@@ -1,11 +1,11 @@
 {
   "name": "@vuoz/components",
-  "version": "0.2.38",
+  "version": "0.2.39",
   "private": true,
   "main": "./dist/vuoz.components.umd.min.js",
   "exports": {
     ".": "./dist/vuoz.components.umd.min.js",
-    "./css": "./dist/themes/default/css/theme.css"
+    "./css": "./dist/themes/default/css/"
   },
   "types": "./src/types/index.d.ts",
   "scripts": {
