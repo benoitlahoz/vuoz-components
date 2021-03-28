@@ -1,0 +1,44 @@
+// Inspired by: https://github.com/jgthms/bulma/issues/451
+
+@mixin buildSpaces
+  $-has: "has"
+  $-marginKey: "margin"
+  $-paddingKey: "padding"
+  $-separator: "-"
+  $-sizes: (("0", 0), ("xxs", $space-xss), ("xs", $space-xs), ("s", $space-s), ("sm", $space-sm), ("ms", $space-ms), ("md", $space-md), ("lg", $space-lg), ("xl", $space-xl), ("xxl", $space-xxl))
+  $-positions: (("top", "top"), ("right", "right"), ("bottom", "bottom"), ("left", "left"), ("x", "x"), ("y", "y"))
+
+  @each $size in $-sizes
+    $sizeKey: nth($size, 1)
+    $sizeValue: nth($size, 2)
+    .#{$-has}#{$-separator}#{$-marginKey}#{$-separator}#{$sizeKey}
+      margin: sizeValue($sizeKey, $sizeValue)
+
+    .#{$-has}#{$-separator}#{$-paddingKey}#{$-separator}#{$sizeKey}
+      padding: sizeValue($sizeKey, $sizeValue)
+
+    @each $position in $-positions
+      $posKey: nth($position, 1)
+      $posValue: nth($position, 2)
+      .#{$-has}#{$-separator}#{$-marginKey}#{$-separator}#{$posKey}#{$-separator}#{$sizeKey}
+        @if $posValue == "x"
+          margin-left: sizeValue($sizeKey, $sizeValue)
+          margin-right: sizeValue($sizeKey, $sizeValue)
+        @else if $posValue == "y"
+          margin-top: sizeValue($sizeKey, $sizeValue)
+          margin-bottom: sizeValue($sizeKey, $sizeValue)
+        @else
+          margin-#{$posValue}: sizeValue($sizeKey, $sizeValue)
+
+      .#{$-has}#{$-separator}#{$-paddingKey}#{$-separator}#{$posKey}#{$-separator}#{$sizeKey}
+        @if $posValue == "x"
+          padding-left: sizeValue($sizeKey, $sizeValue)
+          padding-right: sizeValue($sizeKey, $sizeValue)
+        @else if $posValue == "y"
+          padding-top: sizeValue($sizeKey, $sizeValue)
+          padding-bottom: sizeValue($sizeKey, $sizeValue)
+        @else
+          padding-#{$posValue}: sizeValue($sizeKey, $sizeValue)
+
+@function sizeValue($key, $value)
+  @return if($key == "0", 0, #{$value}#{$spaceUnit})

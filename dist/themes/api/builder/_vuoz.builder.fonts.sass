@@ -1,0 +1,19 @@
+/**
+ * Builds fonts classes.
+ */
+@mixin buildFonts
+  // Variables for creating classes
+  $-font-sizes: ('tiny': $font-size-tiny, 'ultra-small': $font-size-ultra-small, 'small': $font-size-small, 'normal': $font-size-normal, 'large': $font-size-large, 'ultra-large': $font-size-ultra-large, 'big': $font-size-big, 'ultra-big': $font-size-ultra-big)
+  $-font-weights: ('thin': $font-weight-thin, 'ultra-light': $font-weight-ultra-light, 'light': $font-weight-light, 'regular': $font-weight-regular, 'medium': $font-weight-medium, 'semi-bold': $font-weight-semi-bold, 'bold': $font-weight-bold, 'extra-bold': $font-weight-extra-bold, 'black': $font-weight-black)
+
+  @each $name, $size in $-font-sizes
+    .has-text-#{$name}
+      font-family: $default-font-family
+      font-size: #{$size}#{$fontUnit}
+      letter-spacing: #{$size * 0.03}#{$fontUnit}
+      word-spacing: #{$size * 0.2}#{$fontUnit}
+
+  @each $name, $weight in $-font-weights
+    .has-text-#{$name}
+      font-family: $default-font-family
+      font-weight: $weight

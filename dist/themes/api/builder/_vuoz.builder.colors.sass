@@ -1,0 +1,38 @@
+/**
+ * Builds color classes.
+ */
+@mixin buildColors
+  // Maps
+  $-base-colors: ('black': $black, 'white': $white, 'transparent': $transparent)
+  $-grey-colors: ('darker-grey': $darker-grey, 'darker-gray': $darker-grey, 'dark-grey': $dark-grey, 'dark-gray': $dark-grey, 'medium-grey': $medium-grey, 'medium-gray': $medium-grey)
+  $-highlight-colors: ('green': $green, 'blue': $blue, 'pale-blue': $pale-blue, 'yellow': $yellow, 'orange': $orange, 'red': $red)
+  $-colors: map-merge($-base-colors, map-merge($-grey-colors, $-highlight-colors))
+  $-state-colors: ('primary': $primary, 'secondary': $secondary, 'success': $success, 'warning': $warning, 'danger': $danger)
+  $-colors: map-merge($-colors, $-state-colors)
+  @each $name, $color in $-colors
+    .is-#{$name}
+      color: $color
+    .has-background-#{$name}
+      background-color: $color
+    .has-background-#{$name}-shaded
+      background-color: darken($color, $shade)
+    .has-border-#{$name}
+      border: 1px solid $color
+    .has-border-top-#{$name}
+      border-top: 1px solid $color
+    .has-border-left-#{$name}
+      border-left: 1px solid $color
+    .has-border-bottom-#{$name}
+      border-bottom: 1px solid $color
+    .has-border-right-#{$name}
+      border-right: 1px solid $color
+    .has-border-#{$name}-shaded
+      border: 1px solid darken($color, $shade)
+    .has-border-top-#{$name}-shaded
+      border-top: 1px solid darken($color, $shade)
+    .has-border-left-#{$name}-shaded
+      border-left: 1px solid darken($color, $shade)
+    .has-border-bottom-#{$name}-shaded
+      border-bottom: 1px solid darken($color, $shade)
+    .has-border-right-#{$name}-shaded
+      border-right: 1px solid darken($color, $shade)

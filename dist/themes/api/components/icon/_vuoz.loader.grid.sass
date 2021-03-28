@@ -1,0 +1,74 @@
+/**
+ * Adapted from: https://tobiasahlin.com/spinkit/
+ */
+
+$grid-loader-margin-multiplier: 0.62
+
+.vuoz-loader__grid
+  &.is-tiny
+    width: $tiny-height - ($tiny-height * $grid-loader-margin-multiplier)
+    height: $tiny-height - ($tiny-height * $grid-loader-margin-multiplier)
+  &.is-small
+    width: $small-height - ($small-height * $grid-loader-margin-multiplier)
+    height: $small-height - ($small-height * $grid-loader-margin-multiplier)
+  &.is-normal
+    width: $normal-height - ($normal-height * $grid-loader-margin-multiplier)
+    height: $normal-height - ($normal-height * $grid-loader-margin-multiplier)
+  &.is-large
+    width: $large-height - ($large-height * $grid-loader-margin-multiplier)
+    height: $large-height - ($large-height * $grid-loader-margin-multiplier)
+
+.vuoz-loader__grid div
+  width: 33%
+  height: 33%
+  background-color: $white
+  float: left
+  -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out
+          animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out 
+
+.vuoz-loader__grid div:nth-child(1)
+  -webkit-animation-delay: 0.2s
+          animation-delay: 0.2s 
+.vuoz-loader__grid div:nth-child(2)
+  -webkit-animation-delay: 0.3s
+          animation-delay: 0.3s 
+.vuoz-loader__grid div:nth-child(3)
+  -webkit-animation-delay: 0.4s
+          animation-delay: 0.4s 
+.vuoz-loader__grid div:nth-child(4)
+  -webkit-animation-delay: 0.1s
+          animation-delay: 0.1s 
+.vuoz-loader__grid div:nth-child(5)
+  -webkit-animation-delay: 0.2s
+          animation-delay: 0.2s 
+.vuoz-loader__grid div:nth-child(6)
+  -webkit-animation-delay: 0.3s
+          animation-delay: 0.3s 
+.vuoz-loader__grid div:nth-child(7)
+  -webkit-animation-delay: 0s
+          animation-delay: 0s 
+.vuoz-loader__grid div:nth-child(8)
+  -webkit-animation-delay: 0.1s
+          animation-delay: 0.1s 
+.vuoz-loader__grid div:nth-child(9)
+  -webkit-animation-delay: 0.2s
+          animation-delay: 0.2s 
+
+@-webkit-keyframes sk-cubeGridScaleDelay 
+  0%, 70%, 100% 
+    -webkit-transform: scale3D(1, 1, 1)
+    transform: scale3D(1, 1, 1)
+  35% 
+    -webkit-transform: scale3D(0, 0, 1)
+    transform: scale3D(0, 0, 1) 
+  
+
+
+@keyframes sk-cubeGridScaleDelay 
+  0%, 70%, 100% 
+    -webkit-transform: scale3D(1, 1, 1)
+    transform: scale3D(1, 1, 1)
+  35% 
+    -webkit-transform: scale3D(0, 0, 1)
+    transform: scale3D(0, 0, 1)
+   

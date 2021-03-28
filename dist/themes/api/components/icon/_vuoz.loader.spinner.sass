@@ -1,0 +1,62 @@
+/**
+ * Adapted from: https://tobiasahlin.com/spinkit/
+ */
+
+$grid-loader-margin-multiplier: 0.62
+
+.vuoz-loader__spinner
+  position: relative
+  text-align: center
+  -webkit-animation: sk-rotate 2.0s infinite linear
+  animation: sk-rotate 2.0s infinite linear
+  &.is-tiny
+    width: 6px
+    height: 6px
+  &.is-small
+    width: 8px
+    height: 8px
+  &.is-normal
+    width: 10px
+    height: 10px
+  &.is-large
+    width: 15px
+    height: 15px
+
+.vuoz-loader__spinner div
+  width: 60%
+  height: 60%
+  display: inline-block
+  position: absolute
+  top: 0
+  background-color: $white
+  border-radius: 100%
+  -webkit-animation: sk-bounce 2.0s infinite ease-in-out
+  animation: sk-bounce 2.0s infinite ease-in-out
+
+.vuoz-loader__spinner div:nth-child(2)
+  top: auto
+  bottom: 0
+  -webkit-animation-delay: -1.0s
+  animation-delay: -1.0s
+
+@-webkit-keyframes sk-rotate
+  100%  
+    -webkit-transform: rotate(360deg)
+@keyframes sk-rotate
+  100%
+    transform: rotate(360deg) 
+    -webkit-transform: rotate(360deg)
+
+@-webkit-keyframes sk-bounce
+  0%, 100%  
+    -webkit-transform: scale(0.0)
+  50% 
+    -webkit-transform: scale(1.0)
+
+@keyframes sk-bounce
+  0%, 100%
+    transform: scale(0.0)
+    -webkit-transform: scale(0.0)
+  50%
+    transform: scale(1.0)
+    -webkit-transform: scale(1.0)
