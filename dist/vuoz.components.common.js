@@ -1526,13 +1526,6 @@ module.exports = DESCRIPTORS ? function (object, key, value) {
 
 /***/ }),
 
-/***/ "9224":
-/***/ (function(module) {
-
-module.exports = JSON.parse("{\"a\":\"@vuoz/components\"}");
-
-/***/ }),
-
 /***/ "94ca":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11140,10 +11133,8 @@ var api_ThemeManager = function ThemeManager() {
 
   console.log('NEW THEME MANAGER');
 };
-// EXTERNAL MODULE: ./package.json
-var package_0 = __webpack_require__("9224");
-
 // CONCATENATED MODULE: ./src/themes/default/index.ts
+// import * as pkg from '../../../package.json'
 
 /**
  * The default theme.
@@ -11157,7 +11148,6 @@ var package_0 = __webpack_require__("9224");
  * @constant
  * @memberof module:DefaultTheme
  */
-
 var THEME_ID = 'core:default';
 /**
  * The unique displayable name of the theme.
@@ -11170,8 +11160,13 @@ var Theme = {
   id: THEME_ID,
   name: THEME_NAME,
   // Paths relative to dist folder
-  sass: "".concat(package_0["a" /* name */], "/dist/themes/default/sass/theme.sass"),
-  css: "".concat(package_0["a" /* name */], "/dist/themes/default/css/theme.css")
+  sass: "/dist/themes/default/sass/theme.sass",
+  css: "/dist/themes/default/css/theme.css"
+  /*
+  sass: `${pkg.name}/dist/themes/default/sass/theme.sass`,
+  css: `${pkg.name}/dist/themes/default/css/theme.css`
+  */
+
 };
 // CONCATENATED MODULE: ./src/main.ts
 
