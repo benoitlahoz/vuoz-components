@@ -1,0 +1,95 @@
+.vuoz-button
+  @extend .is-flex
+  align-items: center
+  @extend .is-unselectable
+  @extend .is-white
+  position: relative
+  &:focus
+    outline: none
+  .loading-icon
+    position: absolute
+  .content
+    @extend .is-flex
+    align-items: center
+  /**
+   * Sizes and shapes
+   */
+  &.is-square,
+  &.is-circle
+    @extend .is-flex
+    padding: 0
+    align-items: center
+    justify-content: center
+  &.is-loading
+    @extend .is-flex
+    align-items: center
+    justify-content: center
+  &.is-tiny
+    height: $tiny-height
+    .material-icons
+      font-size: $tiny-icon-size
+    .content
+      @extend .has-padding-left-sm
+      @extend .has-padding-right-sm
+      @extend .has-text-tiny
+    &.is-loading
+      // --ggs: 0.4
+    &.is-square,
+    &.is-circle
+      width: $tiny-height
+      // Ugly workarounds for tiny icons
+      // .gg-close
+      //   margin-left: calc(-2px * var(--ggs))
+    &.is-circle
+      border-radius: ($tiny-height / 2)
+  &.is-small
+    height: $small-height
+    .material-icons
+      font-size: $small-icon-size
+    .content
+      @extend .has-padding-left-md
+      @extend .has-padding-right-md
+      @extend .has-text-ultra-small
+    &.is-loading
+      // --ggs: 0.6
+    &.is-square,
+    &.is-circle
+      // --ggs: 0.8
+      width: $small-height
+    &.is-circle
+      border-radius: ($small-height / 2)
+  &.is-normal
+    height: $normal-height
+    .material-icons
+      font-size: $normal-icon-size
+    .content
+      // --ggs: 0.7
+      @extend .has-padding-s
+      @extend .has-padding-left-md
+      @extend .has-padding-right-md
+      @extend .has-text-small
+    &.is-loading
+      // --ggs: 0.7
+    &.is-square,
+    &.is-circle
+      // --ggs: 1
+      width: $normal-height
+    &.is-circle
+      border-radius: ($normal-height / 2)
+  &.is-large
+    height: $large-height
+    .material-icons
+      font-size: $large-icon-size
+    .content
+      @extend .has-padding-sm
+      @extend .has-padding-left-lg
+      @extend .has-padding-right-lg
+      @extend .has-text-normal
+    &.is-loading
+      // --ggs: 1.1
+    &.is-square,
+    &.is-circle
+      // --ggs: 1.5
+      width: $large-height
+    &.is-circle
+      border-radius: ($large-height / 2)

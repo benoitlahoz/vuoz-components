@@ -1,0 +1,174 @@
+.vuoz-tabs
+  @extend .is-flex-column
+  @extend .flex-grow
+  @extend .is-white
+  width: 100%
+  max-width: 100%
+  font-family: $default-font-family
+  .vuoz-tab-bar
+    @extend .is-flex
+    width: 100%
+    max-width: 100%
+    overflow: hidden
+    .plus-button
+      @extend .is-flex
+      margin-top: 0.175rem
+      height: 100%
+      align-items: center
+    .vuoz-tabs-container
+      @extend .is-flex
+      @extend .flex-grow
+      @extend .has-border-bottom-medium-grey
+      justify-content: flex-start
+      box-sizing: border-box
+      -moz-box-sizing: border-box
+      -webkit-box-sizing: border-box
+      width: 100%
+      max-width: 100%
+      .draggable
+        @extend .is-inline-flex
+        flex: auto 1 0
+    &.is-small
+      .divider
+        height: 100%
+        width: 1px
+        position: absolute
+        height: #{$small-height - 0.5rem}
+        width: 1px
+        right: 0
+        top: 0.3rem
+        @extend .has-border-left-medium-gray
+    &.is-normal
+      .divider
+        height: 100%
+        width: 1px
+        position: absolute
+        height: #{$normal-height - 0.5rem}
+        width: 1px
+        right: 0
+        top: 0.3rem
+        @extend .has-border-left-medium-gray
+    &.is-large
+      .divider
+        height: 100%
+        width: 1px
+        position: absolute
+        height: #{$large-height - 0.5rem}
+        width: 1px
+        right: 0
+        top: 0.3rem
+        @extend .has-border-left-medium-gray
+    .vuoz-tab
+      @extend .flex-grow
+      @extend .has-padding-sm
+      @extend .has-padding-left-md
+      @extend .has-padding-right-lg
+      @extend .has-background-darker-grey
+      @extend .is-unselectable
+      @extend .is-disabled
+      @extend .is-flex
+      justify-content: flex-start
+      position: relative
+      overflow: hidden
+      &.is-selected
+        @extend .has-background-dark-grey
+        opacity: 1
+        box-shadow: 0 3px 0 $dark-grey
+        @extend .has-border-top-medium-grey
+        @extend .has-border-right-medium-grey
+        @extend .has-border-left-medium-grey
+        border-radius: 0.5rem 0.5rem 0rem 0rem
+        .title:after
+          content: ''
+          display: block
+          position: absolute
+          top: 0
+          right: 0
+          height: 100%
+          width: 100px
+          background-image: linear-gradient(to right, rgba(255,255,255,0) 82%, rgba($dark-grey, 1))
+          z-index: 1
+          pointer-events: none
+      .title
+        white-space: nowrap
+        overflow: hidden
+        position: relative
+        &:after
+          content: ''
+          display: block
+          position: absolute
+          top: 0
+          right: 0
+          height: 100%
+          width: 100px
+          background-image: linear-gradient(to right, rgba(255,255,255,0) 82%, rgba($darker-grey, 1))
+          z-index: 1
+          pointer-events: none
+      .close
+        @extend .is-flex
+        align-items: center
+        position: absolute
+        right: 0.15rem
+        top: 0
+        bottom: 0
+        overflow: hidden
+    &.is-small
+      @extend .has-text-ultra-small
+      height: #{$small-height + 0.5rem}
+      min-height: #{$small-height + 0.5rem}
+      max-height: #{$small-height + 0.5rem}
+      .plus-button
+        @extend .has-margin-left-sm
+        @extend .has-margin-right-sm
+      .vuoz-tab
+        max-width: 9rem
+        margin-top: 0.25rem
+        .title
+          width: 100%
+        .close
+          @extend .has-padding-right-xs
+    &.is-normal
+      @extend .has-text-small
+      height: #{$normal-height + 0.5rem}
+      min-height: #{$normal-height + 0.5rem}
+      max-height: #{$normal-height + 0.5rem}
+      .plus-button
+        @extend .has-margin-left-sm
+        @extend .has-margin-right-sm
+      .vuoz-tab
+        max-width: 10rem
+        margin-top: 0.25rem
+        .title
+          width: 100%
+        .close
+          @extend .has-padding-right-s
+    &.is-large
+      @extend .has-text-normal
+      height: #{$large-height + 0.5rem}
+      min-height: #{$large-height + 0.5rem}
+      max-height: #{$large-height + 0.5rem}
+      .plus-button
+        @extend .has-margin-left-md
+        @extend .has-margin-right-md
+      .vuoz-tab
+        max-width: 12rem
+        margin-top: 0.25rem
+        .title
+          width: 100%
+          line-height: 1.5rem
+        .close
+          @extend .has-padding-right-ms
+
+  .vuoz-tab-content
+    @extend .flex-grow
+    @extend .is-flex-column
+    @extend .has-background-dark-grey
+    font-family: $default-font-family
+    align-items: center
+    justify-content: center
+    margin: 0
+    box-shadow: 0.25rem -0.25rem 0.5rem rgba($black, $shadow-opacity)
+
+  .vuoz-tab-ghost
+    visibility: hidden
+    opacity: 0

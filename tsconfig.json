@@ -3,7 +3,9 @@
     "target": "esnext",
     "module": "esnext",
     "strict": true,
+    "strictBindCallApply": false,
     "jsx": "preserve",
+    "resolveJsonModule": true,
     "importHelpers": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
@@ -13,7 +15,8 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
-      "webpack-env"
+      "webpack-env",
+      "node"
     ],
     "paths": {
       "@/*": [

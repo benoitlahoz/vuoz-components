@@ -1,8 +1,6 @@
-import Vue from 'vue'
-import App from './App.vue'
+export { default as VuozButton } from './components/button/index.vue'
+export { default as VuozLoader } from './components/loader/index.vue'
+export { default as VuozTabs } from './components/tabbar/tabs/index.vue'
 
-Vue.config.productionTip = false
-
-new Vue({
-  render: h => h(App),
-}).$mount('#app')
+export { ThemeManager } from './themes/api'
+export { Theme } from './themes/default'

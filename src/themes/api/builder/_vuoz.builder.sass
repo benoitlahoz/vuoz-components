@@ -1,0 +1,11 @@
+// Imports specific builders
+@import "./_vuoz.builder.colors"
+@import "./_vuoz.builder.spaces"
+@import "./_vuoz.builder.fonts"
+/**
+ * Builds theme's classes.
+ */
+@mixin buildTheme
+  @include buildColors
+  @include buildSpaces
+  @include buildFonts

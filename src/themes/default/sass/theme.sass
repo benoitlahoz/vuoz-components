@@ -1,0 +1,23 @@
+/**
+ * Theme's creator is responsible for loading its own font file
+ * and define the $default-font-family variable's value.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@100;200;300;400;500;600;700;800;900&display=swap')
+$default-font-family: 'Barlow', sans-serif
+
+// Imports basic Vuoz Theme variables
+@import "../../api/variables"
+// Imports builder 
+@import "../../api/builder"
+
+/**
+ *
+ * Here the theme's creator overrides default variables.
+ *
+ */
+
+// Builds the theme
+@include buildTheme
+
+// Imports base classes themed with our new variables.
+@import '../../api/base'
