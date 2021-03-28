@@ -1,11 +1,12 @@
 {
   "name": "@vuoz/components",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "main": "dist/vuoz.components.umd.min.js",
   "types": "./src/types/index.d.ts",
   "scripts": {
     "serve": "vue-cli-service serve",
+    "preinstall": "yarn run build",
     "build": "vue-cli-service build --target lib src/main.ts --name vuoz.components && node-sass ./src/themes/default/sass/ --output ./dist/themes/default/css/ --indented-syntax --output-style compressed",
     "lint": "vue-cli-service lint",
     "storybook:build": "vue-cli-service storybook:build",
