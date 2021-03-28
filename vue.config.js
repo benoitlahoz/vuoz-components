@@ -4,7 +4,10 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 module.exports = {
   outputDir: './dist',
   chainWebpack: config => {
-    // console.log(config.module.rule('css'))
+
+    config.resolve.alias
+      .set("css", path.join(__dirname, "./dist/themes/default/css/theme.css"))
+
     // Copies files to dist
     config
       .plugin('copy')
@@ -24,13 +27,6 @@ module.exports = {
         { from: './package.json', to: './package.json' },
       ]))
 
-    /*
-  config.entry('theme')
-    .add('./src/themes/default/theme.config.ts')
-    .end()
-  */
-    // config.resolve.alias = { ...config.resolve.alias, ...myAliasConfig }
-
   },
   configureWebpack: {
     entry: {
@@ -39,12 +35,7 @@ module.exports = {
     },
   },
   css: {
-    /*
-    extract: {
-      filename: './src/themes/default/theme.css',
-      chunkFilename: '/themes/default/[name].css',
-    },
-    */
+
     loaderOptions: {
       sass: {
         // Make variables available to components.

@@ -1,5 +1,3 @@
-// import * as pkg from '../../../package.json'
-
 /**
  * The default theme.
  * @module DefaultTheme
@@ -26,8 +24,4 @@ export const Theme = {
   // Paths relative to dist folder
   sass: `/dist/themes/default/sass/theme.sass`,
   css: `/dist/themes/default/css/theme.css`
-  /*
-  sass: `${pkg.name}/dist/themes/default/sass/theme.sass`,
-  css: `${pkg.name}/dist/themes/default/css/theme.css`
-  */
 }

@@ -1,8 +1,11 @@
 {
   "name": "@vuoz/components",
-  "version": "0.2.33",
+  "version": "0.2.34",
   "private": true,
-  "main": "dist/vuoz.components.umd.min.js",
+  "exports": {
+    "./": "./dist/vuoz.components.umd.min.js",
+    "./css": "./dist/themes/default/css/theme.css"
+  },
   "types": "./src/types/index.d.ts",
   "scripts": {
     "serve": "vue-cli-service serve",
