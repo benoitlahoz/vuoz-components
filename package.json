@@ -1,6 +1,6 @@
 {
   "name": "@vuoz/components",
-  "version": "0.2.34",
+  "version": "0.2.35",
   "private": true,
   "exports": {
     "./": "./dist/vuoz.components.umd.min.js",
