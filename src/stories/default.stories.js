@@ -1,5 +1,5 @@
 /**
  * Imports styles globally
  */
-// import '../themes/api/api.sass'
-import '../themes/default/sass/theme.sass'
+
+import '@vuoz/theme-core-default/dist/css/theme.min.css'

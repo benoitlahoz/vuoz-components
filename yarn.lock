@@ -2650,6 +2650,16 @@
   resolved "https://registry.yarnpkg.com/@vue/web-component-wrapper/-/web-component-wrapper-1.3.0.tgz#b6b40a7625429d2bd7c2281ddba601ed05dc7f1a"
   integrity sha512-Iu8Tbg3f+emIIMmI2ycSI8QcEuAUgPTgHwesDU1eKMLE4YC/c/sFbGc70QgMq31ijRftV0R7vCm9co6rldCeOA==
 
+"@vuoz/theme-api@oz-/vuoz-theme-api":
+  version "0.1.79"
+  resolved "https://codeload.github.com/oz-/vuoz-theme-api/tar.gz/f4d4ba7dabe7bcb3944697fa2eec009406da7096"
+
+"@vuoz/theme-core-default@oz-/vuoz-theme-core-default":
+  version "0.2.92"
+  resolved "https://codeload.github.com/oz-/vuoz-theme-core-default/tar.gz/fb6b530478c946d8b38c70c4ecf0366f4772f302"
+  dependencies:
+    "@vuoz/theme-api" oz-/vuoz-theme-api
+
 "@webassemblyjs/ast@1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.9.0.tgz#bd850604b4042459a5a41cd7d338cbed695ed964"
@@ -8595,11 +8605,6 @@ material-colors@^1.2.1:
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/material-colors/-/material-colors-1.2.6.tgz#6d1958871126992ceecc72f4bcc4d8f010865f46"
   integrity sha512-6qE4B9deFBIa9YSpOc9O0Sgc43zTeVYbgDT5veRKSlB2+ZuHNoVVxA1L/ckMUayV9Ay9y7Z/SZCLcGteW9i7bg==
-
-material-icons@^0.5.4:
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/material-icons/-/material-icons-0.5.4.tgz#c9e8e89d93b1172ecb68090e368ee7b7bffecc9c"
-  integrity sha512-5ycazkNmIOtV78Ff3WgvxQESoJuujdRm0cNbf18fmyJN20jHyqp9rpwi4EfQyGimag0ZLElxtVg3H9enIKdOOw==
 
 md5.js@^1.3.4:
   version "1.3.5"
