@@ -1,5 +1,5 @@
 const path = require('path')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+// const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   outputDir: './dist',
@@ -8,6 +8,7 @@ module.exports = {
     config.resolve.alias
       .set("css", path.join(__dirname, "./dist/themes/default/css/theme.css"))
 
+    /*
     // Copies files to dist
     config
       .plugin('copy')
@@ -26,6 +27,7 @@ module.exports = {
         // Copies package.json
         { from: './package.json', to: './package.json' },
       ]))
+      */
 
   },
   configureWebpack: {
