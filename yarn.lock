@@ -2655,8 +2655,8 @@
   resolved "https://codeload.github.com/oz-/vuoz-theme-api/tar.gz/cab1411d26e39ef1600ffa2cc58923ae3e2fdb46"
 
 "@vuoz/theme-core-default@oz-/vuoz-theme-core-default":
-  version "0.2.104"
-  resolved "https://codeload.github.com/oz-/vuoz-theme-core-default/tar.gz/c1284ec70aa7074bc59d7de4546e79d3b4430855"
+  version "0.2.105"
+  resolved "https://codeload.github.com/oz-/vuoz-theme-core-default/tar.gz/c05ea534b671c9764cae02027aac72d0822ffcb5"
   dependencies:
     "@vuoz/theme-api" oz-/vuoz-theme-api
 
