@@ -1,12 +1,13 @@
 {
   "name": "@vuoz/components",
-  "version": "0.2.43",
+  "version": "0.2.44",
   "private": true,
   "main": "./dist/vuoz.components.umd.min.js",
   "types": "./src/types/index.d.ts",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target lib src/main.ts --name vuoz.components && node-sass ./src/themes/default/sass/ --output ./dist/themes/default/css/ --indented-syntax --output-style compressed",
+    "deploy": "yarn run vuoz:upgrade && node update.build.js && yarn run build && git add . && git commit -m 'Auto update.' && git push -u origin master",
     "lint": "vue-cli-service lint",
     "storybook:build": "vue-cli-service storybook:build",
     "storybook:serve": "vue-cli-service storybook:serve -p 6006",
