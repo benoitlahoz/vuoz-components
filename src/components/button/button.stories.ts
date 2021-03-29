@@ -99,30 +99,29 @@ export default {
 /**
  * Template
  */
-const template = `
-  <vuoz-button `                      +
+const template = `<vuoz-button ` +
   // Props
-  `   :disabled="disabled" `          +
-  `   :loading="loading" `            +
-  `   :type="type" `                  +
-  `   :size="size" `                  +
-  `   :shape="shape" `                +
-  `   :weight="weight" `              +
-  `   :rounded="rounded" `            +
-  `   :border="border" `              +
-  `   :shadow="shadow" `              +
-  `   :uppercase="uppercase" `        +
-  `   :smallcaps="smallcaps" `        +
-  `   :color="color" `                +
-  `   :toggle="toggle" `              +
+  `   :disabled="disabled" ` +
+  `   :loading="loading" ` +
+  `   :type="type" ` +
+  `   :size="size" ` +
+  `   :shape="shape" ` +
+  `   :weight="weight" ` +
+  `   :rounded="rounded" ` +
+  `   :border="border" ` +
+  `   :shadow="shadow" ` +
+  `   :uppercase="uppercase" ` +
+  `   :smallcaps="smallcaps" ` +
+  `   :color="color" ` +
+  `   :toggle="toggle" ` +
   // Event
-  `   @click="onClick">`                +
+  `   @click="onClick">` +
   // Icon left slot
   // TODO: `<template v-slot:left><i class="gg-close"></i></template>` +
   // Default slot content
-  `   <template v-slot:main>`         +
-  `     Click me`                     +
-  `   </template>`                    +
+  `   <template v-slot:main>` +
+  `     Click me` +
+  `   </template>` +
   `</vuoz-button>`
 // To be displayed by Storybook
 export const Full = (args: any, { argTypes }: any) => ({

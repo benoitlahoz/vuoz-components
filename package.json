@@ -1,6 +1,6 @@
 {
   "name": "@vuoz/components",
-  "version": "0.2.51",
+  "version": "0.2.53",
   "private": true,
   "main": "./dist/vuoz.components.umd.min.js",
   "types": "./src/types/index.d.ts",
@@ -10,7 +10,7 @@
     "deploy": "yarn run vuoz:upgrade && node update.build.js && yarn run build && git add . && git commit -m 'Auto update.' && git push -u origin master",
     "lint": "vue-cli-service lint",
     "storybook:build": "vue-cli-service storybook:build",
-    "storybook:serve": "vue-cli-service storybook:serve -p 6006",
+    "storybook:serve": "vue-cli-service storybook:serve -s src/public -p 6006",
     "vuoz:upgrade": "yarn upgrade @vuoz/theme-core-default"
   },
   "dependencies": {

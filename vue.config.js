@@ -6,8 +6,8 @@ module.exports = {
   chainWebpack: config => {
 
     config.resolve.alias
-      .set("css", path.join(__dirname, "./dist/themes/default/css/theme.css"))
-
+    .set("@", path.join(__dirname, "./src/"))
+    .set("~", path.join(__dirname, "./src/"))
     /*
     // Copies files to dist
     config
@@ -36,21 +36,8 @@ module.exports = {
       theme: './src/themes/default/index.ts'
     },
   },
-  css: {
-
-    loaderOptions: {
-      sass: {
-        // Make variables available to components.
-        prependData: `@import "@/themes/api/variables.sass"`,
-        /*
-        includePaths: [
-          './src/themes/default/sass/theme.sass'
-        ]
-        */
-      },
-    }
-  },
-  filenameHashing: true
+  // Passed to false for storybook loading static assets.
+  filenameHashing: false
 }
 
 //  && vue-cli-service build --no-clean --target lib src/themes/default/theme.config.ts --skip-plugins ./src/themes/api/index.ts --name theme.default --dest ./dist/themes/default/css
