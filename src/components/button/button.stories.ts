@@ -87,7 +87,7 @@ export default {
     size: 'small',
     shape: 'free',
     weight: 'semi-bold',
-    color: 'darker-grey',
+    color: 'secondary',
     toggle: 'danger',
     rounded: true,
     border: true,
