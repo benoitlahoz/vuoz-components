@@ -21,7 +21,7 @@ let counter = 2
  */
 export default {
   component: VuozTabs,
-  title: 'Tabs',
+  title: 'Components/Tabs',
   parameters: {
     layout: 'fullscreen'
   },
@@ -58,11 +58,11 @@ const template = `
   `   </vuoz-tabs>`                                           +
   `</div>`
 // To be displayed by Storybook
-export const Full = (args: any, { argTypes }: any) => ({
+export const Tabs = (args: any, { argTypes }: any) => ({
   components: { VuozTabs },
   template,
   methods: { 
-    // SStorybook logs
+    // Storybook logs
     onClick: action('select'), 
     onClose: action('close'), 
     onAddTab: action('addtab'), 
@@ -85,7 +85,7 @@ export const Full = (args: any, { argTypes }: any) => ({
         content: `Content ${counter + 1}`
       })
       counter++
-    } ,
+    },
     drag (e: {
       oldIndex: number,
       newIndex: number

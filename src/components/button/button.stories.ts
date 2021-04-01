@@ -5,7 +5,7 @@ import VuozButton from './index.vue'
  */
 export default {
   component: VuozButton,
-  title: 'Button',
+  title: 'Base/Button',
   // Arguments (props) description
   argTypes: {
     disabled: {
@@ -124,7 +124,7 @@ const template = `<vuoz-button ` +
   `   </template>` +
   `</vuoz-button>`
 // To be displayed by Storybook
-export const Full = (args: any, { argTypes }: any) => ({
+export const Button = (args: any, { argTypes }: any) => ({
   components: { VuozButton },
   template,
   methods: { onClick: action('click') },

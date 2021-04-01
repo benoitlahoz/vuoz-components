@@ -6,7 +6,7 @@ import VuozImage from './index.vue'
  */
 export default {
   component: VuozImage,
-  title: 'Image',
+  title: 'Base/Image',
   // Arguments (props) description
   argTypes: {
     path: {
@@ -51,7 +51,7 @@ const template = `
     `:fit="fit"> `        +
   `</vuoz-image>`
 // To be displayed by Storybook
-export const Full = (args: any, { argTypes }: any) => ({
+export const Image = (args: any, { argTypes }: any) => ({
   components: { VuozImage },
   template,
   props: Object.keys(argTypes),

@@ -18,16 +18,16 @@ div(:class="getClass()")
 <script lang='ts'>
 import { Component, Prop, Vue } from 'vue-property-decorator'
 /**
- * Vuoz animated loader icon.
- * @displayName VuozLoader
+ * Vuoz animated loading icon.
+ * @displayName VuozLoadingIcon
  */
 @Component({
-  name: 'VuozLoader',
+  name: 'VuozLoadingIcon',
 })
 export default class VuozComponent extends Vue {
 
-  @Prop({ type: String, default: 'ellipsis' }) readonly name!: string
-  @Prop({ type: String, default: 'normal' }) readonly size!: string
+  @Prop({ type: String, default: 'ellipsis' }) readonly name!: 'spinner' | 'ellipsis' | 'grid' 
+  @Prop({ type: String, default: 'normal' }) readonly size!: 'timy' | 'small' | 'normal' | 'large'
 
   private getClass() {
     const classes = `vuoz-loader__${this.name} ` +

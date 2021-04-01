@@ -1,6 +1,6 @@
 <template lang='pug'>
 button.vuoz-button(
-  :class='getClasses()',
+  :class="getClasses()",
   :key='size',
   @mouseenter='onMouseEnter',
   @mouseleave='onMouseLeave',
@@ -20,15 +20,15 @@ button.vuoz-button(
   .loading-icon(v-if="loading")
     slot(name="loader") 
       template(v-if="shape === 'free'")
-        vuoz-loader(name="ellipsis", :size="size")
+        vuoz-loading-icon(name="ellipsis", :size="size")
       template(v-if="shape === 'square'")
-        vuoz-loader(name="grid", :size="size")
+        vuoz-loading-icon(name="grid", :size="size")
       template(v-if="shape === 'circle'")
-        vuoz-loader(name="spinner", :size="size")
+        vuoz-loading-icon(name="spinner", :size="size")
 </template>
 <script lang='ts'>
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
-import VuozLoader from '../loader/index.vue'
+import VuozLoadingIcon from '../loading/icon/index.vue'
 /**
  * Vuoz standard button
  * @displayName VuozButton
@@ -36,7 +36,7 @@ import VuozLoader from '../loader/index.vue'
 @Component({
   name: 'VuozButton',
   components: {
-    VuozLoader
+    VuozLoadingIcon
   }
 })
 export default class VuozComponent extends Vue {
@@ -53,7 +53,7 @@ export default class VuozComponent extends Vue {
   @Prop({ type: Boolean, default: true }) readonly border!: boolean
   @Prop({ type: Boolean, default: false }) readonly uppercase!: boolean
   @Prop({ type: Boolean, default: false }) readonly smallcaps!: boolean
-  @Prop({ type: String, default: 'darker-grey' }) readonly color!: string
+  @Prop({ type: String, default: 'dark-grey' }) readonly color!: string
   @Prop({ type: String, default: 'danger' }) readonly toggle!: string // TODO
   @Prop({ type: Boolean, default: false }) readonly shadow!: boolean
   /**
