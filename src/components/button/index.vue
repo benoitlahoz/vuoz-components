@@ -16,7 +16,7 @@ button.vuoz-button(
     slot(name="right") 
   // @slot Content for square and circle shapes
   slot(name="shaped", v-if="shape !== 'free' && !loading") 
-    span.material-icons close
+    span.material-icons {{ icon }}
   .loading-icon(v-if="loading")
     slot(name="loader") 
       template(v-if="shape === 'free'")
@@ -56,6 +56,7 @@ export default class VuozComponent extends Vue {
   @Prop({ type: String, default: 'dark-grey' }) readonly color!: string
   @Prop({ type: String, default: 'danger' }) readonly toggle!: string // TODO
   @Prop({ type: Boolean, default: false }) readonly shadow!: boolean
+  @Prop({ type: String, default: 'close' }) readonly icon!: string
   /**
    * Internal component's data
    */

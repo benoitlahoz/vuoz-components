@@ -43,7 +43,7 @@
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 /**
  * Vuoz animated loading bar.
- * @displayName VuozLoadingIcon
+ * @displayName VuozLoadingBar
  */
 @Component({
   name: "VuozLoadingBar",
