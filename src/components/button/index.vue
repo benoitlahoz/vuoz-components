@@ -7,7 +7,7 @@ button.vuoz-button(
   @mousedown='onMouseDown',
   @mouseup='onMouseUp'
 )
-  .content(v-if="shape === 'free'", :class="{ 'is-hidden': loading === true }")
+  .content(v-if="shape === 'free'", :class="{ 'is-hidden': load === true }")
     // @slot Icon left: TODO
     slot(name="left")
     // @slot Default button's text content
@@ -15,9 +15,9 @@ button.vuoz-button(
     // @slot Icon right: TODO
     slot(name="right") 
   // @slot Content for square and circle shapes
-  slot(name="shaped", v-if="shape !== 'free' && !loading") 
+  slot(name="shaped", v-if="shape !== 'free' && !load") 
     span.material-icons {{ icon }}
-  .loading-icon(v-if="loading")
+  .loading-icon(v-if="load")
     slot(name="loader") 
       template(v-if="shape === 'free'")
         vuoz-loading-icon(name="ellipsis", :size="size")
@@ -53,7 +53,7 @@ export default class VuozComponent extends Vue {
   @Prop({ type: Boolean, default: true }) readonly border!: boolean
   @Prop({ type: Boolean, default: false }) readonly uppercase!: boolean
   @Prop({ type: Boolean, default: false }) readonly smallcaps!: boolean
-  @Prop({ type: String, default: 'dark-grey' }) readonly color!: string
+  @Prop({ type: String, default: 'medium-grey' }) readonly color!: string
   @Prop({ type: String, default: 'danger' }) readonly toggle!: string // TODO
   @Prop({ type: Boolean, default: false }) readonly shadow!: boolean
   @Prop({ type: String, default: 'close' }) readonly icon!: string
@@ -62,6 +62,8 @@ export default class VuozComponent extends Vue {
    */
   private hovered = false
   private selected = false
+  private disable = false
+  private load = false
   /**
    * Initialization and tear-down
    */
@@ -76,13 +78,20 @@ export default class VuozComponent extends Vue {
   private beforeDestroy() {
     // 
   }
-  /**
-   * Watchers
-   */
-  @Watch('disabled')
-  private onDisabledChanged() {
-    this.selected = false
+
+  public toggleLoad() {
+    this.load = !this.load
   }
+
+  @Watch('disabled', { immediate: true })
+  onDisable() {
+    this.disable = this.disabled
+  } 
+
+  @Watch('loading', { immediate: true })
+  onload() {
+    this.load = this.loading
+  } 
   /**
    * Gets button's classes according to props' values.
    */
@@ -91,8 +100,8 @@ export default class VuozComponent extends Vue {
     let classes = `is-${this.size}`
     // Shape
     this.shape !== 'free' ? (classes += ` is-${this.shape}`) : ''
-    // Loading
-    this.loading ? (classes += ` is-loading`) : ''
+    // load
+    this.load ? (classes += ` is-load`) : ''
     // Font weight
     classes += ` has-text-${this.weight}`
     // Rounded
@@ -101,14 +110,14 @@ export default class VuozComponent extends Vue {
     this.uppercase ? (classes += ` is-uppercase`) : ''
     // Small caps
     this.smallcaps ? (classes += ` is-small-caps`) : ''
-    // color
+    // Background color
     if (this.type === 'toggle') {
       if (this.selected) {
         classes += ` has-background-${this.toggle}`
       } else {
         classes += ` has-background-${this.color}`
       }
-      if (!this.disabled && this.hovered) {
+      if (!this.disable && this.hovered) {
         this.selected
           ? (classes += ` has-background-${this.toggle}-shaded`)
           : (classes += ` has-background-${this.color}-shaded`)
@@ -127,7 +136,7 @@ export default class VuozComponent extends Vue {
     } else {
       classes += ` has-background-${this.color}`
       // Hovered but not selected
-      if (!this.disabled && this.hovered && !this.selected) {
+      if (!this.disable && this.hovered && !this.selected) {
         // Is hovered
         classes += ` has-background-${this.color}-shaded`
         this.border
@@ -141,28 +150,29 @@ export default class VuozComponent extends Vue {
       }
     }
     // Shadow
-    if (!this.disabled) {
+    if (!this.disable) {
       this.shadow && !this.selected ? (classes += ` has-shadow`) : ''
     }
     // Disabled
-    this.disabled ? (classes += ` is-disabled`) : ''
+    this.disable ? (classes += ` is-disabled`) : ''
     return classes
   }
   /**
    * Mouse events
    */
   onMouseEnter() {
-    if (!this.loading) {
+    if (!this.load) {
       this.hovered = true
     }
   }
   onMouseLeave() {
-    if (!this.loading) {
+    if (!this.load) {
       this.hovered = false
     }
   }
   onMouseDown() {
-    if (!this.disabled && !this.loading) {
+
+    if (!this.disable && !this.load) {
       if (this.type === 'toggle') {
         // Toggles or untoggles the button
         this.selected = !this.selected
@@ -173,8 +183,9 @@ export default class VuozComponent extends Vue {
     }
   }
   onMouseUp() {
-    if (this.type !== 'toggle') {
+    if (this.type !== 'toggle' && !this.disable && !this.load) {
       this.selected = false
+      this.$emit('click', this.selected)
     }
   }
 }
