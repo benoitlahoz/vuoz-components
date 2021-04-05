@@ -75,16 +75,16 @@ export default {
  */
 const template = `<div style="height: 100vh; max-height: 100vh; overflow: hidden; margin: 0; display: flex; flex-direction: column;">` +
   `<vuoz-console ref="console" ` +
-  `:type="type" :size="size" :caller="caller" :date="date" :format="format" :sort="sort" :toolbar="toolbar" :bordered="bordered">` +
+  `:type="type" :size="size" :caller="caller" :date="date" :format="format" :sort="sort" :toolbar="toolbar" :bordered="bordered"">` +
   `</vuoz-console>` +
   `<div style="display: flex;">` +
   `<div style="display: block; margin: 10px;">` +
-  `<vuoz-button color="primary" size="small" rounded shadow uppercase border @click="pushLine();">` +
+  `<vuoz-button color="primary" size="small" rounded shadow uppercase border @click="pushLine">` +
   `<template v-slot:main>Add line</template>` +
   `</vuoz-button>` +
   `</div>` +
   `<div style="display: block; margin: 10px;">` +
-  `<vuoz-button color="warning" size="small" rounded shadow uppercase border @click="replaceLine();">` +
+  `<vuoz-button color="warning" size="small" rounded shadow uppercase border @click="replaceLine">` +
   `<template v-slot:main>Replace last line</template>` +
   `</vuoz-button>` +
   `</div>` +
@@ -96,21 +96,25 @@ export const Console = (args: any, { argTypes }: any) => ({
   template,
   methods: {
     // Actual actions
-    pushLine() {
-      const line = {
-        date: new Date(),
-        content: 'Another line.',
-        caller: 'index.js'
-      };
-      (this as any).$refs.console.push(line)
+    pushLine(down: boolean) {
+      if (down) {
+        const line = {
+          date: new Date(),
+          content: 'Another line.',
+          caller: 'index.js'
+        };
+        (this as any).$refs.console.push(line)
+      }
     },
-    replaceLine() {
-      const line = {
-        date: new Date(),
-        content: 'Another line.',
-        caller: 'index.js'
-      };
-      (this as any).$refs.console.replaceLast(line)
+    replaceLine(down: boolean) {
+      if (down) {
+        const line = {
+          date: new Date(),
+          content: 'Another line.',
+          caller: 'index.js'
+        };
+        (this as any).$refs.console.replaceLast(line)
+      }
     }
   },
   props: Object.keys(argTypes),

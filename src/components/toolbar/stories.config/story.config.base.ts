@@ -1,5 +1,12 @@
 export const argTypes = {
   argTypes: {
+    type: {
+      description: 'Type of the toolbar.',
+      control: {
+        type: 'select',
+        options: ['fixed', 'contextual']
+      }
+    },
     show: {
       description: 'How the toolbar is shown.',
       control: {

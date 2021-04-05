@@ -1,15 +1,13 @@
 <template lang="pug">
-.flex-grow(style="max-height: 100%; overflow: hidden")
-  .is-flex(v-if="toolbar === true") 
-    span
-      b TODO:
-    span Toolbar
-  .is-flex-column(
+.flex-grow(style="overflow: hidden")
+  div(v-if="toolbar === true")
+    vuoz-toolbar(type="fixed", position="top", size="tiny", :items="toolbarItems")
+  .is-flex-column.flex-grow(
     ref="console",
-    style="max-height: 100%; overflow-y: scroll; overflow-x: hidden"
+    style="max-height: 100%; overflow-y: scroll; overflow-x: hidden;"
   )
     template(v-if="type === 'table'")
-      table.is-flex(style="width: 100%; ,table-layout: auto")
+      table.is-flex(style="width: 100%; table-layout: auto;")
         colgroup
           col(v-if="date === true", span="1")
           col(span="1")
@@ -27,10 +25,10 @@
     template(v-if="type === 'stack'")
       .flex-grow(v-for="(line, index) in lines", :class="getStackLineClasses()") {{ line.content }}
 </template>
-
 <script lang="ts">
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 import VuozConsoleItem from "../item/index.vue";
+import VuozToolbar from '../../toolbar/index.vue'
 
 /**
  * Vuoz console
@@ -40,6 +38,7 @@ import VuozConsoleItem from "../item/index.vue";
   name: "VuozConsole",
   components: {
     VuozConsoleItem,
+    VuozToolbar
   },
 })
 export default class VuozComponent extends Vue {
@@ -58,6 +57,86 @@ export default class VuozComponent extends Vue {
   @Prop({ type: String, default: "iso" }) readonly format!: "none" | "iso";
 
   private lines: any[] = [];
+  private toolbarItems = [
+  {
+    icon: 'crop',
+    label: 'Crop',
+    type: 'toggle',
+    toggle: 'primary',
+    rounded: true,
+    name: 'vuoz:toolbar:crop',
+    target: 'MyAwesomeComponent',
+    onDown(target: any, button: any) {
+      // Here 'this' represents the caller (VuozInnerToolbar)
+      console.log('Caller', this)
+      console.log('Select \'crop\' to target', target)
+      console.log('Button called', button);
+      // Disables the toolbar's button except this one.
+      (this as any).disableAllBut('vuoz:toolbar:crop')
+    },
+    onUp(target: any, button: any) {
+      console.log('Caller', this)
+      console.log('Deselect \'crop\' to target', target)
+      console.log('Button called', button);
+      // Resets toolbar's state.
+      (this as any).resetState()
+    }
+  },
+  {
+    icon: 'aspect_ratio',
+    label: 'Resize',
+    rounded: true,
+    name: 'vuoz:toolbar:resize',
+    target: 'MyAwesomeComponent',
+    onDown(target: any, button: any) {
+      console.log('Caller', this)
+      console.log('Select \'resize\' to target', target)
+      console.log('Button called', button);
+      (this as any).disable('vuoz:toolbar:resize')
+    },
+    onUp(target: any, button: any) {
+      console.log('Caller', this)
+      console.log('Deselect \'resize\' to target', target)
+      console.log('Button called', button)
+    }
+  },
+  {
+    icon: 'rotate_right',
+    label: 'Rotate right',
+    rounded: true,
+    name: 'vuoz:toolbar:rotate:right',
+    target: 'MyAwesomeComponent',
+    onUp(target: any, button: any) {
+      console.log('Caller', this)
+      console.log('Rotate right on mouse up to target', target)
+      console.log('Button called', button)
+    }
+  },
+  {
+    icon: 'rotate_left',
+    label: 'Rotate left',
+    rounded: true,
+    name: 'vuoz:toolbar:rotate:left',
+    target: 'MyAwesomeComponent',
+    onDown(target: any, button: any) {
+      console.log('Caller', this)
+      console.log('Rotate left on mouse down to target', target)
+      console.log('Button called', button)
+    }
+  },
+  {
+    icon: 'save',
+    label: 'Save',
+    rounded: true,
+    name: 'vuoz:toolbar:save',
+    target: 'MyAwesomeComponent',
+    onDown(target: any, button: any) {
+      console.log('Caller', this)
+      console.log('Save on mouse down to target', target)
+      console.log('Button called', button)
+    }
+  },
+]
 
   @Watch("sort", { immediate: true })
   private onSortChanged() {
@@ -142,6 +221,7 @@ export default class VuozComponent extends Vue {
         el.scrollTop = 0;
       });
     } else {
+
       this.lines.splice(this.lines.length - 1, 1, line);
       this.$nextTick(() => {
         // Scroll
