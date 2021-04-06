@@ -8,7 +8,7 @@ import { template } from './toolbar.template'
  */
 export default {
   component: VuozToolbar,
-  title: 'Toolbar/Entries',
+  title: 'Components/Toolbar/ArrayUnidimensional',
   // Arguments (props) description
   ...ArrayUni
 }

@@ -39,7 +39,7 @@ export default class VuozComponent extends Vue {
   }
 
   private async created() {
-    console.log(window.console)
+
     this.setStyles()
 
   }

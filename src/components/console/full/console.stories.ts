@@ -24,6 +24,17 @@ export default {
       description: 'Show toolbar.',
       control: { type: 'boolean' }
     },
+    toolbarPosition: {
+      description: 'Position of the console\'s toolbar.',
+      control: {
+        type: 'select',
+        options: ['top', 'left', 'bottom', 'right']
+      }
+    },
+    toolbarBorder: {
+      description: 'Toggles toolbar\'s border.',
+      control: { type: 'boolean' }
+    },
     size: {
       description: 'Size of the console\'s items.',
       control: {
@@ -62,7 +73,9 @@ export default {
   args: {
     type: 'table',
     toolbar: true,
-    size: 'normal',
+    toolbarPosition: 'top',
+    toolbarBorder: true,
+    size: 'small',
     bordered: true,
     caller: true,
     date: true,
@@ -75,9 +88,9 @@ export default {
  */
 const template = `<div style="height: 100vh; max-height: 100vh; overflow: hidden; margin: 0; display: flex; flex-direction: column;">` +
   `<vuoz-console ref="console" ` +
-  `:type="type" :size="size" :caller="caller" :date="date" :format="format" :sort="sort" :toolbar="toolbar" :bordered="bordered"">` +
+  `:type="type" :size="size" :caller="caller" :date="date" :format="format" :sort="sort" :toolbar="toolbar" :toolbarPosition="toolbarPosition" :toolbarBorder="toolbarBorder" :bordered="bordered"">` +
   `</vuoz-console>` +
-  `<div style="display: flex;">` +
+  `<div style="display: flex;" class="has-border-top-medium-grey">` +
   `<div style="display: block; margin: 10px;">` +
   `<vuoz-button color="primary" size="small" rounded shadow uppercase border @click="pushLine">` +
   `<template v-slot:main>Add line</template>` +

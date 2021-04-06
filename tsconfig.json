@@ -36,7 +36,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+, "src/components/toolbar/stories/inner.array.multi.stories.v"  ],
   "exclude": [
     "node_modules"
   ]

@@ -1,33 +1,12 @@
 <template lang="pug">
-tr(:class="getClasses('main')").is-flex
-  td.is-flex.align-center(v-if="date === true")
-    .has-border-medium-grey.is-rounded.has-text-mono-ultra-light(:class="getClasses('time:content')") {{ getFormattedDate() }}
-  td.flex-grow.is-flex.align-center
+tr(:class="getClasses('main')")
+  td(v-if="date === true")
+    .accessory-cell(:class="getClasses('time:content')") {{ getFormattedDate() }}
+  td.flex-grow
     .has-text-regular(:class="getClasses('line:content')") {{ getContent() }}
-  td.is-flex.align-center(v-if="caller === true")
-    .has-border-medium-grey.is-rounded.has-text-mono-ultra-light(v-if="line.caller", :class="getClasses('caller')") {{ line.caller }}
+  td(v-if="caller === true")
+    .accessory-cell(v-if="line.caller", :class="getClasses('caller')") {{ line.caller }}
 </template>
-
-<style lang="sass" scoped>
-.item-height-small
-  height: 2rem
-
-.item-height-normal
-  height: 2.5rem
-
-.item-height-large
-  height: 3rem
-
-.time-line-height-small
-  line-height: 1.1rem
-
-.time-line-height-normal
-  line-height: 1.35rem
-
-.time-line-height-large
-  line-height: 1.5rem
-</style>
-
 <script lang="ts">
 /*eslint no-unreachable: "off"*/
 import { Component, Mixins, Prop, Vue } from "vue-property-decorator";

@@ -8,7 +8,7 @@ import { template } from './toolbar.template'
  */
 export default {
   component: VuozToolbar,
-  title: 'Toolbar/Entries',
+  title: 'Components/Toolbar/ObjectMultidimensional',
   // Arguments (props) description
   ...ObjectMulti
 }

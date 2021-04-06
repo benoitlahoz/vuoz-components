@@ -20,6 +20,7 @@
         :border="button.border",
         :type="button.type",
         :toggle="button.toggle",
+        :toggled="button.toggled",
         :disabled="disabledFlag === true ? true : button.disabled || false",
         :loading="button.loading",
         @click="onClick($event, button.name)"
@@ -49,6 +50,7 @@
             :border="button.border",
             :type="button.type",
             :toggle="button.toggle",
+            :toggled="button.toggled",
             :disabled="disabledFlag === true ? true : button.disabled || false",
             :loading="button.loading",
             @click="onClick($event, button.name)"
@@ -71,6 +73,7 @@
           :border="item.border",
           :type="item.type",
           :toggle="item.toggle",
+          :toggled="item.toggled",
           :disabled="disabledFlag === true ? true : item.disabled || false",
           :loading="item.loading",
           @click="onClick($event, item.name)"
@@ -101,6 +104,7 @@
             :border="button.border",
             :type="button.type",
             :toggle="button.toggle",
+            :toggled="button.toggled",
             :disabled="disabledFlag === true ? true : button.disabled || false",
             :loading="button.loading",
             @click="onClick($event, button.name)"
@@ -122,72 +126,12 @@
           :border="item.border",
           :type="item.type",
           :toggle="item.toggle",
+          :toggled="item.toggled",
           :disabled="disabledFlag === true ? true : item.disabled || false",
           :loading="item.loading",
           @click="onClick($event, item.name)"
         )
 </template>
-<style lang="sass">
-\:root
-  --vuoz-toolbar__position: absolute
-  --vuoz-toolbar__width: auto
-  --vuoz-toolbar__height: auto
-  --vuoz-toolbar__space: 0.5rem
-  --vuoz-toolbar__computed: 1rem
-  --vuoz-toolbar__opacity: 1
-  --vuoz-toolbar__rows: 1
-  --vuoz-toolbar__columns: 1
-  --vuoz-toolbar__fixed-flex: column
-  --vuoz-toolbar__fixed-line-flex: row
-
-.vuoz-toolbar
-  width: var(--vuoz-toolbar__width)
-  height: var(--vuoz-toolbar__height)
-  position: var(--vuoz-toolbar__position)
-  display: inline-block
-  opacity: var(--vuoz-toolbar__opacity)
-  &.is-top-left
-    top: var(--vuoz-toolbar__space)
-    left: var(--vuoz-toolbar__space)
-  &.is-left
-    top: var(--vuoz-toolbar__computed)
-    left: var(--vuoz-toolbar__space)
-  &.is-bottom-left
-    bottom: var(--vuoz-toolbar__space)
-    left: var(--vuoz-toolbar__space)
-  &.is-bottom
-    bottom: var(--vuoz-toolbar__space)
-    left: var(--vuoz-toolbar__computed)
-  &.is-bottom-right
-    bottom: var(--vuoz-toolbar__space)
-    right: var(--vuoz-toolbar__space)
-  &.is-right
-    top: var(--vuoz-toolbar__computed)
-    right: var(--vuoz-toolbar__space)
-  &.is-top-right
-    top: var(--vuoz-toolbar__space)
-    right: var(--vuoz-toolbar__space)
-  &.is-top
-    top: var(--vuoz-toolbar__space)
-    left: var(--vuoz-toolbar__computed)
-
-.vuoz-toolbar__content-contextual
-  display: grid
-  grid-template: repeat(var(--vuoz-toolbar__rows), 1fr) / repeat(var(--vuoz-toolbar__columns), 1fr)
-  grid-auto-flow: row dense
-
-.vuoz-toolbar__content-fixed
-  height: 100%
-  display: flex
-  flex-grow: 1
-  flex-direction: var(--vuoz-toolbar__fixed-flex)
-  .line
-    display: flex
-    flex-grow: 1
-    flex-direction: var(--vuoz-toolbar__fixed-line-flex)
-  .spacer
-    flex-grow: 1
-</style>
 <script lang='ts'>
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 import VuozButton from "../button/index.vue";
@@ -204,10 +148,10 @@ import VuozButton from "../button/index.vue";
 export default class VuozComponent extends Vue {
   @Prop({ type: [Array, Object], required: true }) readonly items!: any[] | any;
   @Prop({ type: String, default: "contextual" }) readonly type!:
-    | "fixed"
+    "fixed"
     | "contextual";
   @Prop({ type: String, default: "always" }) readonly show!:
-    | "always"
+    "always"
     | "over"
     | "call";
   @Prop({ type: Boolean, default: false }) readonly vertical!: boolean;
@@ -215,11 +159,11 @@ export default class VuozComponent extends Vue {
   @Prop({ type: Boolean, default: true }) readonly rounded!: boolean;
   @Prop({ type: String, default: "dark-grey" }) readonly color!: string;
   @Prop({ type: Boolean, default: true }) readonly border!: boolean;
-  @Prop({ type: String, default: "normal" }) readonly size!: "timy" | "small";
+  @Prop({ type: String, default: "normal" }) readonly size!: "tiny" | "small";
   @Prop({ type: String, default: "0.5rem" }) readonly space!: string;
   @Prop({ type: Boolean, default: true }) readonly shadow!: boolean;
   @Prop({ type: String, default: "top-right" }) readonly position!:
-    | "top-left"
+    "top-left"
     | "left"
     | "bottom-left"
     | "bottom"
@@ -230,7 +174,7 @@ export default class VuozComponent extends Vue {
 
   private buttons: any[] = [];
   private objectType:
-    | "object:uni"
+    "object:uni"
     | "object:multi"
     | "array:uni"
     | "array:multi" = "array:uni";

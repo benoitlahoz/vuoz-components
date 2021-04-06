@@ -58,6 +58,10 @@ export default {
         options: ['primary', 'secondary', 'success', 'warning', 'danger', 'darker-grey', 'dark-grey', 'medium-grey']
       }
     },
+    toggled: {
+      description: 'Initially toggled.',
+      control: { type: 'boolean' }
+    },
     rounded: {
       description: 'Applies rounded corners.',
       control: { type: 'boolean' }
@@ -89,6 +93,7 @@ export default {
     weight: 'semi-bold',
     color: 'secondary',
     toggle: 'danger',
+    toggled: false,
     rounded: true,
     border: true,
     shadow: true,
@@ -114,6 +119,7 @@ const template = `<vuoz-button ` +
   `   :smallcaps="smallcaps" ` +
   `   :color="color" ` +
   `   :toggle="toggle" ` +
+  `   :toggled="toggled" ` +
   // Event
   `   @click="onClick">` +
   // Icon left slot

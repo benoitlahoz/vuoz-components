@@ -45,9 +45,9 @@ export default class VuozComponent extends Vue {
    */
   @Prop({ type: Boolean, default: false }) readonly disabled!: boolean
   @Prop({ type: Boolean, default: false }) readonly loading!: boolean
-  @Prop({ type: String, default: 'push' }) readonly type!: string
-  @Prop({ type: String, default: 'normal' }) readonly size!: string
-  @Prop({ type: String, default: 'free' }) readonly shape!: string
+  @Prop({ type: String, default: 'push' }) readonly type!: 'push' | 'toggle'
+  @Prop({ type: String, default: 'normal' }) readonly size!: 'tiny' | 'small' | 'normal' | 'large'
+  @Prop({ type: String, default: 'free' }) readonly shape!: 'free' | 'square' | 'circle'
   @Prop({ type: String, default: 'regular' }) readonly weight!: string
   @Prop({ type: Boolean, default: false }) readonly rounded!: boolean
   @Prop({ type: Boolean, default: true }) readonly border!: boolean
@@ -55,6 +55,7 @@ export default class VuozComponent extends Vue {
   @Prop({ type: Boolean, default: false }) readonly smallcaps!: boolean
   @Prop({ type: String, default: 'medium-grey' }) readonly color!: string
   @Prop({ type: String, default: 'danger' }) readonly toggle!: string // TODO
+  @Prop({ type: Boolean, default: false }) readonly toggled!: string
   @Prop({ type: Boolean, default: false }) readonly shadow!: boolean
   @Prop({ type: String, default: 'close' }) readonly icon!: string
   /**
@@ -68,6 +69,9 @@ export default class VuozComponent extends Vue {
    * Initialization and tear-down
    */
   private mounted() {
+    if (this.toggled) {
+      this.selected = true
+    }
     if (this.shape === 'free') {
       //
     }
