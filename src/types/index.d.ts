@@ -9,5 +9,6 @@ export const VuozImage: VueConstructor
 export const VuozConsole: VueConstructor
 export const VuozConsoleItem: VueConstructor
 export const VuozToolbar: VueConstructor
+export const VuozSplitView: VueConstructor
 
 export const VuozFormatterMixin: VueConstructor
