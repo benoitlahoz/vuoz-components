@@ -45,7 +45,7 @@ export default class VuozComponent extends Vue {
     | "vertical"
     | "horizontal";
   @Prop({ type: Number, default: 21 }) readonly activeSize!: number;
-  @Prop({ type: Object, default: { min: 0, max: 100 } }) readonly settings!: {
+  @Prop({ type: Object, default: () => { return { min: 0, max: 100 } } }) readonly settings!: {
     min: number;
     max: number;
   };
