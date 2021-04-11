@@ -23,10 +23,10 @@ export const argTypes = {
       control: { type: 'boolean' }
     },
     size: {
-      description: 'Size of the button.',
+      description: 'Size of the toolbar.',
       control: {
         type: 'select',
-        options: ['tiny', 'small']
+        options: ['tiny', 'small', 'normal']
       }
     },
     position: {

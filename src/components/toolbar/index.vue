@@ -159,7 +159,7 @@ export default class VuozComponent extends Vue {
   @Prop({ type: Boolean, default: true }) readonly rounded!: boolean;
   @Prop({ type: String, default: "dark-grey" }) readonly color!: string;
   @Prop({ type: String, default: "none" }) readonly border!: string;
-  @Prop({ type: String, default: "normal" }) readonly size!: "tiny" | "small";
+  @Prop({ type: String, default: "normal" }) readonly size!: "tiny" | "small" | "normal";
   @Prop({ type: String, default: "0.5rem" }) readonly space!: string;
   @Prop({ type: Boolean, default: true }) readonly shadow!: boolean;
   @Prop({ type: String, default: "top-right" }) readonly position!:

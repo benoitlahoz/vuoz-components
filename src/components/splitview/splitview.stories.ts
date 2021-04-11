@@ -42,7 +42,7 @@ const template = `<div style="height: 100vh; margin: 0; display: flex;"><vuoz-sp
   `<div class="is-flex flex-grow has-background-danger is-fullsize align-center justify-center" slot="second">Le second</div>` +
   `</vuoz-split-view></div>`
 // To be displayed by Storybook
-export const Splitview = (args: any, { argTypes }: any) => ({
+export const SplitView = (args: any, { argTypes }: any) => ({
   components: { VuozSplitView },
   template,
   props: Object.keys(argTypes),
