@@ -15141,12 +15141,12 @@ var full_component = normalizeComponent(
 )
 
 /* harmony default export */ var full = (full_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"09dda98d-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/splitview/index.vue?vue&type=template&id=d7a215a2&lang=pug&
-var splitviewvue_type_template_id_d7a215a2_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"container",staticClass:"vuoz-split-view__container",class:{ 'is-vertical': _vm.direction === 'vertical', 'is-horizontal': _vm.direction === 'horizontal', dragging: _vm.dragging === true },on:{"mousemove":_vm.onMouseMove,"mouseup":_vm.onMouseUp}},[_c('div',{ref:"first",staticClass:"vuoz-split-view__view is-flex flex-grow",staticStyle:{"position":"relative"}},[_c('div',{staticClass:"flex-grow"},[_vm._t("first",[_vm._v("Argh")])],2)]),_c('div',{ref:"second",staticClass:"vuoz-split-view__view is-flex flex-grow",staticStyle:{"position":"relative"}},[_c('div',{staticClass:"flex-grow"},[_vm._t("second",[_vm._v("Beurk")])],2)]),_c('div',{ref:"separator",staticClass:"vuoz-split-view__separator",class:{ 'is-vertical': _vm.direction === 'vertical', 'is-horizontal': _vm.direction === 'horizontal', hovered: _vm.hovered === true || _vm.dragging === true },on:{"mousedown":_vm.onSeparatorMouseDown,"mouseover":function($event){return _vm.onToggleOver(true)},"mouseout":function($event){return _vm.onToggleOver(false)},"mouseup":_vm.onMouseUp}},[_c('div',{ref:"displayed",staticClass:"vuoz-split-view__separator-displayed",on:{"mousedown":_vm.onSeparatorMouseDown,"mouseup":_vm.onMouseUp}})])])}
-var splitviewvue_type_template_id_d7a215a2_lang_pug_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"09dda98d-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/splitview/index.vue?vue&type=template&id=8c8c5cd8&lang=pug&
+var splitviewvue_type_template_id_8c8c5cd8_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"container",staticClass:"vuoz-split-view__container",class:{ 'is-vertical': _vm.direction === 'vertical', 'is-horizontal': _vm.direction === 'horizontal', dragging: _vm.dragging === true },on:{"mousemove":_vm.onMouseMove,"mouseup":_vm.onMouseUp}},[_c('div',{ref:"first",staticClass:"vuoz-split-view__view is-flex flex-grow",staticStyle:{"position":"relative"}},[_c('div',{staticClass:"flex-grow"},[_vm._t("first",[_vm._v("Argh")])],2)]),_c('div',{ref:"second",staticClass:"vuoz-split-view__view is-flex flex-grow",staticStyle:{"position":"relative"}},[_c('div',{staticClass:"flex-grow"},[_vm._t("second",[_vm._v("Beurk")])],2)]),_c('div',{ref:"separator",staticClass:"vuoz-split-view__separator",class:{ 'is-vertical': _vm.direction === 'vertical', 'is-horizontal': _vm.direction === 'horizontal', hovered: _vm.hovered === true || _vm.dragging === true },on:{"mousedown":_vm.onSeparatorMouseDown,"mouseover":function($event){return _vm.onToggleOver(true)},"mouseout":function($event){return _vm.onToggleOver(false)},"mouseup":_vm.onMouseUp}},[_c('div',{ref:"displayed",staticClass:"vuoz-split-view__separator-displayed",on:{"mousedown":_vm.onSeparatorMouseDown,"mouseup":_vm.onMouseUp}})])])}
+var splitviewvue_type_template_id_8c8c5cd8_lang_pug_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/splitview/index.vue?vue&type=template&id=d7a215a2&lang=pug&
+// CONCATENATED MODULE: ./src/components/splitview/index.vue?vue&type=template&id=8c8c5cd8&lang=pug&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--14-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/ts-loader??ref--14-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/splitview/index.vue?vue&type=script&lang=ts&
 
@@ -15240,10 +15240,35 @@ var splitviewvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue
     value: function onMouseUp() {
       this.dragging = false; // Make items selectable again
 
+      var container = this.$refs.container;
       var first = this.$refs.first;
       var second = this.$refs.second;
       first.classList.remove("vuoz-split-view__unselectable");
-      second.classList.remove("vuoz-split-view__unselectable");
+      second.classList.remove("vuoz-split-view__unselectable"); // Emit event
+
+      var pixels;
+      var percents;
+
+      switch (this.direction) {
+        case "vertical":
+          {
+            pixels = first.clientWidth;
+            percents = pixels / container.clientWidth * 100;
+            break;
+          }
+
+        case "horizontal":
+          {
+            pixels = first.clientHeight;
+            percents = pixels / container.clientHeight * 100;
+            break;
+          }
+      }
+
+      this.$emit("change", {
+        pixels: pixels,
+        percents: percents
+      });
     }
   }, {
     key: "onMouseMove",
@@ -15441,8 +15466,8 @@ splitviewvue_type_script_lang_ts_VuozComponent = __decorate([vue_class_component
 
 var splitview_component = normalizeComponent(
   components_splitviewvue_type_script_lang_ts_,
-  splitviewvue_type_template_id_d7a215a2_lang_pug_render,
-  splitviewvue_type_template_id_d7a215a2_lang_pug_staticRenderFns,
+  splitviewvue_type_template_id_8c8c5cd8_lang_pug_render,
+  splitviewvue_type_template_id_8c8c5cd8_lang_pug_staticRenderFns,
   false,
   null,
   null,
