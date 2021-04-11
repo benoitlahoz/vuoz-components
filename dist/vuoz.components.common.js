@@ -14091,12 +14091,12 @@ var item_component = normalizeComponent(
 )
 
 /* harmony default export */ var item = (item_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"09dda98d-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/toolbar/index.vue?vue&type=template&id=3428add2&lang=pug&
-var toolbarvue_type_template_id_3428add2_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"main",staticClass:"vuoz-toolbar",class:_vm.getClasses('main')},[(_vm.type === 'contextual')?_c('div',{ref:"content",staticClass:"vuoz-toolbar__content-contextual"},_vm._l((_vm.buttons),function(button){return (button.role !== 'separator' && button.role !== 'spacer')?_c('div',{staticClass:"is-flex align-center has-padding-s"},[_c('vuoz-button',{ref:button.name,refInFor:true,attrs:{"size":_vm.size,"shape":button.shape || 'square',"color":button.color,"icon":button.icon,"rounded":button.rounded,"border":button.border,"type":button.type,"toggle":button.toggle,"toggled":button.toggled,"disabled":_vm.disabledFlag === true ? true : button.disabled || false,"loading":button.loading},on:{"click":function($event){return _vm.onClick($event, button.name)}}})],1):_vm._e()}),0):_c('div',{ref:"content",staticClass:"vuoz-toolbar__content-fixed"},[_vm._l((_vm.items),function(item,index){return (Array.isArray(_vm.items))?[(Array.isArray(item))?_c('div',{staticClass:"line",class:_vm.getClasses('line', index, _vm.items.length)},_vm._l((item),function(button){return _c('div',{staticClass:"align-center has-padding-s",class:{ spacer: button.role === 'spacer' }},[(button.role !== 'separator' && button.role !== 'spacer')?_c('vuoz-button',{ref:button.name,refInFor:true,attrs:{"size":_vm.size,"shape":button.shape || 'square',"color":button.color,"icon":button.icon,"rounded":button.rounded,"border":button.border,"type":button.type,"toggle":button.toggle,"toggled":button.toggled,"disabled":_vm.disabledFlag === true ? true : button.disabled || false,"loading":button.loading},on:{"click":function($event){return _vm.onClick($event, button.name)}}}):_vm._e()],1)}),0):_c('div',{staticClass:"align-center has-padding-s",class:{ spacer: item.role === 'spacer' }},[(item.role !== 'separator' && item.role !== 'spacer')?_c('vuoz-button',{ref:item.name,refInFor:true,attrs:{"size":_vm.size,"shape":item.shape || 'square',"color":item.color,"icon":item.icon,"rounded":item.rounded,"border":item.border,"type":item.type,"toggle":item.toggle,"toggled":item.toggled,"disabled":_vm.disabledFlag === true ? true : item.disabled || false,"loading":item.loading},on:{"click":function($event){return _vm.onClick($event, item.name)}}}):_vm._e()],1)]:_vm._e()}),_vm._l((_vm.items.buttons),function(item,index){return (!Array.isArray(_vm.items))?[(Array.isArray(item))?_c('div',{staticClass:"line",class:_vm.getClasses('line', index, _vm.items.buttons.length)},_vm._l((item),function(button){return _c('div',{staticClass:"align-center has-padding-s",class:{ spacer: button.role === 'spacer' }},[(button.role !== 'separator' && button.role !== 'spacer')?_c('vuoz-button',{ref:button.name,refInFor:true,attrs:{"size":_vm.size,"shape":button.shape || 'square',"color":button.color,"icon":button.icon,"rounded":button.rounded,"border":button.border,"type":button.type,"toggle":button.toggle,"toggled":button.toggled,"disabled":_vm.disabledFlag === true ? true : button.disabled || false,"loading":button.loading},on:{"click":function($event){return _vm.onClick($event, button.name)}}}):_vm._e()],1)}),0):_c('div',{staticClass:"align-center has-padding-s",class:{ spacer: item.role === 'spacer' }},[(item.role !== 'separator' && item.role !== 'spacer')?_c('vuoz-button',{ref:item.name,refInFor:true,attrs:{"size":_vm.size,"shape":item.shape || 'square',"color":item.color,"icon":item.icon,"rounded":item.rounded,"border":item.border,"type":item.type,"toggle":item.toggle,"toggled":item.toggled,"disabled":_vm.disabledFlag === true ? true : item.disabled || false,"loading":item.loading},on:{"click":function($event){return _vm.onClick($event, item.name)}}}):_vm._e()],1)]:_vm._e()})],2)])}
-var toolbarvue_type_template_id_3428add2_lang_pug_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"09dda98d-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/toolbar/index.vue?vue&type=template&id=f37b9150&lang=pug&
+var toolbarvue_type_template_id_f37b9150_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"main",staticClass:"vuoz-toolbar",class:_vm.getClasses('main')},[(_vm.type === 'contextual')?_c('div',{ref:"content",staticClass:"vuoz-toolbar__content-contextual"},_vm._l((_vm.buttons),function(button){return (button.role !== 'separator' && button.role !== 'spacer')?_c('div',{staticClass:"is-flex align-center has-padding-s"},[_c('vuoz-button',{ref:button.name,refInFor:true,attrs:{"size":_vm.size,"shape":button.shape || 'square',"color":button.color,"icon":button.icon,"rounded":button.rounded,"border":button.border,"type":button.type,"toggle":button.toggle,"toggled":button.toggled,"disabled":_vm.disabledFlag === true ? true : button.disabled || false,"loading":button.loading},on:{"click":function($event){return _vm.onClick($event, button.name)}}})],1):_vm._e()}),0):_c('div',{ref:"content",staticClass:"vuoz-toolbar__content-fixed"},[_vm._l((_vm.items),function(item,index){return (Array.isArray(_vm.items))?[(Array.isArray(item))?_c('div',{staticClass:"line",class:_vm.getClasses('line', index, _vm.items.length)},_vm._l((item),function(button){return _c('div',{staticClass:"align-center has-padding-s",class:{ spacer: button.role === 'spacer' }},[(button.role !== 'separator' && button.role !== 'spacer')?_c('vuoz-button',{ref:button.name,refInFor:true,attrs:{"size":_vm.size,"shape":button.shape || 'square',"color":button.color,"icon":button.icon,"rounded":button.rounded,"border":button.border,"type":button.type,"toggle":button.toggle,"toggled":button.toggled,"disabled":_vm.disabledFlag === true ? true : button.disabled || false,"loading":button.loading},on:{"click":function($event){return _vm.onClick($event, button.name)}}}):_vm._e()],1)}),0):_c('div',{staticClass:"align-center has-padding-s",class:{ spacer: item.role === 'spacer' }},[(item.role !== 'separator' && item.role !== 'spacer')?_c('vuoz-button',{ref:item.name,refInFor:true,attrs:{"size":_vm.size,"shape":item.shape || 'square',"color":item.color,"icon":item.icon,"rounded":item.rounded,"border":item.border,"type":item.type,"toggle":item.toggle,"toggled":item.toggled,"disabled":_vm.disabledFlag === true ? true : item.disabled || false,"loading":item.loading},on:{"click":function($event){return _vm.onClick($event, item.name)}}}):_vm._e()],1)]:_vm._e()}),_vm._l((_vm.items.buttons),function(item,index){return (!Array.isArray(_vm.items))?[(Array.isArray(item))?_c('div',{staticClass:"line",class:_vm.getClasses('line', index, _vm.items.buttons.length)},_vm._l((item),function(button){return _c('div',{staticClass:"align-center has-padding-s",class:{ spacer: button.role === 'spacer' }},[(button.role !== 'separator' && button.role !== 'spacer')?_c('vuoz-button',{ref:button.name,refInFor:true,attrs:{"size":_vm.size,"shape":button.shape || 'square',"color":button.color,"icon":button.icon,"rounded":button.rounded,"border":button.border,"type":button.type,"toggle":button.toggle,"toggled":button.toggled,"disabled":_vm.disabledFlag === true ? true : button.disabled || false,"loading":button.loading},on:{"click":function($event){return _vm.onClick($event, button.name)}}}):_vm._e()],1)}),0):_c('div',{staticClass:"align-center has-padding-s",class:{ spacer: item.role === 'spacer' }},[(item.role !== 'separator' && item.role !== 'spacer')?_c('vuoz-button',{ref:item.name,refInFor:true,attrs:{"size":_vm.size,"shape":item.shape || 'square',"color":item.color,"icon":item.icon,"rounded":item.rounded,"border":item.border,"type":item.type,"toggle":item.toggle,"toggled":item.toggled,"disabled":_vm.disabledFlag === true ? true : item.disabled || false,"loading":item.loading},on:{"click":function($event){return _vm.onClick($event, item.name)}}}):_vm._e()],1)]:_vm._e()})],2)])}
+var toolbarvue_type_template_id_f37b9150_lang_pug_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/toolbar/index.vue?vue&type=template&id=3428add2&lang=pug&
+// CONCATENATED MODULE: ./src/components/toolbar/index.vue?vue&type=template&id=f37b9150&lang=pug&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.object.keys.js
 var es_object_keys = __webpack_require__("b64b");
@@ -14501,30 +14501,30 @@ var toolbarvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) 
           {
             classes += "has-background-".concat(this.color, " ");
 
-            if (this.border) {
+            if (this.border !== 'none') {
               if (this.type === "contextual") {
-                classes += this.border ? "has-border-".concat(this.color, "-shaded ") : " ";
+                classes += this.border ? "has-border-".concat(this.border, " ") : " ";
               } else {
                 switch (this.position) {
                   case "top":
                   case "top-left":
                   case "top-right":
                     {
-                      classes += "has-border-bottom-".concat(this.color, "-shaded ");
+                      classes += "has-border-bottom-".concat(this.border, " ");
                       classes += this.shadow ? classes += "has-shadow-bottom " : "";
                       break;
                     }
 
                   case "left":
                     {
-                      classes += "has-border-right-".concat(this.color, "-shaded ");
+                      classes += "has-border-right-".concat(this.border, " ");
                       classes += this.shadow ? classes += "has-shadow-right " : "";
                       break;
                     }
 
                   case "right":
                     {
-                      classes += "has-border-left-".concat(this.color, "-shaded ");
+                      classes += "has-border-left-".concat(this.border, " ");
                       classes += this.shadow ? classes += "has-shadow-left " : "";
                       break;
                     }
@@ -14533,7 +14533,7 @@ var toolbarvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) 
                   case "bottom-left":
                   case "bottom-right":
                     {
-                      classes += "has-border-top-".concat(this.color, "-shaded ");
+                      classes += "has-border-top-".concat(this.border, " ");
                       classes += this.shadow ? classes += "has-shadow-top " : "";
                       break;
                     }
@@ -14593,14 +14593,14 @@ var toolbarvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) 
 
         case "line":
           {
-            if (this.border) {
+            if (this.border !== 'none') {
               switch (this.position) {
                 case "top":
                 case "top-left":
                 case "top-right":
                   {
                     if (index !== undefined && length !== undefined && index < length - 1) {
-                      classes += "has-border-bottom-".concat(this.color, "-shaded ");
+                      classes += "has-border-bottom-".concat(this.border, " ");
                     }
 
                     break;
@@ -14610,7 +14610,7 @@ var toolbarvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) 
                 case "right":
                   {
                     if (index !== undefined && length !== undefined && index < length - 1) {
-                      classes += "has-border-right-".concat(this.color, "-shaded ");
+                      classes += "has-border-right-".concat(this.border, " ");
                     }
 
                     break;
@@ -14621,7 +14621,7 @@ var toolbarvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) 
                 case "bottom-right":
                   {
                     if (index !== undefined && length !== undefined && index < length - 1) {
-                      classes += "has-border-bottom-".concat(this.color, "-shaded ");
+                      classes += "has-border-bottom-".concat(this.border, " ");
                     }
 
                     break;
@@ -14761,8 +14761,8 @@ __decorate([Prop({
 })], toolbarvue_type_script_lang_ts_VuozComponent.prototype, "color", void 0);
 
 __decorate([Prop({
-  type: Boolean,
-  default: true
+  type: String,
+  default: "none"
 })], toolbarvue_type_script_lang_ts_VuozComponent.prototype, "border", void 0);
 
 __decorate([Prop({
@@ -14828,8 +14828,8 @@ toolbarvue_type_script_lang_ts_VuozComponent = __decorate([vue_class_component_e
 
 var toolbar_component = normalizeComponent(
   components_toolbarvue_type_script_lang_ts_,
-  toolbarvue_type_template_id_3428add2_lang_pug_render,
-  toolbarvue_type_template_id_3428add2_lang_pug_staticRenderFns,
+  toolbarvue_type_template_id_f37b9150_lang_pug_render,
+  toolbarvue_type_template_id_f37b9150_lang_pug_staticRenderFns,
   false,
   null,
   null,

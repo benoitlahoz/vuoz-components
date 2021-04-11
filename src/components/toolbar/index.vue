@@ -158,7 +158,7 @@ export default class VuozComponent extends Vue {
   @Prop({ type: Boolean, default: false }) readonly disabled!: boolean;
   @Prop({ type: Boolean, default: true }) readonly rounded!: boolean;
   @Prop({ type: String, default: "dark-grey" }) readonly color!: string;
-  @Prop({ type: Boolean, default: true }) readonly border!: boolean;
+  @Prop({ type: String, default: "none" }) readonly border!: string;
   @Prop({ type: String, default: "normal" }) readonly size!: "tiny" | "small";
   @Prop({ type: String, default: "0.5rem" }) readonly space!: string;
   @Prop({ type: Boolean, default: true }) readonly shadow!: boolean;
@@ -442,32 +442,32 @@ export default class VuozComponent extends Vue {
 
       case "main": {
         classes += `has-background-${this.color} `;
-        if (this.border) {
+        if (this.border !== 'none') {
           if (this.type === "contextual") {
-            classes += this.border ? `has-border-${this.color}-shaded ` : " ";
+            classes += this.border ? `has-border-${this.border} ` : " ";
           } else {
             switch (this.position) {
               case "top":
               case "top-left":
               case "top-right": {
-                classes += `has-border-bottom-${this.color}-shaded `;
+                classes += `has-border-bottom-${this.border} `;
                 classes += this.shadow ? (classes += `has-shadow-bottom `) : "";
                 break;
               }
               case "left": {
-                classes += `has-border-right-${this.color}-shaded `;
+                classes += `has-border-right-${this.border} `;
                 classes += this.shadow ? (classes += `has-shadow-right `) : "";
                 break;
               }
               case "right": {
-                classes += `has-border-left-${this.color}-shaded `;
+                classes += `has-border-left-${this.border} `;
                 classes += this.shadow ? (classes += `has-shadow-left `) : "";
                 break;
               }
               case "bottom":
               case "bottom-left":
               case "bottom-right": {
-                classes += `has-border-top-${this.color}-shaded `;
+                classes += `has-border-top-${this.border} `;
                 classes += this.shadow ? (classes += `has-shadow-top `) : "";
                 break;
               }
@@ -516,7 +516,7 @@ export default class VuozComponent extends Vue {
         break;
       }
       case "line": {
-        if (this.border) {
+        if (this.border !== 'none') {
           switch (this.position) {
             case "top":
             case "top-left":
@@ -526,7 +526,7 @@ export default class VuozComponent extends Vue {
                 length !== undefined &&
                 index < length - 1
               ) {
-                classes += `has-border-bottom-${this.color}-shaded `;
+                classes += `has-border-bottom-${this.border} `;
               }
               break;
             }
@@ -537,7 +537,7 @@ export default class VuozComponent extends Vue {
                 length !== undefined &&
                 index < length - 1
               ) {
-                classes += `has-border-right-${this.color}-shaded `;
+                classes += `has-border-right-${this.border} `;
               }
               break;
             }
@@ -549,7 +549,7 @@ export default class VuozComponent extends Vue {
                 length !== undefined &&
                 index < length - 1
               ) {
-                classes += `has-border-bottom-${this.color}-shaded `;
+                classes += `has-border-bottom-${this.border} `;
               }
               break;
             }

@@ -21,7 +21,7 @@ export default {
     position: 'top-right',
     space: '0.5rem',
     color: 'dark-grey',
-    border: true,
+    border: 'medium-grey',
     rounded: true,
     shadow: true
   }

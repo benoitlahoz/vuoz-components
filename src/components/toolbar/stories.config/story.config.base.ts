@@ -51,8 +51,11 @@ export const argTypes = {
       }
     },
     border: {
-      description: 'Applies border.',
-      control: { type: 'boolean' }
+      description: 'The color of the border.',
+      control: {
+        type: 'select',
+        options: ['none', 'primary', 'secondary', 'success', 'warning', 'danger', 'darker-grey', 'dark-grey', 'medium-grey', 'transparent']
+      }
     },
     rounded: {
       description: 'Applies rounded corners.',
