@@ -109,34 +109,36 @@ export default class VuozComponent extends Vue {
   }
 
   private onMouseUp() {
-    this.dragging = false;
-    // Make items selectable again
-    const container = this.$refs.container as HTMLElement;
-    const first = this.$refs.first as HTMLElement;
-    const second = this.$refs.second as HTMLElement;
+    if (this.dragging) {
+      this.dragging = false;
+      // Make items selectable again
+      const container = this.$refs.container as HTMLElement;
+      const first = this.$refs.first as HTMLElement;
+      const second = this.$refs.second as HTMLElement;
 
-    first.classList.remove("vuoz-split-view__unselectable");
-    second.classList.remove("vuoz-split-view__unselectable");
+      first.classList.remove("vuoz-split-view__unselectable");
+      second.classList.remove("vuoz-split-view__unselectable");
 
-    // Emit event
-    let pixels;
-    let percents;
-    switch (this.direction) {
-      case "vertical": {
-        pixels = first.clientWidth;
-        percents = (pixels / container.clientWidth) * 100;
-        break;
+      // Emit event
+      let pixels;
+      let percents;
+      switch (this.direction) {
+        case "vertical": {
+          pixels = first.clientWidth;
+          percents = (pixels / container.clientWidth) * 100;
+          break;
+        }
+        case "horizontal": {
+          pixels = first.clientHeight;
+          percents = (pixels / container.clientHeight) * 100;
+          break;
+        }
       }
-      case "horizontal": {
-        pixels = first.clientHeight;
-        percents = (pixels / container.clientHeight) * 100;
-        break;
-      }
+      this.$emit("change", {
+        pixels,
+        percents,
+      });
     }
-    this.$emit("change", {
-      pixels,
-      percents,
-    });
   }
 
   private onMouseMove(event: MouseEvent) {
