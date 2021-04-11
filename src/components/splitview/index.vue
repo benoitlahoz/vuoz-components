@@ -10,13 +10,13 @@
     style="position: relative"
   )
     .flex-grow
-      slot(name="first") Argh
+      slot(name="first") First
   .vuoz-split-view__view.is-flex.flex-grow(
     ref="second",
     style="position: relative"
   )
     .flex-grow
-      slot(name="second") Beurk
+      slot(name="second") Second
   .vuoz-split-view__separator(
     ref="separator",
     :class="{ 'is-vertical': direction === 'vertical', 'is-horizontal': direction === 'horizontal', hovered: hovered === true || dragging === true }",
