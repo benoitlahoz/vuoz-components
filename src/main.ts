@@ -5,5 +5,6 @@ export { default as VuozLoadingIcon } from './components/loading/icon/index.vue'
 export { default as VuozTabs } from './components/tabbar/tabs/index.vue'
 export { default as VuozConsole } from './components/console/full/index.vue'
 export { default as VuozToolbar } from './components/toolbar/index.vue'
+export { default as VuozSplitView } from './components/splitview/index.vue'
 
 export { Theme } from '@vuoz/theme-core-default'
