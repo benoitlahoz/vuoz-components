@@ -7,5 +7,8 @@ export { default as VuozConsole } from './components/console/full/index.vue'
 export { default as VuozToolbar } from './components/toolbar/index.vue'
 export { default as VuozSplitView } from './components/splitview/index.vue'
 export { default as VuozTitleBar } from './components/titlebar/index.vue'
+export { default as VuozTable } from './components/table/index.vue'
+export { default as VuozTableHeader } from './components/table/header/index.vue'
+export { default as VuozTableRow } from './components/table/row/index.vue'
 
 export { Theme } from '@vuoz/theme-core-default'

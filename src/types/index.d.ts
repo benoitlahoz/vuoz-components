@@ -11,5 +11,8 @@ export const VuozConsoleItem: VueConstructor
 export const VuozToolbar: VueConstructor
 export const VuozSplitView: VueConstructor
 export const VuozTitleBar: VueConstructor
+export const VuozTable: VueConstructor
+export const VuozTableHeader: VueConstructor
+export const VuozTableRow: VueConstructor
 
 export const VuozFormatterMixin: VueConstructor
