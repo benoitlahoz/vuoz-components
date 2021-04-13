@@ -3,6 +3,7 @@ import VuozTableHeader from './header/index.vue'
 import VuozTableRow from './row/index.vue'
 // Simple component to pass to items
 import ExampleComponent from './helpers/ExampleComponent.vue'
+import VuozPreferencesItem from '@/components/preferences/item/index.vue'
 /**
  * Data for the story.
  */
@@ -15,10 +16,11 @@ const items = [
   ['BLA', 'BLEU', 'BEURK'],
   'BLA',
   ['BLO', {
-    component: ExampleComponent,
+    component: VuozPreferencesItem,
     name: 'An example',
     props: {
-      example: false
+      title: 'Video',
+      icon: 'videocam'
     }
   }],
   'BLI',

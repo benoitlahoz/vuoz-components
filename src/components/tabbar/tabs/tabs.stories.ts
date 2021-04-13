@@ -12,7 +12,7 @@ let tabs = [
   {
     id: 1,
     title: 'Tab 2',
-    content: 'Content 2'        
+    content: 'Content 2'
   }
 ]
 let counter = 2
@@ -34,10 +34,24 @@ export default {
         options: ['small', 'normal', 'large']
       }
     },
+    showAdd: {
+      description: "Show / hide the plus button",
+      control: {
+        type: 'boolean'
+      }
+    },
+    draggable: {
+      description: "Are the tabs draggable",
+      control: {
+        type: 'boolean'
+      }
+    }
   },
   // Arguments (props) defaults
   args: {
     size: 'small',
+    showAdd: true,
+    draggable: true,
     tabs
   }
 }
@@ -46,26 +60,28 @@ export default {
  */
 const template = `
   <div style="height: 100vh; margin: 0; display: flex;">`     +
-  `   <vuoz-tabs `                                            +
-  `     :size="size"`                                         +
-  `     :tabs="tabs"`                                         +
-  `     :placeholder="placeholder"`                           +
+  `   <vuoz-tabs ` +
+  `     :size="size"` +
+  `     :draggable="draggable"` +
+  `     :showAdd="showAdd"` +
+  `     :tabs="tabs"` +
+  `     :placeholder="placeholder"` +
   // Event
-  `     @select="onClick"`                                    +
-  `     @close="onClose($event); closeData($event)"`          +
-  `     @addtab="onAddTab(); addTab()"`                       +
-  `     @dragged="onDragged($event); drag($event)">`          +
-  `   </vuoz-tabs>`                                           +
+  `     @select="onClick"` +
+  `     @close="onClose($event); closeData($event)"` +
+  `     @addtab="onAddTab(); addTab()"` +
+  `     @dragged="onDragged($event); drag($event)">` +
+  `   </vuoz-tabs>` +
   `</div>`
 // To be displayed by Storybook
 export const Tabs = (args: any, { argTypes }: any) => ({
   components: { VuozTabs },
   template,
-  methods: { 
+  methods: {
     // Storybook logs
-    onClick: action('select'), 
-    onClose: action('close'), 
-    onAddTab: action('addtab'), 
+    onClick: action('select'),
+    onClose: action('close'),
+    onAddTab: action('addtab'),
     onDragged: action('dragged'),
     // Custom actions
     closeData: (id: number | string) => {
@@ -86,7 +102,7 @@ export const Tabs = (args: any, { argTypes }: any) => ({
       })
       counter++
     },
-    drag (e: {
+    drag(e: {
       oldIndex: number,
       newIndex: number
     }) {

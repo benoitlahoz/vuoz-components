@@ -10,5 +10,7 @@ export { default as VuozTitleBar } from './components/titlebar/index.vue'
 export { default as VuozTable } from './components/table/index.vue'
 export { default as VuozTableHeader } from './components/table/header/index.vue'
 export { default as VuozTableRow } from './components/table/row/index.vue'
+export { default as VuozPreferencesItem } from './components/preferences/item/index.vue'
+export { default as VuozPreferencesPanel } from './components/preferences/panel/index.vue'
 
 export { Theme } from '@vuoz/theme-core-default'

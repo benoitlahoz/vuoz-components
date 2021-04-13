@@ -14,5 +14,7 @@ export const VuozTitleBar: VueConstructor
 export const VuozTable: VueConstructor
 export const VuozTableHeader: VueConstructor
 export const VuozTableRow: VueConstructor
+export const VuozPreferencesItem: VueConstructor
+export const VuozPreferencesPanel: VueConstructor
 
 export const VuozFormatterMixin: VueConstructor

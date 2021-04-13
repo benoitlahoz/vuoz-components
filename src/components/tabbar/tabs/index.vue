@@ -2,6 +2,8 @@
 .vuoz-tabs.has-background-darker-grey
   vuoz-tab-bar(
     :size="size",
+    :showAdd="showAdd",
+    :draggable="draggable",
     :tabs="tabs",
     :selected="selected",
     @select="onSelect",
@@ -44,6 +46,8 @@ export default class VuozComponent extends Vue {
    * Properties
    */
   @Prop({ type: String, default: "normal" }) readonly size!: string;
+  @Prop({ type: Boolean, default: true }) readonly showAdd!: boolean;
+  @Prop({ type: Boolean, default: true }) readonly draggable!: boolean;
   @Prop({ type: Array, default: [] }) readonly tabs!: TabDescription[];
   @Prop({ type: String, default: "No tab" }) readonly placeholder!: string;
   /**

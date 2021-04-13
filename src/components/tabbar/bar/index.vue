@@ -5,7 +5,8 @@
       :value="tabs",
       delayOnTouchOnly="true",
       draggable=".vuoz-tab",
-      :options="options",
+      filter=".not-draggable",
+      :disabled="!this.draggable",
       @start="onStartDrag",
       @end="onEndDrag"
     ).draggable
@@ -19,7 +20,7 @@
           @select="onSelect",
           @close="onClose"
         )
-    .plus-button.not-draggable
+    .plus-button.not-draggable(v-if="showAdd === true")
       vuoz-button(
         type="push",
         :size="getButtonSize()",
@@ -53,15 +54,10 @@ export default class VuozComponent extends Vue {
    * Properties
    */
   @Prop({ type: String, default: "normal" }) readonly size!: string;
+  @Prop({ type: Boolean, default: true }) readonly showAdd!: boolean;
+  @Prop({ type: Boolean, default: true }) readonly draggable!: boolean;
   @Prop({ type: Array, default: [] }) readonly tabs!: object;
   @Prop({ type: Number, default: 0 }) readonly selected!: number;
-  /**
-   * Internal component's data
-   */
-  options = {
-    draggable: '.vuoz-tab',
-    filter: '.not-draggable'
-  }
   /**
    * Initialization and tear-down
    */
