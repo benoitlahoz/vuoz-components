@@ -8,18 +8,18 @@ table.vuoz-table(
 )
   tbody
     slot(name="headers", :border="border", :selectable="selectable")
-    template(v-for="(item, index) in items")
-      slot(
-        name="rows",
-        :row="item",
-        :id="index",
-        :size="size",
-        :border="border",
-        :delimiter="delimiter",
-        :selected="selection[index]",
-        :highlight="highlight",
-        :selectable="selectable"
-      )
+    slot(
+      v-for="(item, index) in items",
+      name="rows",
+      :row="item",
+      :id="index",
+      :size="size",
+      :border="border",
+      :delimiter="delimiter",
+      :selected="selection[index]",
+      :highlight="highlight",
+      :selectable="selectable"
+    )
 </template>
 <script lang='ts'>
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";

@@ -10,7 +10,8 @@ const headersItems = [
   'Three'
 ]
 const items = [
-  ['BLA', 'BLEU', 'BEURK'],
+  // ['BLA', 'BLEU', 'BEURK'],
+  'BLA',
   'BLO',
   'BLI'
 ]

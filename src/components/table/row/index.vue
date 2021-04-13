@@ -10,7 +10,7 @@ tr(:class="`has-background-${this.background} ` + getClasses('row')")
     @contextmenu="onContextMenu"
   ) {{ item }}
   td.is-fullwidth(
-    v-else,
+    v-if="!Array.isArray(row)",
     :class="getClasses('cell')",
     @mousedown="onClick(0, row, $event)",
     @contextmenu="onContextMenu"
