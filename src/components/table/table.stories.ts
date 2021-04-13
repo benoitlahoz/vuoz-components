@@ -30,6 +30,14 @@ const items = [
     props: {
       example: true
     }
+  },
+  {
+    component: VuozPreferencesItem,
+    name: 'An example',
+    props: {
+      title: 'Video',
+      icon: 'videocam'
+    }
   }
 ]
 /**

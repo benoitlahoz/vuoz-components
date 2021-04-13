@@ -1,5 +1,5 @@
 <template lang="pug">
-.vuoz-title-bar(:class="getClasses()") {{ title }}
+.vuoz-title-bar.has-text-semi-bold(:class="getClasses()") {{ title }}
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
