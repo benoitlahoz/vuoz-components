@@ -1,20 +1,28 @@
 <template lang='pug'>
-tr(:class="`has-background-${this.background} ` + getClasses('row')")
-  td(
+tr.is-flex-column(
+  :class="`has-background-${this.background} ` + getClasses('row')",
+  style="height: auto"
+)
+  td.is-flex.flex-grow(
     :id="index",
     v-if="Array.isArray(row)",
     v-for="(item, index) in row",
     :style="`width: ${100 / row.length}%;`",
-    :class="getClasses('cell', index, row.length)",
-    @mousedown="onClick(index, item, $event)",
-    @contextmenu="onContextMenu"
-  ) {{ item }}
-  td.is-fullwidth(
+    :class="getClasses('cell', isObject(item), index, row.length)",
+    @mousedown="onClick(index, item, $event)"
+  ) 
+    template(v-if="!isObject(item)") 
+      .flex-grow.is-flex.align-center.is-fullheight {{ item }}
+    template(v-if="isObject(item)") 
+      component(:is="item.component", v-bind="item.props")
+  td.is-fullwidth.is-flex-column(
     v-if="!Array.isArray(row)",
-    :class="getClasses('cell')",
-    @mousedown="onClick(0, row, $event)",
-    @contextmenu="onContextMenu"
-  ) {{ row }}
+    :class="getClasses('cell', isObject(row))",
+    @mousedown="onClick(0, row, $event)"
+  )
+    template(v-if="!isObject(row)") {{ row }}
+    template(v-if="isObject(row)") 
+      component(:is="row.component", v-bind="row.props")
 </template>
 <script lang='ts'>
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
@@ -26,9 +34,8 @@ import { Component, Prop, Watch, Vue } from "vue-property-decorator";
   name: "VuozTableRow",
 })
 export default class VuozComponent extends Vue {
-  @Prop({ type: [Array, String, Number], required: true }) readonly row!:
-    | any[]
-    | any;
+  @Prop({ type: [Array, String, Number, Object], required: true })
+  readonly row!: any[] | any;
   @Prop({ type: Number, required: true }) readonly id!: string;
   @Prop({ type: String, default: "small" }) readonly size!:
     | "small-thin"
@@ -60,7 +67,12 @@ export default class VuozComponent extends Vue {
       : "ctrl";
   }
 
-  private getClasses(type: "row" | "cell", index?: number, length?: number) {
+  private getClasses(
+    type: "row" | "cell",
+    isObject?: boolean,
+    index?: number,
+    length?: number
+  ) {
     let classes = "";
     switch (type) {
       case "row": {
@@ -77,6 +89,21 @@ export default class VuozComponent extends Vue {
           index < length - 1
         ) {
           classes += `has-border-right-${this.cellBorder} `;
+        }
+
+        if (isObject === false) {
+          switch (this.size) {
+            case "small-thin":
+            case "small": {
+              classes += `has-padding-left-sm has-padding-right-sm`;
+              break;
+            }
+            case "normal":
+            case "large": {
+              classes += `has-padding-left-md has-padding-right-md`;
+              break;
+            }
+          }
         }
       }
     }
@@ -111,10 +138,8 @@ export default class VuozComponent extends Vue {
     }
   }
 
-  private onContextMenu(event: any) {
-    event.preventDefault();
-    event.stopPropagation();
-    return false;
+  private isObject(item: any) {
+    return typeof item === "object";
   }
 }
 </script>

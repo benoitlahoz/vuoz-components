@@ -1,6 +1,8 @@
-import VuozTable from './index.vue'
+import VuozTable from '@/components/table/index.vue'
 import VuozTableHeader from './header/index.vue'
 import VuozTableRow from './row/index.vue'
+// Simple component to pass to items
+import ExampleComponent from './helpers/ExampleComponent.vue'
 /**
  * Data for the story.
  */
@@ -10,10 +12,23 @@ const headersItems = [
   'Three'
 ]
 const items = [
-  // ['BLA', 'BLEU', 'BEURK'],
+  ['BLA', 'BLEU', 'BEURK'],
   'BLA',
-  'BLO',
-  'BLI'
+  ['BLO', {
+    component: ExampleComponent,
+    name: 'An example',
+    props: {
+      example: false
+    }
+  }],
+  'BLI',
+  {
+    component: ExampleComponent,
+    name: 'Another example',
+    props: {
+      example: true
+    }
+  }
 ]
 /**
  * Story
@@ -111,7 +126,7 @@ export default {
 /**
  * Template
  */
-const template = `<div style="width: 100%; height: 100%;"><vuoz-table :items="items" :selectable="selectable" :size="size" :color="color" :border="border" :delimiter="delimiter" :highlight="highlight" @header="onHeader" @row="onRow" @cell="onCell" @multi="onMultiSelection" @unselect="onUnselect">` +
+const template = `<div style="margin: 0; height: 100vh;"><vuoz-table :items="items" :selectable="selectable" :size="size" :color="color" :border="border" :delimiter="delimiter" :highlight="highlight" @header="onHeader" @row="onRow" @cell="onCell" @multi="onMultiSelection" @unselect="onUnselect">` +
   `<template v-if="showHeaders === true" slot="headers" slot-scope="props"><vuoz-table-header :row="headersItems" :selectable="props.selectable" :size="headersSize" :color="headersColor" :border="props.border"></vuoz-table-header></template>` +
   `<template slot="rows" slot-scope="props">` +
   `<vuoz-table-row :row="props.row" :id="props.id" :selectable="props.selectable" :size="props.size" :border="props.border" :cell-border="delimiter" :selected="props.selected" :highlight="highlight"></vuoz-table-row>` +

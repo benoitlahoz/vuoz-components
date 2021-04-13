@@ -2,7 +2,9 @@
 // see https://stackoverflow.com/a/60623598/1060921
 table.vuoz-table(
   tabindex="0",
+  cellspacing="0",
   :class="`has-background-${color}`",
+  style="height: 100%; overflow-y: scroll;",
   @keydown="onKeyDown",
   @blur="unselect"
 )
