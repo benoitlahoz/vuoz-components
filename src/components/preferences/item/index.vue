@@ -1,5 +1,5 @@
 <template lang='pug'>
-.is-flex.align-center.is-small(style="justify-contet: flex-start;")
+.is-flex.align-center.is-small(style="justify-content: flex-start;")
   div.material-icons.has-padding-left-sm.has-padding-left-sm {{ icon }}
   div.has-padding-left-sm.has-padding-right-sm {{ title }}
 </template>
