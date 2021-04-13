@@ -1,7 +1,7 @@
 <template lang='pug'>
-.is-flex.align-center.is-small
-  span.material-icons.has-padding-left-sm {{ icon }}
-  span.has-padding-left-sm.has-padding-right-sm {{ title }}
+.is-flex.align-center.is-small(style="justify-contet: flex-start;")
+  div.material-icons.has-padding-left-sm.has-padding-left-sm {{ icon }}
+  div.has-padding-left-sm.has-padding-right-sm {{ title }}
 </template>
 <script lang='ts'>
 import { Component, Prop, Vue } from "vue-property-decorator";

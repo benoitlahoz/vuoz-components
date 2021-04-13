@@ -16752,12 +16752,12 @@ var row_component = normalizeComponent(
 )
 
 /* harmony default export */ var row = (row_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"238399ca-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/preferences/item/index.vue?vue&type=template&id=8989b2e0&lang=pug&
-var itemvue_type_template_id_8989b2e0_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"is-flex align-center is-small"},[_c('span',{staticClass:"material-icons has-padding-left-sm"},[_vm._v(_vm._s(_vm.icon))]),_c('span',{staticClass:"has-padding-left-sm has-padding-right-sm"},[_vm._v(_vm._s(_vm.title))])])}
-var itemvue_type_template_id_8989b2e0_lang_pug_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"238399ca-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/preferences/item/index.vue?vue&type=template&id=dbf9bc92&lang=pug&
+var itemvue_type_template_id_dbf9bc92_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"is-flex align-center is-small",staticStyle:{"justify-contet":"flex-start"}},[_c('div',{staticClass:"material-icons has-padding-left-sm has-padding-left-sm"},[_vm._v(_vm._s(_vm.icon))]),_c('div',{staticClass:"has-padding-left-sm has-padding-right-sm"},[_vm._v(_vm._s(_vm.title))])])}
+var itemvue_type_template_id_dbf9bc92_lang_pug_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/preferences/item/index.vue?vue&type=template&id=8989b2e0&lang=pug&
+// CONCATENATED MODULE: ./src/components/preferences/item/index.vue?vue&type=template&id=dbf9bc92&lang=pug&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--14-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/ts-loader??ref--14-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/preferences/item/index.vue?vue&type=script&lang=ts&
 
@@ -16810,8 +16810,8 @@ preferences_itemvue_type_script_lang_ts_VuozComponent = __decorate([vue_class_co
 
 var preferences_item_component = normalizeComponent(
   components_preferences_itemvue_type_script_lang_ts_,
-  itemvue_type_template_id_8989b2e0_lang_pug_render,
-  itemvue_type_template_id_8989b2e0_lang_pug_staticRenderFns,
+  itemvue_type_template_id_dbf9bc92_lang_pug_render,
+  itemvue_type_template_id_dbf9bc92_lang_pug_staticRenderFns,
   false,
   null,
   null,
