@@ -1,6 +1,6 @@
 {
   "name": "@vuoz/components",
-  "version": "0.2.80",
+  "version": "0.2.81",
   "private": true,
   "main": "./dist/vuoz.components.umd.min.js",
   "types": "./src/types/index.d.ts",

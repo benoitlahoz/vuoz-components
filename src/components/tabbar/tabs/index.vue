@@ -48,7 +48,7 @@ export default class VuozComponent extends Vue {
   @Prop({ type: String, default: "normal" }) readonly size!: string;
   @Prop({ type: Boolean, default: true }) readonly showAdd!: boolean;
   @Prop({ type: Boolean, default: true }) readonly draggable!: boolean;
-  @Prop({ type: Array, default: [] }) readonly tabs!: TabDescription[];
+  @Prop({ type: Array, default: () => { return [] } }) readonly tabs!: TabDescription[];
   @Prop({ type: String, default: "No tab" }) readonly placeholder!: string;
   /**
    * Internal component's data
