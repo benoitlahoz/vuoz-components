@@ -1,5 +1,5 @@
 <template lang="pug">
- .vuoz-tab-content 
+ .vuoz-tab-content.has-border-left-medium-grey
   component(v-if="component", :is="component")
   div(v-else) {{ content }}
 </template>

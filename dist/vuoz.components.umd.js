@@ -14009,12 +14009,12 @@ var tabbar_bar_component = normalizeComponent(
 )
 
 /* harmony default export */ var tabbar_bar = (tabbar_bar_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"382977f6-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/tabbar/content/index.vue?vue&type=template&id=12a0b4eb&lang=pug&
-var contentvue_type_template_id_12a0b4eb_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vuoz-tab-content"},[(_vm.component)?_c(_vm.component,{tag:"component"}):_c('div',[_vm._v(_vm._s(_vm.content))])],1)}
-var contentvue_type_template_id_12a0b4eb_lang_pug_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"382977f6-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/tabbar/content/index.vue?vue&type=template&id=1468be52&lang=pug&
+var contentvue_type_template_id_1468be52_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vuoz-tab-content has-border-left-medium-grey"},[(_vm.component)?_c(_vm.component,{tag:"component"}):_c('div',[_vm._v(_vm._s(_vm.content))])],1)}
+var contentvue_type_template_id_1468be52_lang_pug_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/tabbar/content/index.vue?vue&type=template&id=12a0b4eb&lang=pug&
+// CONCATENATED MODULE: ./src/components/tabbar/content/index.vue?vue&type=template&id=1468be52&lang=pug&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--14-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/ts-loader??ref--14-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/tabbar/content/index.vue?vue&type=script&lang=ts&
 
@@ -14066,8 +14066,8 @@ contentvue_type_script_lang_ts_VuozComponent = __decorate([vue_class_component_e
 
 var content_component = normalizeComponent(
   tabbar_contentvue_type_script_lang_ts_,
-  contentvue_type_template_id_12a0b4eb_lang_pug_render,
-  contentvue_type_template_id_12a0b4eb_lang_pug_staticRenderFns,
+  contentvue_type_template_id_1468be52_lang_pug_render,
+  contentvue_type_template_id_1468be52_lang_pug_staticRenderFns,
   false,
   null,
   null,
