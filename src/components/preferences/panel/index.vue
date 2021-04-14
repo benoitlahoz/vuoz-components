@@ -1,5 +1,5 @@
 <template lang='pug'>
-.is-flex-column.is-fullsize.has-padding-sm
+.flex-grow.is-flex.is-fullsize.has-padding-sm
   slot
 </template>
 <script lang='ts'>
