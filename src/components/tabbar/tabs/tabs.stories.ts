@@ -7,7 +7,8 @@ let tabs = [
   {
     id: 0,
     title: 'Tab 1',
-    content: 'Content 1'
+    closable: false,
+    content: 'Content 1',
   },
   {
     id: 1,

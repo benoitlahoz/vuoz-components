@@ -4,7 +4,7 @@
   @mousedown="onSelect"
 )
   .title {{ title }}
-  .close(v-if="selected === true", @click.stop="onClose")
+  .close(v-if="selected === true && closable === true", @click.stop="onClose")
     vuoz-button(
       type="push",
       size="tiny",
@@ -36,6 +36,7 @@ export default class VuozComponent extends Vue {
   @Prop({ type: String, default: 'small' }) readonly size!: string;
   @Prop({ type: [ String, Number ], required: true }) readonly id!: string | number;
   @Prop({ type: Boolean, default: false }) readonly selected!: boolean;
+  @Prop({ type: Boolean, default: true }) readonly closable!: boolean;
   @Prop({ type: Boolean, default: true }) readonly divider!: boolean;
   /**
    * Internal component's data

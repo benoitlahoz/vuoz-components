@@ -16,6 +16,7 @@
           :title="tab.title",
           :id="tab.id",
           :selected="selected === tab.id",
+          :closable="tab.closable",
           :divider="(selected !== tab.id && tabs[index + 1] !== undefined && tabs[index + 1].id !== selected) || (selected !== tab.id && index === tabs.length - 1)",
           @select="onSelect",
           @close="onClose"

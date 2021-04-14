@@ -18,7 +18,7 @@
   )
 </template>
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import VuozTabBar from "./../bar/index.vue";
 import VuozTabContent from "./../content/index.vue";
 /**
@@ -54,6 +54,14 @@ export default class VuozComponent extends Vue {
    * Internal component's data
    */
   private selected: string | number = -1;
+
+  @Watch('tabs', { immediate: true })
+  onTabsChanged() {
+    if (this.selected < 0 || this.tabs.length <= this.selected) {
+      this.selected = this.tabs[0].id
+    }
+  }
+
   /**
    * Initialization and tear-down
    */
