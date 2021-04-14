@@ -1,6 +1,6 @@
 <template lang="pug">
  .vuoz-tab-content.has-border-left-medium-grey
-  component(v-if="component", :is="component")
+  component(v-if="component", :is="component.object", :props="component.props")
   div(v-else) {{ content }}
 </template>
 <script lang="ts">
@@ -16,7 +16,7 @@ export default class VuozComponent extends Vue {
   /**
    * Properties
    */
-  @Prop({ type: Function }) readonly component!: string | null;
+  @Prop({ type: Object }) readonly component!: string | null;
   @Prop({ type: String, default: 'No content' }) readonly content!: string | null ;
   /**
    * Internal component's data
