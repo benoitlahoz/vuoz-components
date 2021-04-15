@@ -57,7 +57,7 @@ export default class VuozComponent extends Vue {
 
   @Watch('tabs', { immediate: true })
   onTabsChanged() {
-    if (this.selected < 0 || this.tabs.length <= this.selected) {
+    if (this.tabs.length > 0 && (this.selected < 0 || this.tabs.length <= this.selected)) {
       this.selected = this.tabs[0].id
     }
   }
