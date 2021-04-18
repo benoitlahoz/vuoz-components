@@ -176,16 +176,16 @@ export default class VuozComponent extends Vue {
             classes += `has-margin-${opposite}-s `;
             classes +=
               this.labelPosition === "bottom" || this.labelPosition === "top"
-                ? "has-margin-left-s"
-                : "";
+                ? "has-margin-left-s "
+                : "is-flex align-center ";
             break;
           }
           case "small": {
             classes += `has-margin-${opposite}-s `;
             classes +=
               this.labelPosition === "bottom" || this.labelPosition === "top"
-                ? "has-margin-left-s"
-                : "";
+                ? "has-margin-left-s "
+                : "is-flex align-center ";
             break;
           }
           case "normal":
@@ -193,8 +193,8 @@ export default class VuozComponent extends Vue {
             classes += `has-margin-${opposite}-sm `;
             classes +=
               this.labelPosition === "bottom" || this.labelPosition === "top"
-                ? "has-margin-left-sm"
-                : "";
+                ? "has-margin-left-sm "
+                : "is-flex align-center ";
             break;
           }
         }
@@ -282,6 +282,7 @@ export default class VuozComponent extends Vue {
         break;
       }
       case "float": {
+        console.warn('TODO: float behavior')
         console.log(current)
         // Juste un point => NaN
         // Point et un choffre après le zéro initial => le chiffre
