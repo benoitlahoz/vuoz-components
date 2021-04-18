@@ -1,6 +1,7 @@
 <template lang="pug">
 .vuoz-input(
-  :class="`${getClasses('container')} ${isDragging ? ' is-unselectable' : ''}`"
+  :class="`${getClasses('container')} ${isDragging ? ' is-unselectable' : ''}`",
+  style="background-color: red; height: auto;"
 )
   .vuoz-input__label(
     v-if="label.trim() !== '' && (labelPosition === 'left' || labelPosition === 'top')",
