@@ -9,8 +9,7 @@
   ) {{ label }}
   .vuoz-input__main(ref="main", :class="getClasses('main')")
     .required-placeholder(
-      v-if="required === true",
-      style="background-color: red; width: 20px; height: 100%"
+      v-if="required === true"
     ) 
     input.has-text-regular(
       ref="input",
@@ -19,7 +18,8 @@
       :class="getClasses('input')",
       :disabled="disabled",
       v-model="value",
-      @input="onInput"
+      @input="onInput",
+      style="display: block;"
     )
     template(v-if="(icon.trim() !== '' && !isNumber()) || type === 'password'")
       span.material-icons.is-unselectable(v-if="type !== 'password'") {{ icon }}

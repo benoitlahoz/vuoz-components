@@ -107,7 +107,7 @@ export default {
 /**
  * Template
  */
-const template = `<vuoz-input ` +
+const template = `<div><vuoz-input ` +
   // Props
   `   :type="type" ` +
   `   :label="label" ` +
@@ -124,7 +124,8 @@ const template = `<vuoz-input ` +
   `   :smallcaps="smallcaps" ` +
   `   :icon="icon" ` +
   `   :disabled="disabled"> ` +
-  `</vuoz-input>`
+  `</vuoz-input>` +
+  `<div>Something else</div></div>`
 // To be displayed by Storybook
 export const Input = (args: any, { argTypes }: any) => ({
   components: { VuozInput },
