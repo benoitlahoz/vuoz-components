@@ -10,7 +10,7 @@ tr(:class="getClasses('main')")
 <script lang="ts">
 /*eslint no-unreachable: "off"*/
 import { Component, Mixins, Prop, Vue } from "vue-property-decorator";
-import { VuozFormatterMixin } from "../../../mixins/VuozFormatterMixin";
+import { VuozTimeFormatterMixin } from "../../../mixins/VuozTimeFormatterMixin";
 
 /**
  * Vuoz console item
@@ -19,7 +19,7 @@ import { VuozFormatterMixin } from "../../../mixins/VuozFormatterMixin";
 @Component({
   name: "VuozConsoleItem",
 })
-export default class VuozComponent extends Mixins(Vue, VuozFormatterMixin) {
+export default class VuozComponent extends Mixins(Vue, VuozTimeFormatterMixin) {
   @Prop({ type: String, default: 'normal' }) readonly size!:
     "small"
     | "normal"

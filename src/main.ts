@@ -1,4 +1,5 @@
 export { default as VuozButton } from './components/button/index.vue'
+export { default as VuozInput } from './components/input/index.vue'
 export { default as VuozImage } from './components/image/index.vue'
 export { default as VuozLoadingBar } from './components/loading/bar/index.vue'
 export { default as VuozLoadingIcon } from './components/loading/icon/index.vue'

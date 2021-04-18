@@ -1,81 +1,47 @@
 <template lang="pug">
-.vuoz-input(:class="getClasses('container')")
-  .vuoz-input__label(v-if="label.trim() !== ''") {{ label }}
-  .vuoz-input__main(:class="getClasses('main')")
-    .required-placeholder(v-if="required === true", style="background-color: red; width: 20px; height: 100%;")
-    input(:type="getInputType()", :placeholder="placeholder", :class="getClasses('input')").has-text-regular
-    span.material-icons(v-if="icon.trim() !== ''") {{ icon }}
+.vuoz-input(
+  :class="`${getClasses('container')} ${isDragging ? ' is-unselectable' : ''}`"
+)
+  .vuoz-input__label(
+    v-if="label.trim() !== '' && (labelPosition === 'left' || labelPosition === 'top')",
+    :class="getClasses('label')"
+  ) {{ label }}
+  .vuoz-input__main(ref="main", :class="getClasses('main')")
+    .required-placeholder(
+      v-if="required === true",
+      style="background-color: red; width: 20px; height: 100%"
+    ) 
+    input.has-text-regular(
+      ref="input",
+      :type="getInputType()",
+      :placeholder="placeholder",
+      :class="getClasses('input')",
+      :disabled="disabled",
+      v-model="value",
+      @input="onInput"
+    )
+    template(v-if="(icon.trim() !== '' && !isNumber()) || type === 'password'")
+      span.material-icons.is-unselectable(v-if="type !== 'password'") {{ icon }}
+      span.material-icons.is-unselectable(
+        v-if="type === 'password'",
+        @click="togglePasswordVisibility"
+      ) {{ passwordVisibility === false ? 'visibility' : 'visibility_off' }}
+    template(v-if="isNumber()")
+      .vuoz-input__number-stepper
+        .material-icons.is-unselectable.up-arrow arrow_drop_down
+        .material-icons.is-unselectable.down-arrow arrow_drop_down
+        // Bad hack to keep the same size accross types
+        span.material-icons.is-unselectable(style="visibility: hidden") search
+        template(v-if="isNumber()")
+          .up-actuator(@mousedown="onMouseDown('up', $event)")
+          .down-actuator(@mousedown="onMouseDown('down', $event)")
+  .vuoz-input__label(
+    v-if="label.trim() !== '' && (labelPosition === 'right' || labelPosition === 'bottom')",
+    :class="getClasses('label')"
+  ) {{ label }}
 </template>
-<style lang="sass">
-// TODO: pass in theme-api
-@import "@vuoz/theme-core-default/dist/sass/theme.sass"
-
-.vuoz-input,
-.vuoz-input__main
-  @extend .is-inline-flex
-  @extend .align-center
-  &.is-tiny 
-    height: $tiny-height
-    @extend .has-padding-left-s
-    @extend .has-padding-right-xs
-    input
-      @extend .has-text-ultra-small
-      @extend .has-margin-right-xs
-      line-height: $tiny-height
-  &.is-small 
-    height: $small-height
-    @extend .has-padding-left-sm
-    @extend .has-padding-right-s
-    input
-      @extend .has-text-small
-      @extend .has-margin-right-s
-      line-height: $small-height
-  &.is-normal 
-    height: $normal-height
-    @extend .has-padding-left-ms
-    @extend .has-padding-right-sm
-    input
-      @extend .has-text-normal
-      @extend .has-margin-right-sm
-      line-height: $normal-height
-  &.is-large 
-    height: $large-height
-    @extend .has-padding-left-md
-    @extend .has-padding-right-sm
-    input
-      @extend .has-text-large
-      @extend .has-margin-right-sm
-      line-height: $large-height
-
-.vuoz-input .vuoz-input__label
-  @extend .is-inline-flex
-  @extend .align-center
-
-.vuoz-input 
-  &.is-tiny .vuoz-input__label
-    height: $tiny-height
-    @extend .has-text-ultra-small
-    @extend .has-margin-right-ms
-  &.is-small .vuoz-input__label
-    height: $small-height
-    @extend .has-text-small
-    @extend .has-margin-right-md
-  &.is-normal .vuoz-input__label
-    height: $normal-height
-    @extend .has-text-normal
-    @extend .has-margin-right-md
-  &.is-large .vuoz-input__label
-    height: $large-height
-    @extend .has-text-large
-    @extend .has-margin-right-md
-
-.vuoz-input input
-  color: white
-  border: none
-  outline: none
-  background-color: transparent
-</style>
 <script lang="ts">
+import { parse } from "node:path";
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 /**
  * Vuoz input.
@@ -85,75 +51,374 @@ import { Component, Prop, Watch, Vue } from "vue-property-decorator";
   name: "VuozInput",
 })
 export default class VuozComponent extends Vue {
-
-  @Prop({ type: String, default: 'text' }) readonly type!: 'text' | 'email' | 'password' | 'integer' | 'float'
-  @Prop({ type: String, default: '' }) readonly label!: string
+  @Prop({ type: String, default: "text" }) readonly type!:
+    | "text"
+    | "email"
+    | "password"
+    | "ip"
+    | "integer"
+    | "uinteger"
+    | "float";
+  @Prop({ type: String, default: "" }) readonly label!: string;
   @Prop({ type: String, default: "top" }) readonly labelPosition!:
-    "top"
+    | "top"
     | "left"
     | "bottom"
     | "right";
-  @Prop({ type: String, default: '' }) readonly placeholder!: string
-  @Prop({ type: Boolean, default: false }) readonly required!: boolean
-  @Prop({ type: String, default: 'small' }) readonly size!: 'tiny' | 'small' | 'normal' | 'large'
-  @Prop({ type: Boolean, default: false }) readonly disabled!: boolean
-  @Prop({ type: Boolean, default: false }) readonly loading!: boolean
-  @Prop({ type: String, default: 'regular' }) readonly weight!: string
-  @Prop({ type: Boolean, default: false }) readonly rounded!: boolean
-  @Prop({ type: Boolean, default: true }) readonly border!: boolean
-  @Prop({ type: Boolean, default: false }) readonly uppercase!: boolean
-  @Prop({ type: Boolean, default: false }) readonly smallcaps!: boolean
-  @Prop({ type: String, default: 'medium-grey' }) readonly color!: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'darker-grey' | 'dark-grey' | 'medium-grey' | 'transparent'
-  @Prop({ type: Boolean, default: false }) readonly shadow!: boolean
-  @Prop({ type: String, default: '' }) readonly icon!: string
+  @Prop({ type: String, default: "" }) readonly placeholder!: string;
+  @Prop({ type: Boolean, default: false }) readonly required!: boolean;
+  @Prop({ type: String, default: "small" }) readonly size!:
+    | "tiny"
+    | "small"
+    | "normal"
+    | "large";
+  @Prop({ type: Boolean, default: false }) readonly disabled!: boolean;
+  @Prop({ type: Boolean, default: false }) readonly loading!: boolean;
+  @Prop({ type: String, default: "regular" }) readonly weight!: string;
+  @Prop({ type: Boolean, default: false }) readonly rounded!: boolean;
+  @Prop({ type: Boolean, default: true }) readonly border!: boolean;
+  @Prop({ type: Boolean, default: false }) readonly uppercase!: boolean;
+  @Prop({ type: Boolean, default: false }) readonly smallcaps!: boolean;
+  @Prop({ type: String, default: "medium-grey" }) readonly color!:
+    | "primary"
+    | "secondary"
+    | "success"
+    | "warning"
+    | "danger"
+    | "darker-grey"
+    | "dark-grey"
+    | "medium-grey"
+    | "transparent";
+  @Prop({ type: Boolean, default: false }) readonly shadow!: boolean;
+  @Prop({ type: String, default: "" }) readonly icon!: string;
+
+  // Click/drag behavior for numerals
+  private numDirection: "up" | "down" = "up";
+  private maxDelta = 6;
+  private isDragging = false;
+  private pageY = 0;
+  // Password behavior
+  private passwordVisibility = false;
+  // eslint-disable-next-line
+  private passwordPattern = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+  // Input value
+  private value = "";
+  private valid = false;
+
+  @Watch("type", { immediate: true })
+  onTypeChange() {
+    this.$nextTick(() => {
+      // Set format and eventual default value
+      this.setFormat();
+    });
+  }
 
   private getInputType() {
-    switch(this.type) {
-      case 'text':
-      case 'integer':
-      case 'float': {
-        return 'text'
+    switch (this.type) {
+      case "text":
+      case "integer":
+      case "float": {
+        return "text";
       }
-      case 'email':
-      case 'password': {
-        return this.type
+      case "email":
+      case "password": {
+        return this.type;
       }
     }
+  }
+
+  private setFormat() {
+    if (this.isNumber()) {
+      this.value = '0'
+    } else {
+      this.value = ''
+    }
+  }
+
+  private isNumber() {
+    return (
+      this.type === "integer" ||
+      this.type === "uinteger" ||
+      this.type === "float"
+    );
   }
 
   private getClasses(type: string) {
-    let classes = ''
-    switch(type) {
-      case 'container': {
-        classes += `is-${this.size} `
-        break
+    let classes = "";
+    switch (type) {
+      case "container": {
+        classes += `is-${this.size} `;
+        switch (this.labelPosition) {
+          case "right":
+          case "left": {
+            classes += "is-inline-flex align-center ";
+            break;
+          }
+          case "bottom":
+          case "top": {
+            classes += "is-inline-flex-column justify-center ";
+            break;
+          }
+        }
+        break;
       }
-      case 'main': {
-        classes += `is-${this.size} has-background-${this.color} has-border-${this.color}-shaded `
-        classes += this.border ? `has-border-${this.color}-shaded ` : 'has-border-none '
+      case "label": {
+        const opposite =
+          this.labelPosition === "left"
+            ? "right"
+            : this.labelPosition === "right"
+            ? "left"
+            : this.labelPosition === "top"
+            ? "bottom"
+            : "top";
+        switch (this.size) {
+          case "tiny": {
+            classes += `has-margin-${opposite}-s `;
+            classes +=
+              this.labelPosition === "bottom" || this.labelPosition === "top"
+                ? "has-margin-left-s"
+                : "";
+            break;
+          }
+          case "small": {
+            classes += `has-margin-${opposite}-s `;
+            classes +=
+              this.labelPosition === "bottom" || this.labelPosition === "top"
+                ? "has-margin-left-s"
+                : "";
+            break;
+          }
+          case "normal":
+          case "large": {
+            classes += `has-margin-${opposite}-sm `;
+            classes +=
+              this.labelPosition === "bottom" || this.labelPosition === "top"
+                ? "has-margin-left-sm"
+                : "";
+            break;
+          }
+        }
+        break;
+      }
+      case "main": {
+        classes += `is-${this.size} has-background-${this.color} has-border-${this.color}-shaded `;
+        classes += this.border
+          ? `has-border-${this.color}-shaded `
+          : "has-border-none ";
         if (this.rounded) {
-          classes += 'is-rounded '
+          classes += "is-rounded ";
         }
         if (this.uppercase) {
-          classes += 'is-uppercase '
+          classes += "is-uppercase ";
         }
         if (this.shadow) {
-          classes += 'has-shadow '
+          classes += "has-shadow ";
         }
-        break
+        if (this.disabled) {
+          classes += "is-disabled ";
+        }
+        break;
       }
-      case 'input': {
+      case "input": {
         if (this.uppercase) {
-          classes += 'is-uppercase '
+          classes += "is-uppercase ";
         }
         if (this.smallcaps) {
-          classes += 'is-small-caps '
+          classes += "is-small-caps ";
         }
-        break
+        break;
       }
     }
-    return classes
+    return classes;
   }
 
+  private onInput(event: any) {
+    // ^[^@]+@[a-zA-Z0-9._-]+\\.+[a-z._-]+$
+    let current = this.value;
+    let updated = this.value;
+
+    switch (this.type) {
+      case "email": {
+        console.warn('TODO: validate email')
+        // Replace white spaces
+        current = current.replace(/\s+/g, "");
+        break;
+      }
+      case "password": {
+        console.warn('TODO: validate password')
+        // For password regex:
+        // see: https://stackoverflow.com/a/21456918/1060921
+        // see: https://stackoverflow.com/a/33589907/1060921
+        current = current.replace(/\s+/g, "");
+        this.valid = this.passwordPattern.test(current);
+        break;
+      }
+      case "integer": {
+        if (
+          current.trim() === "" ||
+          current.trim() === "-" ||
+          event.data === null
+        ) {
+          current = "0";
+        }
+        // see: https://stackoverflow.com/questions/1898129/javascript-subtract-keycode
+        // FIXME: charCode to be tested according to browsers and keyboard layouts?
+        const code = event.data?.charCodeAt(0);
+        let sign = "";
+        const actual = parseInt(current);
+        if ((code === 45 || code === 109 || code === 149) && actual === 0) {
+          sign = "-";
+        }
+        updated = `${sign}${actual}`;
+        break;
+      }
+      case "uinteger": {
+        const actual = parseInt(current);
+        if (actual >= 0) {
+          updated = `${parseInt(current)}`;
+        } else {
+          updated = "0";
+        }
+        break;
+      }
+      case "float": {
+        console.log(current)
+        // Juste un point => NaN
+        // Point et un choffre après le zéro initial => le chiffre
+        // Point tout seul après chiffre au-dessus de zéro : pas pris en compte
+        // Signe moins après select all => NaN
+        updated = `${parseFloat(current)}`
+        break;
+      }
+    }
+
+    this.value = updated;
+    this.$emit("change", {
+      type: this.type,
+      value: this.value,
+      valid: this.valid,
+    });
+  }
+
+  private onMouseDown(direction: "up" | "down", event: MouseEvent) {
+    this.numDirection = direction;
+
+    this.onMouseUp = this.onMouseUp.bind(this);
+    this.onDrag = this.onDrag.bind(this);
+    document.addEventListener("mouseup", this.onMouseUp);
+    document.addEventListener("mousemove", this.onDrag);
+  }
+
+  private onDrag(event: any) {
+    if (!this.isDragging) {
+      const delta = Math.abs(Math.abs(event.pageY) - this.pageY);
+      if (delta >= this.maxDelta) {
+        this.isDragging = true;
+      }
+    }
+    if (this.isDragging) {
+      const delta = this.pageY - event.pageY;
+      this.pageY = event.pageY;
+
+      const current = this.value;
+      switch (this.type) {
+        case "integer": {
+          const updated = parseInt(current) + delta;
+          this.value = `${updated}`;
+          break;
+        }
+        case "uinteger": {
+          const updated = parseInt(current) + delta;
+          if (updated >= 0) {
+            this.value = `${updated}`;
+          }
+          break;
+        }
+        case "float": {
+          let updated = parseFloat(current);
+          updated += delta * 0.1;
+          this.value = `${updated.toFixed(2)}`;
+          break;
+        }
+      }
+
+      this.$emit("change", {
+        type: this.type,
+        value: this.value,
+        valid: true,
+      });
+    }
+  }
+
+  private onMouseUp(event: any) {
+    document.removeEventListener("mousemove", this.onDrag);
+    document.removeEventListener("mouseup", this.onMouseUp);
+    this.pageY = 0;
+
+    if (this.isDragging) {
+      this.isDragging = false;
+      return;
+    }
+
+    switch (this.numDirection) {
+      case "up": {
+        switch (this.type) {
+          case "integer":
+          case "uinteger": {
+            let current = parseInt(this.value);
+            current++;
+            this.value = `${current}`;
+            break;
+          }
+          case "float": {
+            const current = `${parseFloat(this.value) + 1}`;
+            this.value = current;
+            break;
+          }
+        }
+        break;
+      }
+      case "down": {
+        switch (this.type) {
+          case "integer": {
+            let current = parseInt(this.value);
+            current--;
+            this.value = `${current}`;
+            break;
+          }
+          case "uinteger": {
+            let current = parseInt(this.value);
+            if (current > 0) {
+              current--;
+              this.value = `${current}`;
+            }
+            break;
+          }
+          case "float": {
+            const current = `${parseFloat(this.value) - 1}`;
+            this.value = current;
+            break;
+          }
+        }
+        break;
+      }
+    }
+
+    this.$emit("change", {
+      type: this.type,
+      value: this.value,
+      valid: true,
+    });
+  }
+
+  private togglePasswordVisibility() {
+    this.passwordVisibility = !this.passwordVisibility;
+    const el = this.$refs.input as HTMLInputElement;
+    if (this.passwordVisibility) {
+      el.type = "text";
+    } else {
+      el.type = "password";
+    }
+  }
 }
 </script>

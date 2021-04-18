@@ -1,7 +1,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component
-export class VuozFormatterMixin extends Vue {
+export class VuozTimeFormatterMixin extends Vue {
 
   public parseDays(date: Date) {
     

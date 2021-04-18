@@ -11,11 +11,18 @@ export default {
       description: 'Type of the input.',
       control: {
         type: 'select',
-        options: ['text', 'email', 'password', 'integer', 'float']
+        options: ['text', 'email', 'password', 'ip', 'integer', 'uinteger', 'float']
       }
     },
     label: {
       description: 'Label of the input'
+    },
+    labelPosition: {
+      description: 'Position of the label.',
+      control: {
+        type: 'select',
+        options: ['top', 'left', 'bottom', 'right']
+      }
     },
     placeholder: {
       description: 'Placeholder of the input'
@@ -84,6 +91,7 @@ export default {
     required: false,
     type: 'text',
     label: 'My input',
+    labelPosition: 'left',
     placeholder: 'Type text...',
     size: 'small',
     weight: 'semi-bold',
@@ -103,6 +111,7 @@ const template = `<vuoz-input ` +
   // Props
   `   :type="type" ` +
   `   :label="label" ` +
+  `   :labelPosition="labelPosition" ` +
   `   :placeholder="placeholder" ` +
   `   :required="required" ` +
   `   :size="size" ` +
