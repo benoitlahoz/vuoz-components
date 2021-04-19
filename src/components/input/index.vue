@@ -1,12 +1,12 @@
 <template lang="pug">
 .vuoz-input(
   :class="`${getClasses('container')} ${isDragging ? ' is-unselectable' : ''}`",
-  style="height: auto; white-space: nowrap;"
+  style="height: auto; white-space: nowrap"
 )
-  .vuoz-input__label(
+  .vuoz-input__label.is-flex.align-center(
     v-if="label.trim() !== '' && (labelPosition === 'left' || labelPosition === 'top')",
     :class="getClasses('label')"
-  ).is-flex.align-center {{ label }}
+  ) {{ label }}
   .vuoz-input__main(ref="main", :class="getClasses('main')")
     .required-placeholder(v-if="required === true") 
     input.has-text-regular(
@@ -118,8 +118,7 @@ export default class VuozComponent extends Vue {
   onInitialChange() {
     this.$nextTick(() => {
       // Sets default value
-      const el = this.$refs.input as HTMLInputElement
-      el.value = this.initial
+      this.setFormat()
     });
   }
 
@@ -138,9 +137,11 @@ export default class VuozComponent extends Vue {
   }
 
   private setFormat() {
-    if (this.isNumber()) {
-      this.value = "0";
-    } else {
+    this.value = this.initial;
+    if (this.isNumber() && (isNaN(this.value as any) || this.value.trim() === '')) {
+      // Type is integer, uinteger or float, with no initial value or an initial value that is not a number
+        this.value = "0";
+    } else if (this.value.trim() === '') {
       this.value = "";
     }
   }
@@ -313,7 +314,7 @@ export default class VuozComponent extends Vue {
 
   private onMouseDown(direction: "up" | "down", event: MouseEvent) {
     this.numDirection = direction;
-    this.pageY = event.pageY
+    this.pageY = event.pageY;
 
     this.onMouseUp = this.onMouseUp.bind(this);
     this.onDrag = this.onDrag.bind(this);
@@ -326,7 +327,7 @@ export default class VuozComponent extends Vue {
       const delta = Math.abs(Math.abs(event.pageY) - this.pageY);
       if (delta >= this.maxDelta) {
         this.isDragging = true;
-        document.documentElement.classList.add('is-unselectable')
+        document.documentElement.classList.add("is-unselectable");
       }
     }
     if (this.isDragging) {
@@ -369,7 +370,7 @@ export default class VuozComponent extends Vue {
 
     const wasDragging = this.isDragging;
     this.isDragging = false;
-    document.documentElement.classList.remove('is-unselectable')
+    document.documentElement.classList.remove("is-unselectable");
 
     if (wasDragging) {
       return;
