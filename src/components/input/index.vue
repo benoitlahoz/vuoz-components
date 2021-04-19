@@ -34,7 +34,7 @@
         template(v-if="isNumber()")
           .up-actuator(@mousedown="onMouseDown('up', $event)")
           .down-actuator(@mousedown="onMouseDown('down', $event)")
-  .vuoz-input__label(
+  .vuoz-input__label.is-unselectable(
     v-if="label.trim() !== '' && (labelPosition === 'right' || labelPosition === 'bottom')",
     :class="getClasses('label')"
   ) {{ label }}
