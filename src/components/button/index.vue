@@ -1,11 +1,11 @@
 <template lang='pug'>
 button.vuoz-button(
   :class="getClasses()",
-  :key='size',
-  @mouseenter='onMouseEnter',
-  @mouseleave='onMouseLeave',
-  @mousedown='onMouseDown',
-  @mouseup='onMouseUp'
+  :key="size",
+  @mouseenter="onMouseEnter",
+  @mouseleave="onMouseLeave",
+  @mousedown="onMouseDown",
+  @mouseup="onMouseUp"
 )
   .content(v-if="shape === 'free'", :class="{ 'is-hidden': load === true }")
     // @slot Icon left: TODO
@@ -27,52 +27,59 @@ button.vuoz-button(
         vuoz-loading-icon(name="spinner", :size="size")
 </template>
 <script lang='ts'>
-import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
-import VuozLoadingIcon from '../loading/icon/index.vue'
+import { Component, Prop, Watch, Vue } from "vue-property-decorator";
+import VuozLoadingIcon from "../loading/icon/index.vue";
 /**
  * Vuoz standard button
  * @displayName VuozButton
  */
 @Component({
-  name: 'VuozButton',
+  name: "VuozButton",
   components: {
-    VuozLoadingIcon
-  }
+    VuozLoadingIcon,
+  },
 })
 export default class VuozComponent extends Vue {
   /**
    * Properties
    */
-  @Prop({ type: Boolean, default: false }) readonly disabled!: boolean
-  @Prop({ type: Boolean, default: false }) readonly loading!: boolean
-  @Prop({ type: String, default: 'push' }) readonly type!: 'push' | 'toggle'
-  @Prop({ type: String, default: 'normal' }) readonly size!: 'tiny' | 'small' | 'normal' | 'large'
-  @Prop({ type: String, default: 'free' }) readonly shape!: 'free' | 'square' | 'circle'
-  @Prop({ type: String, default: 'regular' }) readonly weight!: string
-  @Prop({ type: Boolean, default: false }) readonly rounded!: boolean
-  @Prop({ type: Boolean, default: true }) readonly border!: boolean
-  @Prop({ type: Boolean, default: false }) readonly uppercase!: boolean
-  @Prop({ type: Boolean, default: false }) readonly smallcaps!: boolean
-  @Prop({ type: String, default: 'medium-grey' }) readonly color!: string
-  @Prop({ type: String, default: 'danger' }) readonly toggle!: string 
-  @Prop({ type: Boolean, default: false }) readonly toggled!: string
-  @Prop({ type: Boolean, default: false }) readonly shadow!: boolean
-  @Prop({ type: String, default: 'close' }) readonly icon!: string
+  @Prop({ type: Boolean, default: false }) readonly disabled!: boolean;
+  @Prop({ type: Boolean, default: false }) readonly loading!: boolean;
+  @Prop({ type: String, default: "push" }) readonly type!: "push" | "toggle";
+  @Prop({ type: String, default: "normal" }) readonly size!:
+    | "tiny"
+    | "small"
+    | "normal"
+    | "large";
+  @Prop({ type: String, default: "free" }) readonly shape!:
+    | "free"
+    | "square"
+    | "circle";
+  @Prop({ type: String, default: "regular" }) readonly weight!: string;
+  @Prop({ type: Boolean, default: false }) readonly rounded!: boolean;
+  @Prop({ type: Boolean, default: true }) readonly border!: boolean;
+  @Prop({ type: Boolean, default: false }) readonly uppercase!: boolean;
+  @Prop({ type: Boolean, default: false }) readonly smallcaps!: boolean;
+  @Prop({ type: String, default: "medium-grey" }) readonly color!: string;
+  @Prop({ type: String, default: "danger" }) readonly toggle!: string;
+  @Prop({ type: Boolean, default: false }) readonly toggled!: string;
+  @Prop({ type: Boolean, default: false }) readonly shadow!: boolean;
+  @Prop({ type: String, default: "close" }) readonly icon!: string;
   /**
    * Internal component's data
    */
-  private hovered = false
-  private selected = false
-  private disable = false
-  private load = false
+  private hovered = false;
+  private selected = false;
+  private disable = false;
+  private load = false;
   /**
    * Initialization and tear-down
    */
   private mounted() {
     if (this.toggled) {
-      this.selected = true
+      this.selected = true;
     }
-    if (this.shape === 'free') {
+    if (this.shape === "free") {
       //
     }
   }
@@ -80,116 +87,117 @@ export default class VuozComponent extends Vue {
     //
   }
   private beforeDestroy() {
-    // 
+    //
   }
 
   public toggleLoad() {
-    this.load = !this.load
+    this.load = !this.load;
   }
 
-  @Watch('disabled', { immediate: true })
+  @Watch("disabled", { immediate: true })
   onDisable() {
-    this.disable = this.disabled
-  } 
+    this.disable = this.disabled;
+  }
 
-  @Watch('loading', { immediate: true })
+  @Watch("loading", { immediate: true })
   onload() {
-    this.load = this.loading
-  } 
+    this.load = this.loading;
+  }
   /**
    * Gets button's classes according to props' values.
    */
   private getClasses() {
     // Size
-    let classes = `is-${this.size}`
+    let classes = `is-${this.size}`;
     // Shape
-    this.shape !== 'free' ? (classes += ` is-${this.shape}`) : ''
+    this.shape !== "free" ? (classes += ` is-${this.shape}`) : "";
     // load
-    this.load ? (classes += ` is-load`) : ''
+    this.load ? (classes += ` is-load`) : "";
     // Font weight
-    classes += ` has-text-${this.weight}`
+    classes += ` has-text-${this.weight}`;
     // Rounded
-    this.rounded && this.shape !== 'circle' ? (classes += ` is-rounded`) : ''
+    this.rounded && this.shape !== "circle" ? (classes += ` is-rounded`) : "";
     // Uppercase
-    this.uppercase ? (classes += ` is-uppercase`) : ''
+    this.uppercase ? (classes += ` is-uppercase`) : "";
     // Small caps
-    this.smallcaps ? (classes += ` is-small-caps`) : ''
+    this.smallcaps ? (classes += ` is-small-caps`) : "";
     // Background color
-    if (this.type === 'toggle') {
+    if (this.type === "toggle") {
       if (this.selected) {
-        classes += ` has-background-${this.toggle}`
+        classes += ` has-background-${this.toggle}`;
       } else {
-        classes += ` has-background-${this.color}`
+        classes += ` has-background-${this.color}`;
       }
       if (!this.disable && this.hovered) {
         this.selected
           ? (classes += ` has-background-${this.toggle}-shaded`)
-          : (classes += ` has-background-${this.color}-shaded`)
+          : (classes += ` has-background-${this.color}-shaded`);
         this.border
           ? this.selected
             ? (classes += ` has-border-${this.toggle}`)
             : (classes += ` has-border-${this.color}`)
-          : (classes += ` has-border-none`)
+          : (classes += ` has-border-none`);
       } else {
         this.border
           ? this.selected
             ? (classes += ` has-border-${this.toggle}-shaded`)
             : (classes += ` has-border-${this.color}-shaded`)
-          : (classes += ` has-border-none`)
+          : (classes += ` has-border-none`);
       }
     } else {
-      classes += ` has-background-${this.color}`
+      classes += ` has-background-${this.color}`;
       // Hovered but not selected
       if (!this.disable && this.hovered && !this.selected) {
         // Is hovered
-        classes += ` has-background-${this.color}-shaded`
+        classes += ` has-background-${this.color}-shaded`;
         this.border
           ? (classes += ` has-border-${this.color}`)
-          : (classes += ` has-border-none`)
+          : (classes += ` has-border-none`);
       } else {
         // Is not hovered
         this.border
           ? (classes += ` has-border-${this.color}-shaded`)
-          : (classes += ` has-border-none`)
+          : (classes += ` has-border-none`);
       }
     }
     // Shadow
     if (!this.disable) {
-      this.shadow && !this.selected ? (classes += ` has-shadow`) : ''
+      this.shadow && !this.selected ? (classes += ` has-shadow`) : "";
     }
     // Disabled
-    this.disable ? (classes += ` is-disabled`) : ''
-    return classes
+    this.disable ? (classes += ` is-disabled`) : "";
+    return classes;
   }
   /**
    * Mouse events
    */
   onMouseEnter() {
     if (!this.load) {
-      this.hovered = true
+      this.hovered = true;
     }
   }
   onMouseLeave() {
     if (!this.load) {
-      this.hovered = false
+      this.hovered = false;
     }
   }
-  onMouseDown() {
-
+  onMouseDown(event: any) {
+    event.stopPropagation();
     if (!this.disable && !this.load) {
-      if (this.type === 'toggle') {
+      if (this.type === "toggle") {
         // Toggles or untoggles the button
-        this.selected = !this.selected
+        this.selected = !this.selected;
       } else {
-        this.selected = true
+        this.selected = true;
       }
-      this.$emit('click', this.selected)
+      this.$emit("click", this.selected);
     }
   }
-  onMouseUp() {
-    if (this.type !== 'toggle' && !this.disable && !this.load) {
-      this.selected = false
-      this.$emit('click', this.selected)
+  onMouseUp(event: any) {
+    event.stopPropagation();
+    if (this.type !== "toggle" && !this.disable && !this.load) {
+      this.selected = false;
+      this.$emit("click", this.selected);
     }
   }
 }

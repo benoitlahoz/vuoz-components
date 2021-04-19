@@ -12162,12 +12162,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"4dbd1a5c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/button/index.vue?vue&type=template&id=2c905546&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"4dbd1a5c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/button/index.vue?vue&type=template&id=414e5ce5&lang=pug&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('button',{key:_vm.size,staticClass:"vuoz-button",class:_vm.getClasses(),on:{"mouseenter":_vm.onMouseEnter,"mouseleave":_vm.onMouseLeave,"mousedown":_vm.onMouseDown,"mouseup":_vm.onMouseUp}},[(_vm.shape === 'free')?_c('div',{staticClass:"content",class:{ 'is-hidden': _vm.load === true }},[_vm._t("left"),_vm._t("main",[_vm._v("Click here")]),_vm._t("right")],2):_vm._e(),(_vm.shape !== 'free' && !_vm.load)?_vm._t("shaped",[_c('span',{staticClass:"material-icons"},[_vm._v(_vm._s(_vm.icon))])]):_vm._e(),(_vm.load)?_c('div',{staticClass:"loading-icon"},[_vm._t("loader",[(_vm.shape === 'free')?[_c('vuoz-loading-icon',{attrs:{"name":"ellipsis","size":_vm.size}})]:_vm._e(),(_vm.shape === 'square')?[_c('vuoz-loading-icon',{attrs:{"name":"grid","size":_vm.size}})]:_vm._e(),(_vm.shape === 'circle')?[_c('vuoz-loading-icon',{attrs:{"name":"spinner","size":_vm.size}})]:_vm._e()])],2):_vm._e()],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/button/index.vue?vue&type=template&id=2c905546&lang=pug&
+// CONCATENATED MODULE: ./src/components/button/index.vue?vue&type=template&id=414e5ce5&lang=pug&
 
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/classCallCheck.js
 function _classCallCheck(instance, Constructor) {
@@ -13463,7 +13463,7 @@ var buttonvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) {
         this.selected = true;
       }
 
-      if (this.shape === 'free') {//
+      if (this.shape === "free") {//
       }
     }
   }, {
@@ -13472,7 +13472,7 @@ var buttonvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) {
     }
   }, {
     key: "beforeDestroy",
-    value: function beforeDestroy() {// 
+    value: function beforeDestroy() {//
     }
   }, {
     key: "toggleLoad",
@@ -13499,19 +13499,19 @@ var buttonvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) {
       // Size
       var classes = "is-".concat(this.size); // Shape
 
-      this.shape !== 'free' ? classes += " is-".concat(this.shape) : ''; // load
+      this.shape !== "free" ? classes += " is-".concat(this.shape) : ""; // load
 
-      this.load ? classes += " is-load" : ''; // Font weight
+      this.load ? classes += " is-load" : ""; // Font weight
 
       classes += " has-text-".concat(this.weight); // Rounded
 
-      this.rounded && this.shape !== 'circle' ? classes += " is-rounded" : ''; // Uppercase
+      this.rounded && this.shape !== "circle" ? classes += " is-rounded" : ""; // Uppercase
 
-      this.uppercase ? classes += " is-uppercase" : ''; // Small caps
+      this.uppercase ? classes += " is-uppercase" : ""; // Small caps
 
-      this.smallcaps ? classes += " is-small-caps" : ''; // Background color
+      this.smallcaps ? classes += " is-small-caps" : ""; // Background color
 
-      if (this.type === 'toggle') {
+      if (this.type === "toggle") {
         if (this.selected) {
           classes += " has-background-".concat(this.toggle);
         } else {
@@ -13539,11 +13539,11 @@ var buttonvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) {
 
 
       if (!this.disable) {
-        this.shadow && !this.selected ? classes += " has-shadow" : '';
+        this.shadow && !this.selected ? classes += " has-shadow" : "";
       } // Disabled
 
 
-      this.disable ? classes += " is-disabled" : '';
+      this.disable ? classes += " is-disabled" : "";
       return classes;
     }
     /**
@@ -13566,24 +13566,28 @@ var buttonvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) {
     }
   }, {
     key: "onMouseDown",
-    value: function onMouseDown() {
+    value: function onMouseDown(event) {
+      event.stopPropagation();
+
       if (!this.disable && !this.load) {
-        if (this.type === 'toggle') {
+        if (this.type === "toggle") {
           // Toggles or untoggles the button
           this.selected = !this.selected;
         } else {
           this.selected = true;
         }
 
-        this.$emit('click', this.selected);
+        this.$emit("click", this.selected);
       }
     }
   }, {
     key: "onMouseUp",
-    value: function onMouseUp() {
-      if (this.type !== 'toggle' && !this.disable && !this.load) {
+    value: function onMouseUp(event) {
+      event.stopPropagation();
+
+      if (this.type !== "toggle" && !this.disable && !this.load) {
         this.selected = false;
-        this.$emit('click', this.selected);
+        this.$emit("click", this.selected);
       }
     }
   }]);
@@ -13603,22 +13607,22 @@ __decorate([Prop({
 
 __decorate([Prop({
   type: String,
-  default: 'push'
+  default: "push"
 })], buttonvue_type_script_lang_ts_VuozComponent.prototype, "type", void 0);
 
 __decorate([Prop({
   type: String,
-  default: 'normal'
+  default: "normal"
 })], buttonvue_type_script_lang_ts_VuozComponent.prototype, "size", void 0);
 
 __decorate([Prop({
   type: String,
-  default: 'free'
+  default: "free"
 })], buttonvue_type_script_lang_ts_VuozComponent.prototype, "shape", void 0);
 
 __decorate([Prop({
   type: String,
-  default: 'regular'
+  default: "regular"
 })], buttonvue_type_script_lang_ts_VuozComponent.prototype, "weight", void 0);
 
 __decorate([Prop({
@@ -13643,12 +13647,12 @@ __decorate([Prop({
 
 __decorate([Prop({
   type: String,
-  default: 'medium-grey'
+  default: "medium-grey"
 })], buttonvue_type_script_lang_ts_VuozComponent.prototype, "color", void 0);
 
 __decorate([Prop({
   type: String,
-  default: 'danger'
+  default: "danger"
 })], buttonvue_type_script_lang_ts_VuozComponent.prototype, "toggle", void 0);
 
 __decorate([Prop({
@@ -13663,19 +13667,19 @@ __decorate([Prop({
 
 __decorate([Prop({
   type: String,
-  default: 'close'
+  default: "close"
 })], buttonvue_type_script_lang_ts_VuozComponent.prototype, "icon", void 0);
 
-__decorate([Watch('disabled', {
+__decorate([Watch("disabled", {
   immediate: true
 })], buttonvue_type_script_lang_ts_VuozComponent.prototype, "onDisable", null);
 
-__decorate([Watch('loading', {
+__decorate([Watch("loading", {
   immediate: true
 })], buttonvue_type_script_lang_ts_VuozComponent.prototype, "onload", null);
 
 buttonvue_type_script_lang_ts_VuozComponent = __decorate([vue_class_component_esm({
-  name: 'VuozButton',
+  name: "VuozButton",
   components: {
     VuozLoadingIcon: icon
   }
