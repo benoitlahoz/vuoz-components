@@ -54,7 +54,7 @@ export default class VuozComponent extends Vue {
   @Prop({ type: Boolean, default: false }) readonly uppercase!: boolean
   @Prop({ type: Boolean, default: false }) readonly smallcaps!: boolean
   @Prop({ type: String, default: 'medium-grey' }) readonly color!: string
-  @Prop({ type: String, default: 'danger' }) readonly toggle!: string // TODO
+  @Prop({ type: String, default: 'danger' }) readonly toggle!: string 
   @Prop({ type: Boolean, default: false }) readonly toggled!: string
   @Prop({ type: Boolean, default: false }) readonly shadow!: boolean
   @Prop({ type: String, default: 'close' }) readonly icon!: string

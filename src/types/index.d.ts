@@ -1,6 +1,7 @@
 import { VueConstructor } from "vue";
 
 export const VuozButton: VueConstructor
+export const VuozCheckbox: VueConstructor
 export const VuozInput: VueConstructor
 export const VuozLoadingIcon: VueConstructor
 export const VuozTabs: VueConstructor
