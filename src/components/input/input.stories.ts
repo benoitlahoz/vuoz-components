@@ -25,7 +25,10 @@ export default {
       }
     },
     placeholder: {
-      description: 'Placeholder of the input'
+      description: 'Placeholder of the input.'
+    },
+    initial: {
+      description: 'Initial value of the input.'
     },
     size: {
       description: 'Size of the input.',
@@ -33,6 +36,9 @@ export default {
         type: 'select',
         options: ['tiny', 'small', 'normal', 'large']
       }
+    },
+    width: {
+      description: 'Width of the inner input (with units)'
     },
     required: {
       description: 'Is an answer required.',
@@ -93,7 +99,9 @@ export default {
     label: 'My input',
     labelPosition: 'left',
     placeholder: 'Type text...',
+    initial: '',
     size: 'small',
+    width: 'auto',
     weight: 'semi-bold',
     color: 'medium-grey',
     rounded: true,
@@ -113,8 +121,10 @@ const template = `<div><vuoz-input ` +
   `   :label="label" ` +
   `   :labelPosition="labelPosition" ` +
   `   :placeholder="placeholder" ` +
+  `   :initial="initial" ` +
   `   :required="required" ` +
   `   :size="size" ` +
+  `   :width="width" ` +
   `   :weight="weight" ` +
   `   :color="color" ` +
   `   :rounded="rounded" ` +

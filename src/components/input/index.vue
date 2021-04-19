@@ -1,16 +1,14 @@
 <template lang="pug">
 .vuoz-input(
   :class="`${getClasses('container')} ${isDragging ? ' is-unselectable' : ''}`",
-  style="height: auto;"
+  style="height: auto; white-space: nowrap;"
 )
   .vuoz-input__label(
     v-if="label.trim() !== '' && (labelPosition === 'left' || labelPosition === 'top')",
     :class="getClasses('label')"
-  ) {{ label }}
+  ).is-flex.align-center {{ label }}
   .vuoz-input__main(ref="main", :class="getClasses('main')")
-    .required-placeholder(
-      v-if="required === true"
-    ) 
+    .required-placeholder(v-if="required === true") 
     input.has-text-regular(
       ref="input",
       :type="getInputType()",
@@ -19,7 +17,7 @@
       :disabled="disabled",
       v-model="value",
       @input="onInput",
-      style="display: block;"
+      :style="`width: ${width};`"
     )
     template(v-if="(icon.trim() !== '' && !isNumber()) || type === 'password'")
       span.material-icons.is-unselectable(v-if="type !== 'password'") {{ icon }}
@@ -73,6 +71,8 @@ export default class VuozComponent extends Vue {
     | "small"
     | "normal"
     | "large";
+  @Prop({ type: String, default: "auto" }) readonly width!: string;
+  @Prop({ type: String, default: "" }) readonly initial!: string;
   @Prop({ type: Boolean, default: false }) readonly disabled!: boolean;
   @Prop({ type: Boolean, default: false }) readonly loading!: boolean;
   @Prop({ type: String, default: "regular" }) readonly weight!: string;
@@ -114,6 +114,15 @@ export default class VuozComponent extends Vue {
     });
   }
 
+  @Watch("initial", { immediate: true })
+  onInitialChange() {
+    this.$nextTick(() => {
+      // Sets default value
+      const el = this.$refs.input as HTMLInputElement
+      el.value = this.initial
+    });
+  }
+
   private getInputType() {
     switch (this.type) {
       case "text":
@@ -130,9 +139,9 @@ export default class VuozComponent extends Vue {
 
   private setFormat() {
     if (this.isNumber()) {
-      this.value = '0'
+      this.value = "0";
     } else {
-      this.value = ''
+      this.value = "";
     }
   }
 
@@ -240,13 +249,13 @@ export default class VuozComponent extends Vue {
 
     switch (this.type) {
       case "email": {
-        console.warn('TODO: validate email')
+        console.warn("TODO: validate email");
         // Replace white spaces
         current = current.replace(/\s+/g, "");
         break;
       }
       case "password": {
-        console.warn('TODO: validate password')
+        console.warn("TODO: validate password");
         // For password regex:
         // see: https://stackoverflow.com/a/21456918/1060921
         // see: https://stackoverflow.com/a/33589907/1060921
@@ -283,13 +292,13 @@ export default class VuozComponent extends Vue {
         break;
       }
       case "float": {
-        console.warn('TODO: float behavior')
-        console.log(current)
+        console.warn("TODO: float behavior");
+        console.log(current);
         // Juste un point => NaN
         // Point et un choffre après le zéro initial => le chiffre
         // Point tout seul après chiffre au-dessus de zéro : pas pris en compte
         // Signe moins après select all => NaN
-        updated = `${parseFloat(current)}`
+        updated = `${parseFloat(current)}`;
         break;
       }
     }
@@ -304,6 +313,7 @@ export default class VuozComponent extends Vue {
 
   private onMouseDown(direction: "up" | "down", event: MouseEvent) {
     this.numDirection = direction;
+    this.pageY = event.pageY
 
     this.onMouseUp = this.onMouseUp.bind(this);
     this.onDrag = this.onDrag.bind(this);
@@ -316,6 +326,7 @@ export default class VuozComponent extends Vue {
       const delta = Math.abs(Math.abs(event.pageY) - this.pageY);
       if (delta >= this.maxDelta) {
         this.isDragging = true;
+        document.documentElement.classList.add('is-unselectable')
       }
     }
     if (this.isDragging) {
@@ -355,10 +366,12 @@ export default class VuozComponent extends Vue {
   private onMouseUp(event: any) {
     document.removeEventListener("mousemove", this.onDrag);
     document.removeEventListener("mouseup", this.onMouseUp);
-    this.pageY = 0;
 
-    if (this.isDragging) {
-      this.isDragging = false;
+    const wasDragging = this.isDragging;
+    this.isDragging = false;
+    document.documentElement.classList.remove('is-unselectable')
+
+    if (wasDragging) {
       return;
     }
 
