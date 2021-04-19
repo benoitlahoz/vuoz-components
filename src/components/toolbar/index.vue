@@ -335,7 +335,7 @@ export default class VuozComponent extends Vue {
             this.position.includes("bottom")
           ) {
             el.style.setProperty("--vuoz-toolbar__width", "100%");
-            el.style.setProperty("--vuoz-toolbar__height", "auto");
+            el.style.setProperty("--vuoz-toolbar__height", "100px"); // TODO: fixed height according to toolbar size
             if (this.objectType.includes("uni")) {
               el.style.setProperty("--vuoz-toolbar__fixed-flex", "row");
               el.style.setProperty("--vuoz-toolbar__fixed-line-flex", "column");
