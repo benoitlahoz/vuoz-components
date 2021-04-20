@@ -168,6 +168,11 @@ export default class VuozComponent extends Vue {
     this.disable ? (classes += ` is-disabled`) : "";
     return classes;
   }
+
+  public click(toggle: boolean) {
+    this.selected = toggle
+  }
+
   /**
    * Mouse events
    */

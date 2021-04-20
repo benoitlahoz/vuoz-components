@@ -12162,12 +12162,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"4dbd1a5c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/button/index.vue?vue&type=template&id=414e5ce5&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"4dbd1a5c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/button/index.vue?vue&type=template&id=dba01a46&lang=pug&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('button',{key:_vm.size,staticClass:"vuoz-button",class:_vm.getClasses(),on:{"mouseenter":_vm.onMouseEnter,"mouseleave":_vm.onMouseLeave,"mousedown":_vm.onMouseDown,"mouseup":_vm.onMouseUp}},[(_vm.shape === 'free')?_c('div',{staticClass:"content",class:{ 'is-hidden': _vm.load === true }},[_vm._t("left"),_vm._t("main",[_vm._v("Click here")]),_vm._t("right")],2):_vm._e(),(_vm.shape !== 'free' && !_vm.load)?_vm._t("shaped",[_c('span',{staticClass:"material-icons"},[_vm._v(_vm._s(_vm.icon))])]):_vm._e(),(_vm.load)?_c('div',{staticClass:"loading-icon"},[_vm._t("loader",[(_vm.shape === 'free')?[_c('vuoz-loading-icon',{attrs:{"name":"ellipsis","size":_vm.size}})]:_vm._e(),(_vm.shape === 'square')?[_c('vuoz-loading-icon',{attrs:{"name":"grid","size":_vm.size}})]:_vm._e(),(_vm.shape === 'circle')?[_c('vuoz-loading-icon',{attrs:{"name":"spinner","size":_vm.size}})]:_vm._e()])],2):_vm._e()],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/button/index.vue?vue&type=template&id=414e5ce5&lang=pug&
+// CONCATENATED MODULE: ./src/components/button/index.vue?vue&type=template&id=dba01a46&lang=pug&
 
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/classCallCheck.js
 function _classCallCheck(instance, Constructor) {
@@ -13545,6 +13545,11 @@ var buttonvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) {
 
       this.disable ? classes += " is-disabled" : "";
       return classes;
+    }
+  }, {
+    key: "click",
+    value: function click(toggle) {
+      this.selected = toggle;
     }
     /**
      * Mouse events
