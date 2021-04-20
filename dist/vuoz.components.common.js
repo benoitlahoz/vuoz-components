@@ -13703,12 +13703,12 @@ var button_component = normalizeComponent(
 )
 
 /* harmony default export */ var components_button = (button_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"4dbd1a5c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/checkbox/index.vue?vue&type=template&id=702cb03f&lang=pug&
-var checkboxvue_type_template_id_702cb03f_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('button',{key:_vm.size,staticClass:"vuoz-checkbox",class:_vm.getClasses('main'),on:{"mouseenter":_vm.onMouseEnter,"mouseleave":_vm.onMouseLeave,"mousedown":_vm.onMouseDown,"mouseup":_vm.onMouseUp}},[(_vm.selected)?_c('div',{staticClass:"vuoz-checkbox__content is-rounded",class:_vm.getClasses('inner')}):_vm._e()])}
-var checkboxvue_type_template_id_702cb03f_lang_pug_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"4dbd1a5c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/checkbox/index.vue?vue&type=template&id=52d5b07f&lang=pug&
+var checkboxvue_type_template_id_52d5b07f_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('button',{key:_vm.size,staticClass:"vuoz-checkbox",class:_vm.getClasses('main'),on:{"mouseenter":_vm.onMouseEnter,"mouseleave":_vm.onMouseLeave,"mousedown":_vm.onMouseDown,"mouseup":_vm.onMouseUp}},[(_vm.selected)?_c('div',{staticClass:"vuoz-checkbox__content is-rounded",class:_vm.getClasses('inner')}):_vm._e()])}
+var checkboxvue_type_template_id_52d5b07f_lang_pug_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/checkbox/index.vue?vue&type=template&id=702cb03f&lang=pug&
+// CONCATENATED MODULE: ./src/components/checkbox/index.vue?vue&type=template&id=52d5b07f&lang=pug&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--14-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/ts-loader??ref--14-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/checkbox/index.vue?vue&type=script&lang=ts&
 
@@ -13832,7 +13832,10 @@ var checkboxvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue)
     }
   }, {
     key: "onMouseDown",
-    value: function onMouseDown() {
+    value: function onMouseDown(event) {
+      event.preventDefault();
+      event.stopPropagation();
+
       if (!this.disable) {
         if (this.type === "toggle") {
           // Toggles or untoggles the button
@@ -13846,7 +13849,10 @@ var checkboxvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue)
     }
   }, {
     key: "onMouseUp",
-    value: function onMouseUp() {
+    value: function onMouseUp(event) {
+      event.preventDefault();
+      event.stopPropagation();
+
       if (this.type !== "toggle" && !this.disable) {
         this.selected = false;
         this.$emit("click", this.selected);
@@ -13933,8 +13939,8 @@ checkboxvue_type_script_lang_ts_VuozComponent = __decorate([vue_class_component_
 
 var checkbox_component = normalizeComponent(
   components_checkboxvue_type_script_lang_ts_,
-  checkboxvue_type_template_id_702cb03f_lang_pug_render,
-  checkboxvue_type_template_id_702cb03f_lang_pug_staticRenderFns,
+  checkboxvue_type_template_id_52d5b07f_lang_pug_render,
+  checkboxvue_type_template_id_52d5b07f_lang_pug_staticRenderFns,
   false,
   null,
   null,

@@ -115,7 +115,9 @@ export default class VuozComponent extends Vue {
   onMouseLeave() {
     this.hovered = false;
   }
-  onMouseDown() {
+  onMouseDown(event: MouseEvent) {
+    event.preventDefault()
+    event.stopPropagation()
     if (!this.disable) {
       if (this.type === "toggle") {
         // Toggles or untoggles the button
@@ -126,7 +128,9 @@ export default class VuozComponent extends Vue {
       this.$emit("click", this.selected);
     }
   }
-  onMouseUp() {
+  onMouseUp(event: MouseEvent) {
+    event.preventDefault()
+    event.stopPropagation()
     if (this.type !== "toggle" && !this.disable) {
       this.selected = false;
       this.$emit("click", this.selected);
