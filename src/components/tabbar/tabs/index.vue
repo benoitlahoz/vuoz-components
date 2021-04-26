@@ -11,11 +11,12 @@
     @addtab="onAddTab",
     @dragged="onTabDragged"
   )
-  vuoz-tab-content(
-    :selected="selected",
-    :component="getComponent()",
-    :content="getContent()"
-  )
+  keep-alive
+    vuoz-tab-content(
+      :selected="selected",
+      :component="getComponent()",
+      :content="getContent()"
+    )
 </template>
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";

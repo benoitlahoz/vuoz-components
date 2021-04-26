@@ -4,6 +4,7 @@
   div(v-else) {{ content }}
 </template>
 <script lang="ts">
+import { VueConstructor } from "vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 /**
  * Vuoz tab system's main content of tab.
@@ -16,7 +17,7 @@ export default class VuozComponent extends Vue {
   /**
    * Properties
    */
-  @Prop({ type: [ Object, Function ] }) readonly component!: string | null;
+  @Prop({ type: Object }) readonly component!: string | null;
   @Prop({ type: String, default: 'No content' }) readonly content!: string | null ;
   /**
    * Internal component's data
