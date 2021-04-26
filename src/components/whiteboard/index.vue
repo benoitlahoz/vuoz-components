@@ -1,5 +1,5 @@
 <template lang="pug">
-.flex-grow.is-flex-column(ref="container", style="width: 100%; height: 100%;")
+.flex-grow.is-flex-column(ref="container", style="width: 100%; height: 100%")
   vuoz-toolbar(
     :items="toolbarItems",
     type="fixed",
@@ -18,6 +18,7 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { fabric } from "fabric";
 import { PSBrush, PSBrushIface, PSPoint } from "@arch-inc/fabricjs-psbrush";
+import ResizeObserver from "resize-observer-polyfill";
 // Toobar
 import VuozToolbar from "@/components/toolbar/index.vue";
 import { whiteBoardToolbarItems } from "./toolbar";
@@ -43,6 +44,7 @@ export default class VuozComponent extends Vue {
   private canvas!: fabric.Canvas;
   private width!: number;
   private height!: number;
+  private resizeObserver!: ResizeObserver;
   private backgroundColor = "#fff";
   private brush!: PSBrushIface;
   private brushColor = "#000";
@@ -54,11 +56,14 @@ export default class VuozComponent extends Vue {
   private toolbarItems = whiteBoardToolbarItems;
   // State
   private pressure = 0;
-  // Objects 
+  // Objects
   private objects: any[] = [];
 
   private mounted() {
-    window.addEventListener("resize", this.onResize);
+    this.resizeObserver = new ResizeObserver(this.onResize);
+    this.resizeObserver.observe(
+      (this.$refs.container as HTMLElement).parentElement!
+    );
     // For Storybook
     const inFrame =
       (this.$refs.container as HTMLElement).ownerDocument !== document;
@@ -102,8 +107,7 @@ export default class VuozComponent extends Vue {
   }
 
   private beforeDestroy() {
-    window.removeEventListener("resize", this.onResize);
-
+    this.resizeObserver.disconnect();
     this.canvas.off("mouse:down", this.onMouseDown);
     this.canvas.off("mouse:down:before", this.onMouseDownBefore);
     this.canvas.off("mouse:move", this.onMouseMove);
@@ -182,13 +186,15 @@ export default class VuozComponent extends Vue {
   }
 
   private onResize() {
-    // Get full container's size
-    const container: HTMLElement = this.$refs.container as HTMLElement;
-    this.width = container.clientWidth;
-    this.height = container.clientHeight;
-    this.canvas.setWidth(this.width);
-    this.canvas.setHeight(this.height);
-    this.canvas.calcOffset();
+    this.$nextTick(() => {
+      // Get full container's size
+      const container: HTMLElement = this.$refs.container as HTMLElement;
+      this.width = container.clientWidth;
+      this.height = container.clientHeight;
+      this.canvas.setWidth(this.width);
+      this.canvas.setHeight(this.height);
+      this.canvas.calcOffset();
+    });
   }
 
   private onToolbar(name: string, toggle: boolean) {

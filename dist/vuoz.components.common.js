@@ -2094,6 +2094,943 @@ module.exports = {
 
 /***/ }),
 
+/***/ "6dd8":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {/**
+ * A collection of shims that provide minimal functionality of the ES6 collections.
+ *
+ * These implementations are not meant to be used outside of the ResizeObserver
+ * modules as they cover only a limited range of use cases.
+ */
+/* eslint-disable require-jsdoc, valid-jsdoc */
+var MapShim = (function () {
+    if (typeof Map !== 'undefined') {
+        return Map;
+    }
+    /**
+     * Returns index in provided array that matches the specified key.
+     *
+     * @param {Array<Array>} arr
+     * @param {*} key
+     * @returns {number}
+     */
+    function getIndex(arr, key) {
+        var result = -1;
+        arr.some(function (entry, index) {
+            if (entry[0] === key) {
+                result = index;
+                return true;
+            }
+            return false;
+        });
+        return result;
+    }
+    return /** @class */ (function () {
+        function class_1() {
+            this.__entries__ = [];
+        }
+        Object.defineProperty(class_1.prototype, "size", {
+            /**
+             * @returns {boolean}
+             */
+            get: function () {
+                return this.__entries__.length;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * @param {*} key
+         * @returns {*}
+         */
+        class_1.prototype.get = function (key) {
+            var index = getIndex(this.__entries__, key);
+            var entry = this.__entries__[index];
+            return entry && entry[1];
+        };
+        /**
+         * @param {*} key
+         * @param {*} value
+         * @returns {void}
+         */
+        class_1.prototype.set = function (key, value) {
+            var index = getIndex(this.__entries__, key);
+            if (~index) {
+                this.__entries__[index][1] = value;
+            }
+            else {
+                this.__entries__.push([key, value]);
+            }
+        };
+        /**
+         * @param {*} key
+         * @returns {void}
+         */
+        class_1.prototype.delete = function (key) {
+            var entries = this.__entries__;
+            var index = getIndex(entries, key);
+            if (~index) {
+                entries.splice(index, 1);
+            }
+        };
+        /**
+         * @param {*} key
+         * @returns {void}
+         */
+        class_1.prototype.has = function (key) {
+            return !!~getIndex(this.__entries__, key);
+        };
+        /**
+         * @returns {void}
+         */
+        class_1.prototype.clear = function () {
+            this.__entries__.splice(0);
+        };
+        /**
+         * @param {Function} callback
+         * @param {*} [ctx=null]
+         * @returns {void}
+         */
+        class_1.prototype.forEach = function (callback, ctx) {
+            if (ctx === void 0) { ctx = null; }
+            for (var _i = 0, _a = this.__entries__; _i < _a.length; _i++) {
+                var entry = _a[_i];
+                callback.call(ctx, entry[1], entry[0]);
+            }
+        };
+        return class_1;
+    }());
+})();
+
+/**
+ * Detects whether window and document objects are available in current environment.
+ */
+var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined' && window.document === document;
+
+// Returns global object of a current environment.
+var global$1 = (function () {
+    if (typeof global !== 'undefined' && global.Math === Math) {
+        return global;
+    }
+    if (typeof self !== 'undefined' && self.Math === Math) {
+        return self;
+    }
+    if (typeof window !== 'undefined' && window.Math === Math) {
+        return window;
+    }
+    // eslint-disable-next-line no-new-func
+    return Function('return this')();
+})();
+
+/**
+ * A shim for the requestAnimationFrame which falls back to the setTimeout if
+ * first one is not supported.
+ *
+ * @returns {number} Requests' identifier.
+ */
+var requestAnimationFrame$1 = (function () {
+    if (typeof requestAnimationFrame === 'function') {
+        // It's required to use a bounded function because IE sometimes throws
+        // an "Invalid calling object" error if rAF is invoked without the global
+        // object on the left hand side.
+        return requestAnimationFrame.bind(global$1);
+    }
+    return function (callback) { return setTimeout(function () { return callback(Date.now()); }, 1000 / 60); };
+})();
+
+// Defines minimum timeout before adding a trailing call.
+var trailingTimeout = 2;
+/**
+ * Creates a wrapper function which ensures that provided callback will be
+ * invoked only once during the specified delay period.
+ *
+ * @param {Function} callback - Function to be invoked after the delay period.
+ * @param {number} delay - Delay after which to invoke callback.
+ * @returns {Function}
+ */
+function throttle (callback, delay) {
+    var leadingCall = false, trailingCall = false, lastCallTime = 0;
+    /**
+     * Invokes the original callback function and schedules new invocation if
+     * the "proxy" was called during current request.
+     *
+     * @returns {void}
+     */
+    function resolvePending() {
+        if (leadingCall) {
+            leadingCall = false;
+            callback();
+        }
+        if (trailingCall) {
+            proxy();
+        }
+    }
+    /**
+     * Callback invoked after the specified delay. It will further postpone
+     * invocation of the original function delegating it to the
+     * requestAnimationFrame.
+     *
+     * @returns {void}
+     */
+    function timeoutCallback() {
+        requestAnimationFrame$1(resolvePending);
+    }
+    /**
+     * Schedules invocation of the original function.
+     *
+     * @returns {void}
+     */
+    function proxy() {
+        var timeStamp = Date.now();
+        if (leadingCall) {
+            // Reject immediately following calls.
+            if (timeStamp - lastCallTime < trailingTimeout) {
+                return;
+            }
+            // Schedule new call to be in invoked when the pending one is resolved.
+            // This is important for "transitions" which never actually start
+            // immediately so there is a chance that we might miss one if change
+            // happens amids the pending invocation.
+            trailingCall = true;
+        }
+        else {
+            leadingCall = true;
+            trailingCall = false;
+            setTimeout(timeoutCallback, delay);
+        }
+        lastCallTime = timeStamp;
+    }
+    return proxy;
+}
+
+// Minimum delay before invoking the update of observers.
+var REFRESH_DELAY = 20;
+// A list of substrings of CSS properties used to find transition events that
+// might affect dimensions of observed elements.
+var transitionKeys = ['top', 'right', 'bottom', 'left', 'width', 'height', 'size', 'weight'];
+// Check if MutationObserver is available.
+var mutationObserverSupported = typeof MutationObserver !== 'undefined';
+/**
+ * Singleton controller class which handles updates of ResizeObserver instances.
+ */
+var ResizeObserverController = /** @class */ (function () {
+    /**
+     * Creates a new instance of ResizeObserverController.
+     *
+     * @private
+     */
+    function ResizeObserverController() {
+        /**
+         * Indicates whether DOM listeners have been added.
+         *
+         * @private {boolean}
+         */
+        this.connected_ = false;
+        /**
+         * Tells that controller has subscribed for Mutation Events.
+         *
+         * @private {boolean}
+         */
+        this.mutationEventsAdded_ = false;
+        /**
+         * Keeps reference to the instance of MutationObserver.
+         *
+         * @private {MutationObserver}
+         */
+        this.mutationsObserver_ = null;
+        /**
+         * A list of connected observers.
+         *
+         * @private {Array<ResizeObserverSPI>}
+         */
+        this.observers_ = [];
+        this.onTransitionEnd_ = this.onTransitionEnd_.bind(this);
+        this.refresh = throttle(this.refresh.bind(this), REFRESH_DELAY);
+    }
+    /**
+     * Adds observer to observers list.
+     *
+     * @param {ResizeObserverSPI} observer - Observer to be added.
+     * @returns {void}
+     */
+    ResizeObserverController.prototype.addObserver = function (observer) {
+        if (!~this.observers_.indexOf(observer)) {
+            this.observers_.push(observer);
+        }
+        // Add listeners if they haven't been added yet.
+        if (!this.connected_) {
+            this.connect_();
+        }
+    };
+    /**
+     * Removes observer from observers list.
+     *
+     * @param {ResizeObserverSPI} observer - Observer to be removed.
+     * @returns {void}
+     */
+    ResizeObserverController.prototype.removeObserver = function (observer) {
+        var observers = this.observers_;
+        var index = observers.indexOf(observer);
+        // Remove observer if it's present in registry.
+        if (~index) {
+            observers.splice(index, 1);
+        }
+        // Remove listeners if controller has no connected observers.
+        if (!observers.length && this.connected_) {
+            this.disconnect_();
+        }
+    };
+    /**
+     * Invokes the update of observers. It will continue running updates insofar
+     * it detects changes.
+     *
+     * @returns {void}
+     */
+    ResizeObserverController.prototype.refresh = function () {
+        var changesDetected = this.updateObservers_();
+        // Continue running updates if changes have been detected as there might
+        // be future ones caused by CSS transitions.
+        if (changesDetected) {
+            this.refresh();
+        }
+    };
+    /**
+     * Updates every observer from observers list and notifies them of queued
+     * entries.
+     *
+     * @private
+     * @returns {boolean} Returns "true" if any observer has detected changes in
+     *      dimensions of it's elements.
+     */
+    ResizeObserverController.prototype.updateObservers_ = function () {
+        // Collect observers that have active observations.
+        var activeObservers = this.observers_.filter(function (observer) {
+            return observer.gatherActive(), observer.hasActive();
+        });
+        // Deliver notifications in a separate cycle in order to avoid any
+        // collisions between observers, e.g. when multiple instances of
+        // ResizeObserver are tracking the same element and the callback of one
+        // of them changes content dimensions of the observed target. Sometimes
+        // this may result in notifications being blocked for the rest of observers.
+        activeObservers.forEach(function (observer) { return observer.broadcastActive(); });
+        return activeObservers.length > 0;
+    };
+    /**
+     * Initializes DOM listeners.
+     *
+     * @private
+     * @returns {void}
+     */
+    ResizeObserverController.prototype.connect_ = function () {
+        // Do nothing if running in a non-browser environment or if listeners
+        // have been already added.
+        if (!isBrowser || this.connected_) {
+            return;
+        }
+        // Subscription to the "Transitionend" event is used as a workaround for
+        // delayed transitions. This way it's possible to capture at least the
+        // final state of an element.
+        document.addEventListener('transitionend', this.onTransitionEnd_);
+        window.addEventListener('resize', this.refresh);
+        if (mutationObserverSupported) {
+            this.mutationsObserver_ = new MutationObserver(this.refresh);
+            this.mutationsObserver_.observe(document, {
+                attributes: true,
+                childList: true,
+                characterData: true,
+                subtree: true
+            });
+        }
+        else {
+            document.addEventListener('DOMSubtreeModified', this.refresh);
+            this.mutationEventsAdded_ = true;
+        }
+        this.connected_ = true;
+    };
+    /**
+     * Removes DOM listeners.
+     *
+     * @private
+     * @returns {void}
+     */
+    ResizeObserverController.prototype.disconnect_ = function () {
+        // Do nothing if running in a non-browser environment or if listeners
+        // have been already removed.
+        if (!isBrowser || !this.connected_) {
+            return;
+        }
+        document.removeEventListener('transitionend', this.onTransitionEnd_);
+        window.removeEventListener('resize', this.refresh);
+        if (this.mutationsObserver_) {
+            this.mutationsObserver_.disconnect();
+        }
+        if (this.mutationEventsAdded_) {
+            document.removeEventListener('DOMSubtreeModified', this.refresh);
+        }
+        this.mutationsObserver_ = null;
+        this.mutationEventsAdded_ = false;
+        this.connected_ = false;
+    };
+    /**
+     * "Transitionend" event handler.
+     *
+     * @private
+     * @param {TransitionEvent} event
+     * @returns {void}
+     */
+    ResizeObserverController.prototype.onTransitionEnd_ = function (_a) {
+        var _b = _a.propertyName, propertyName = _b === void 0 ? '' : _b;
+        // Detect whether transition may affect dimensions of an element.
+        var isReflowProperty = transitionKeys.some(function (key) {
+            return !!~propertyName.indexOf(key);
+        });
+        if (isReflowProperty) {
+            this.refresh();
+        }
+    };
+    /**
+     * Returns instance of the ResizeObserverController.
+     *
+     * @returns {ResizeObserverController}
+     */
+    ResizeObserverController.getInstance = function () {
+        if (!this.instance_) {
+            this.instance_ = new ResizeObserverController();
+        }
+        return this.instance_;
+    };
+    /**
+     * Holds reference to the controller's instance.
+     *
+     * @private {ResizeObserverController}
+     */
+    ResizeObserverController.instance_ = null;
+    return ResizeObserverController;
+}());
+
+/**
+ * Defines non-writable/enumerable properties of the provided target object.
+ *
+ * @param {Object} target - Object for which to define properties.
+ * @param {Object} props - Properties to be defined.
+ * @returns {Object} Target object.
+ */
+var defineConfigurable = (function (target, props) {
+    for (var _i = 0, _a = Object.keys(props); _i < _a.length; _i++) {
+        var key = _a[_i];
+        Object.defineProperty(target, key, {
+            value: props[key],
+            enumerable: false,
+            writable: false,
+            configurable: true
+        });
+    }
+    return target;
+});
+
+/**
+ * Returns the global object associated with provided element.
+ *
+ * @param {Object} target
+ * @returns {Object}
+ */
+var getWindowOf = (function (target) {
+    // Assume that the element is an instance of Node, which means that it
+    // has the "ownerDocument" property from which we can retrieve a
+    // corresponding global object.
+    var ownerGlobal = target && target.ownerDocument && target.ownerDocument.defaultView;
+    // Return the local global object if it's not possible extract one from
+    // provided element.
+    return ownerGlobal || global$1;
+});
+
+// Placeholder of an empty content rectangle.
+var emptyRect = createRectInit(0, 0, 0, 0);
+/**
+ * Converts provided string to a number.
+ *
+ * @param {number|string} value
+ * @returns {number}
+ */
+function toFloat(value) {
+    return parseFloat(value) || 0;
+}
+/**
+ * Extracts borders size from provided styles.
+ *
+ * @param {CSSStyleDeclaration} styles
+ * @param {...string} positions - Borders positions (top, right, ...)
+ * @returns {number}
+ */
+function getBordersSize(styles) {
+    var positions = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        positions[_i - 1] = arguments[_i];
+    }
+    return positions.reduce(function (size, position) {
+        var value = styles['border-' + position + '-width'];
+        return size + toFloat(value);
+    }, 0);
+}
+/**
+ * Extracts paddings sizes from provided styles.
+ *
+ * @param {CSSStyleDeclaration} styles
+ * @returns {Object} Paddings box.
+ */
+function getPaddings(styles) {
+    var positions = ['top', 'right', 'bottom', 'left'];
+    var paddings = {};
+    for (var _i = 0, positions_1 = positions; _i < positions_1.length; _i++) {
+        var position = positions_1[_i];
+        var value = styles['padding-' + position];
+        paddings[position] = toFloat(value);
+    }
+    return paddings;
+}
+/**
+ * Calculates content rectangle of provided SVG element.
+ *
+ * @param {SVGGraphicsElement} target - Element content rectangle of which needs
+ *      to be calculated.
+ * @returns {DOMRectInit}
+ */
+function getSVGContentRect(target) {
+    var bbox = target.getBBox();
+    return createRectInit(0, 0, bbox.width, bbox.height);
+}
+/**
+ * Calculates content rectangle of provided HTMLElement.
+ *
+ * @param {HTMLElement} target - Element for which to calculate the content rectangle.
+ * @returns {DOMRectInit}
+ */
+function getHTMLElementContentRect(target) {
+    // Client width & height properties can't be
+    // used exclusively as they provide rounded values.
+    var clientWidth = target.clientWidth, clientHeight = target.clientHeight;
+    // By this condition we can catch all non-replaced inline, hidden and
+    // detached elements. Though elements with width & height properties less
+    // than 0.5 will be discarded as well.
+    //
+    // Without it we would need to implement separate methods for each of
+    // those cases and it's not possible to perform a precise and performance
+    // effective test for hidden elements. E.g. even jQuery's ':visible' filter
+    // gives wrong results for elements with width & height less than 0.5.
+    if (!clientWidth && !clientHeight) {
+        return emptyRect;
+    }
+    var styles = getWindowOf(target).getComputedStyle(target);
+    var paddings = getPaddings(styles);
+    var horizPad = paddings.left + paddings.right;
+    var vertPad = paddings.top + paddings.bottom;
+    // Computed styles of width & height are being used because they are the
+    // only dimensions available to JS that contain non-rounded values. It could
+    // be possible to utilize the getBoundingClientRect if only it's data wasn't
+    // affected by CSS transformations let alone paddings, borders and scroll bars.
+    var width = toFloat(styles.width), height = toFloat(styles.height);
+    // Width & height include paddings and borders when the 'border-box' box
+    // model is applied (except for IE).
+    if (styles.boxSizing === 'border-box') {
+        // Following conditions are required to handle Internet Explorer which
+        // doesn't include paddings and borders to computed CSS dimensions.
+        //
+        // We can say that if CSS dimensions + paddings are equal to the "client"
+        // properties then it's either IE, and thus we don't need to subtract
+        // anything, or an element merely doesn't have paddings/borders styles.
+        if (Math.round(width + horizPad) !== clientWidth) {
+            width -= getBordersSize(styles, 'left', 'right') + horizPad;
+        }
+        if (Math.round(height + vertPad) !== clientHeight) {
+            height -= getBordersSize(styles, 'top', 'bottom') + vertPad;
+        }
+    }
+    // Following steps can't be applied to the document's root element as its
+    // client[Width/Height] properties represent viewport area of the window.
+    // Besides, it's as well not necessary as the <html> itself neither has
+    // rendered scroll bars nor it can be clipped.
+    if (!isDocumentElement(target)) {
+        // In some browsers (only in Firefox, actually) CSS width & height
+        // include scroll bars size which can be removed at this step as scroll
+        // bars are the only difference between rounded dimensions + paddings
+        // and "client" properties, though that is not always true in Chrome.
+        var vertScrollbar = Math.round(width + horizPad) - clientWidth;
+        var horizScrollbar = Math.round(height + vertPad) - clientHeight;
+        // Chrome has a rather weird rounding of "client" properties.
+        // E.g. for an element with content width of 314.2px it sometimes gives
+        // the client width of 315px and for the width of 314.7px it may give
+        // 314px. And it doesn't happen all the time. So just ignore this delta
+        // as a non-relevant.
+        if (Math.abs(vertScrollbar) !== 1) {
+            width -= vertScrollbar;
+        }
+        if (Math.abs(horizScrollbar) !== 1) {
+            height -= horizScrollbar;
+        }
+    }
+    return createRectInit(paddings.left, paddings.top, width, height);
+}
+/**
+ * Checks whether provided element is an instance of the SVGGraphicsElement.
+ *
+ * @param {Element} target - Element to be checked.
+ * @returns {boolean}
+ */
+var isSVGGraphicsElement = (function () {
+    // Some browsers, namely IE and Edge, don't have the SVGGraphicsElement
+    // interface.
+    if (typeof SVGGraphicsElement !== 'undefined') {
+        return function (target) { return target instanceof getWindowOf(target).SVGGraphicsElement; };
+    }
+    // If it's so, then check that element is at least an instance of the
+    // SVGElement and that it has the "getBBox" method.
+    // eslint-disable-next-line no-extra-parens
+    return function (target) { return (target instanceof getWindowOf(target).SVGElement &&
+        typeof target.getBBox === 'function'); };
+})();
+/**
+ * Checks whether provided element is a document element (<html>).
+ *
+ * @param {Element} target - Element to be checked.
+ * @returns {boolean}
+ */
+function isDocumentElement(target) {
+    return target === getWindowOf(target).document.documentElement;
+}
+/**
+ * Calculates an appropriate content rectangle for provided html or svg element.
+ *
+ * @param {Element} target - Element content rectangle of which needs to be calculated.
+ * @returns {DOMRectInit}
+ */
+function getContentRect(target) {
+    if (!isBrowser) {
+        return emptyRect;
+    }
+    if (isSVGGraphicsElement(target)) {
+        return getSVGContentRect(target);
+    }
+    return getHTMLElementContentRect(target);
+}
+/**
+ * Creates rectangle with an interface of the DOMRectReadOnly.
+ * Spec: https://drafts.fxtf.org/geometry/#domrectreadonly
+ *
+ * @param {DOMRectInit} rectInit - Object with rectangle's x/y coordinates and dimensions.
+ * @returns {DOMRectReadOnly}
+ */
+function createReadOnlyRect(_a) {
+    var x = _a.x, y = _a.y, width = _a.width, height = _a.height;
+    // If DOMRectReadOnly is available use it as a prototype for the rectangle.
+    var Constr = typeof DOMRectReadOnly !== 'undefined' ? DOMRectReadOnly : Object;
+    var rect = Object.create(Constr.prototype);
+    // Rectangle's properties are not writable and non-enumerable.
+    defineConfigurable(rect, {
+        x: x, y: y, width: width, height: height,
+        top: y,
+        right: x + width,
+        bottom: height + y,
+        left: x
+    });
+    return rect;
+}
+/**
+ * Creates DOMRectInit object based on the provided dimensions and the x/y coordinates.
+ * Spec: https://drafts.fxtf.org/geometry/#dictdef-domrectinit
+ *
+ * @param {number} x - X coordinate.
+ * @param {number} y - Y coordinate.
+ * @param {number} width - Rectangle's width.
+ * @param {number} height - Rectangle's height.
+ * @returns {DOMRectInit}
+ */
+function createRectInit(x, y, width, height) {
+    return { x: x, y: y, width: width, height: height };
+}
+
+/**
+ * Class that is responsible for computations of the content rectangle of
+ * provided DOM element and for keeping track of it's changes.
+ */
+var ResizeObservation = /** @class */ (function () {
+    /**
+     * Creates an instance of ResizeObservation.
+     *
+     * @param {Element} target - Element to be observed.
+     */
+    function ResizeObservation(target) {
+        /**
+         * Broadcasted width of content rectangle.
+         *
+         * @type {number}
+         */
+        this.broadcastWidth = 0;
+        /**
+         * Broadcasted height of content rectangle.
+         *
+         * @type {number}
+         */
+        this.broadcastHeight = 0;
+        /**
+         * Reference to the last observed content rectangle.
+         *
+         * @private {DOMRectInit}
+         */
+        this.contentRect_ = createRectInit(0, 0, 0, 0);
+        this.target = target;
+    }
+    /**
+     * Updates content rectangle and tells whether it's width or height properties
+     * have changed since the last broadcast.
+     *
+     * @returns {boolean}
+     */
+    ResizeObservation.prototype.isActive = function () {
+        var rect = getContentRect(this.target);
+        this.contentRect_ = rect;
+        return (rect.width !== this.broadcastWidth ||
+            rect.height !== this.broadcastHeight);
+    };
+    /**
+     * Updates 'broadcastWidth' and 'broadcastHeight' properties with a data
+     * from the corresponding properties of the last observed content rectangle.
+     *
+     * @returns {DOMRectInit} Last observed content rectangle.
+     */
+    ResizeObservation.prototype.broadcastRect = function () {
+        var rect = this.contentRect_;
+        this.broadcastWidth = rect.width;
+        this.broadcastHeight = rect.height;
+        return rect;
+    };
+    return ResizeObservation;
+}());
+
+var ResizeObserverEntry = /** @class */ (function () {
+    /**
+     * Creates an instance of ResizeObserverEntry.
+     *
+     * @param {Element} target - Element that is being observed.
+     * @param {DOMRectInit} rectInit - Data of the element's content rectangle.
+     */
+    function ResizeObserverEntry(target, rectInit) {
+        var contentRect = createReadOnlyRect(rectInit);
+        // According to the specification following properties are not writable
+        // and are also not enumerable in the native implementation.
+        //
+        // Property accessors are not being used as they'd require to define a
+        // private WeakMap storage which may cause memory leaks in browsers that
+        // don't support this type of collections.
+        defineConfigurable(this, { target: target, contentRect: contentRect });
+    }
+    return ResizeObserverEntry;
+}());
+
+var ResizeObserverSPI = /** @class */ (function () {
+    /**
+     * Creates a new instance of ResizeObserver.
+     *
+     * @param {ResizeObserverCallback} callback - Callback function that is invoked
+     *      when one of the observed elements changes it's content dimensions.
+     * @param {ResizeObserverController} controller - Controller instance which
+     *      is responsible for the updates of observer.
+     * @param {ResizeObserver} callbackCtx - Reference to the public
+     *      ResizeObserver instance which will be passed to callback function.
+     */
+    function ResizeObserverSPI(callback, controller, callbackCtx) {
+        /**
+         * Collection of resize observations that have detected changes in dimensions
+         * of elements.
+         *
+         * @private {Array<ResizeObservation>}
+         */
+        this.activeObservations_ = [];
+        /**
+         * Registry of the ResizeObservation instances.
+         *
+         * @private {Map<Element, ResizeObservation>}
+         */
+        this.observations_ = new MapShim();
+        if (typeof callback !== 'function') {
+            throw new TypeError('The callback provided as parameter 1 is not a function.');
+        }
+        this.callback_ = callback;
+        this.controller_ = controller;
+        this.callbackCtx_ = callbackCtx;
+    }
+    /**
+     * Starts observing provided element.
+     *
+     * @param {Element} target - Element to be observed.
+     * @returns {void}
+     */
+    ResizeObserverSPI.prototype.observe = function (target) {
+        if (!arguments.length) {
+            throw new TypeError('1 argument required, but only 0 present.');
+        }
+        // Do nothing if current environment doesn't have the Element interface.
+        if (typeof Element === 'undefined' || !(Element instanceof Object)) {
+            return;
+        }
+        if (!(target instanceof getWindowOf(target).Element)) {
+            throw new TypeError('parameter 1 is not of type "Element".');
+        }
+        var observations = this.observations_;
+        // Do nothing if element is already being observed.
+        if (observations.has(target)) {
+            return;
+        }
+        observations.set(target, new ResizeObservation(target));
+        this.controller_.addObserver(this);
+        // Force the update of observations.
+        this.controller_.refresh();
+    };
+    /**
+     * Stops observing provided element.
+     *
+     * @param {Element} target - Element to stop observing.
+     * @returns {void}
+     */
+    ResizeObserverSPI.prototype.unobserve = function (target) {
+        if (!arguments.length) {
+            throw new TypeError('1 argument required, but only 0 present.');
+        }
+        // Do nothing if current environment doesn't have the Element interface.
+        if (typeof Element === 'undefined' || !(Element instanceof Object)) {
+            return;
+        }
+        if (!(target instanceof getWindowOf(target).Element)) {
+            throw new TypeError('parameter 1 is not of type "Element".');
+        }
+        var observations = this.observations_;
+        // Do nothing if element is not being observed.
+        if (!observations.has(target)) {
+            return;
+        }
+        observations.delete(target);
+        if (!observations.size) {
+            this.controller_.removeObserver(this);
+        }
+    };
+    /**
+     * Stops observing all elements.
+     *
+     * @returns {void}
+     */
+    ResizeObserverSPI.prototype.disconnect = function () {
+        this.clearActive();
+        this.observations_.clear();
+        this.controller_.removeObserver(this);
+    };
+    /**
+     * Collects observation instances the associated element of which has changed
+     * it's content rectangle.
+     *
+     * @returns {void}
+     */
+    ResizeObserverSPI.prototype.gatherActive = function () {
+        var _this = this;
+        this.clearActive();
+        this.observations_.forEach(function (observation) {
+            if (observation.isActive()) {
+                _this.activeObservations_.push(observation);
+            }
+        });
+    };
+    /**
+     * Invokes initial callback function with a list of ResizeObserverEntry
+     * instances collected from active resize observations.
+     *
+     * @returns {void}
+     */
+    ResizeObserverSPI.prototype.broadcastActive = function () {
+        // Do nothing if observer doesn't have active observations.
+        if (!this.hasActive()) {
+            return;
+        }
+        var ctx = this.callbackCtx_;
+        // Create ResizeObserverEntry instance for every active observation.
+        var entries = this.activeObservations_.map(function (observation) {
+            return new ResizeObserverEntry(observation.target, observation.broadcastRect());
+        });
+        this.callback_.call(ctx, entries, ctx);
+        this.clearActive();
+    };
+    /**
+     * Clears the collection of active observations.
+     *
+     * @returns {void}
+     */
+    ResizeObserverSPI.prototype.clearActive = function () {
+        this.activeObservations_.splice(0);
+    };
+    /**
+     * Tells whether observer has active observations.
+     *
+     * @returns {boolean}
+     */
+    ResizeObserverSPI.prototype.hasActive = function () {
+        return this.activeObservations_.length > 0;
+    };
+    return ResizeObserverSPI;
+}());
+
+// Registry of internal observers. If WeakMap is not available use current shim
+// for the Map collection as it has all required methods and because WeakMap
+// can't be fully polyfilled anyway.
+var observers = typeof WeakMap !== 'undefined' ? new WeakMap() : new MapShim();
+/**
+ * ResizeObserver API. Encapsulates the ResizeObserver SPI implementation
+ * exposing only those methods and properties that are defined in the spec.
+ */
+var ResizeObserver = /** @class */ (function () {
+    /**
+     * Creates a new instance of ResizeObserver.
+     *
+     * @param {ResizeObserverCallback} callback - Callback that is invoked when
+     *      dimensions of the observed elements change.
+     */
+    function ResizeObserver(callback) {
+        if (!(this instanceof ResizeObserver)) {
+            throw new TypeError('Cannot call a class as a function.');
+        }
+        if (!arguments.length) {
+            throw new TypeError('1 argument required, but only 0 present.');
+        }
+        var controller = ResizeObserverController.getInstance();
+        var observer = new ResizeObserverSPI(callback, controller, this);
+        observers.set(this, observer);
+    }
+    return ResizeObserver;
+}());
+// Expose public methods of ResizeObserver.
+[
+    'observe',
+    'unobserve',
+    'disconnect'
+].forEach(function (method) {
+    ResizeObserver.prototype[method] = function () {
+        var _a;
+        return (_a = observers.get(this))[method].apply(_a, arguments);
+    };
+});
+
+var index = (function () {
+    // Export existing implementation if available.
+    if (typeof global$1.ResizeObserver !== 'undefined') {
+        return global$1.ResizeObserver;
+    }
+    return ResizeObserver;
+})();
+
+/* harmony default export */ __webpack_exports__["a"] = (index);
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__("c8ba")))
+
+/***/ }),
+
 /***/ "6eeb":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -44777,7 +45714,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/button/index.vue?vue&type=template&id=0bbd56ec&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/button/index.vue?vue&type=template&id=0bbd56ec&lang=pug&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('button',{key:_vm.size,ref:"main",staticClass:"vuoz-button",class:_vm.getClasses(),staticStyle:{"position":"relative"},on:{"mouseenter":_vm.onMouseEnter,"mouseleave":_vm.onMouseLeave,"mousedown":_vm.onMouseDown,"mouseup":_vm.onMouseUp}},[(_vm.shape === 'free')?_c('div',{staticClass:"content",class:{ 'is-hidden': _vm.load === true }},[_vm._t("left"),_vm._t("main",[_vm._v("Click here")]),_vm._t("right")],2):_vm._e(),(_vm.shape !== 'free' && !_vm.load)?_vm._t("shaped",[_c('span',{staticClass:"material-icons"},[_vm._v(_vm._s(_vm.icon))])]):_vm._e(),(_vm.load)?_c('div',{staticClass:"loading-icon"},[_vm._t("loader",[(_vm.shape === 'free')?[_c('vuoz-loading-icon',{attrs:{"name":"ellipsis","size":_vm.size}})]:_vm._e(),(_vm.shape === 'square')?[_c('vuoz-loading-icon',{attrs:{"name":"grid","size":_vm.size}})]:_vm._e(),(_vm.shape === 'circle')?[_c('vuoz-loading-icon',{attrs:{"name":"spinner","size":_vm.size}})]:_vm._e()])],2):_vm._e(),(_vm.type === 'dropdown')?_c('div',{directives:[{name:"click-outside",rawName:"v-click-outside",value:(_vm.onClickOutside),expression:"onClickOutside"}],ref:"menu",staticClass:"has-shadow"},[_vm._t("menu",[_c(_vm.menuComponent,{tag:"component",staticClass:"is-rounded-bottom-left is-rounded-bottom-right is-rounded-top-right",on:{"select":_vm.onMenu}})])],2):_vm._e()],2)}
 var staticRenderFns = []
 
@@ -50151,7 +51088,7 @@ tippy.setDefaultProps({
 
 //# sourceMappingURL=tippy.esm.js.map
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/loading/icon/index.vue?vue&type=template&id=7045f622&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/loading/icon/index.vue?vue&type=template&id=7045f622&lang=pug&
 var iconvue_type_template_id_7045f622_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:_vm.getClass()},[_c('div'),_c('div'),(_vm.name === 'ellipsis' || _vm.name === 'grid')?[_c('div')]:_vm._e(),(_vm.name === 'grid')?[_c('div'),_c('div'),_c('div'),_c('div'),_c('div'),_c('div')]:_vm._e()],2)}
 var iconvue_type_template_id_7045f622_lang_pug_staticRenderFns = []
 
@@ -50743,7 +51680,7 @@ var button_component = normalizeComponent(
 )
 
 /* harmony default export */ var components_button = (button_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/checkbox/index.vue?vue&type=template&id=52d5b07f&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/checkbox/index.vue?vue&type=template&id=52d5b07f&lang=pug&
 var checkboxvue_type_template_id_52d5b07f_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('button',{key:_vm.size,staticClass:"vuoz-checkbox",class:_vm.getClasses('main'),on:{"mouseenter":_vm.onMouseEnter,"mouseleave":_vm.onMouseLeave,"mousedown":_vm.onMouseDown,"mouseup":_vm.onMouseUp}},[(_vm.selected)?_c('div',{staticClass:"vuoz-checkbox__content is-rounded",class:_vm.getClasses('inner')}):_vm._e()])}
 var checkboxvue_type_template_id_52d5b07f_lang_pug_staticRenderFns = []
 
@@ -50989,7 +51926,7 @@ var checkbox_component = normalizeComponent(
 )
 
 /* harmony default export */ var components_checkbox = (checkbox_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/input/index.vue?vue&type=template&id=ee0d4c2e&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/input/index.vue?vue&type=template&id=ee0d4c2e&lang=pug&
 var inputvue_type_template_id_ee0d4c2e_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vuoz-input",class:((_vm.getClasses('container')) + " " + (_vm.isDragging ? ' is-unselectable' : '')),staticStyle:{"height":"auto","white-space":"nowrap"}},[(_vm.label.trim() !== '' && (_vm.labelPosition === 'left' || _vm.labelPosition === 'top'))?_c('div',{staticClass:"vuoz-input__label is-flex align-center",class:_vm.getClasses('label')},[_vm._v(_vm._s(_vm.label))]):_vm._e(),_c('div',{ref:"main",staticClass:"vuoz-input__main",class:_vm.getClasses('main')},[(_vm.required === true)?_c('div',{staticClass:"required-placeholder"}):_vm._e(),((_vm.getInputType())==='checkbox')?_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.value),expression:"value"}],ref:"input",staticClass:"has-text-regular",class:_vm.getClasses('input'),style:(("width: " + _vm.width + ";")),attrs:{"placeholder":_vm.placeholder,"disabled":_vm.disabled,"type":"checkbox"},domProps:{"checked":Array.isArray(_vm.value)?_vm._i(_vm.value,null)>-1:(_vm.value)},on:{"input":_vm.onInput,"change":function($event){var $$a=_vm.value,$$el=$event.target,$$c=$$el.checked?(true):(false);if(Array.isArray($$a)){var $$v=null,$$i=_vm._i($$a,$$v);if($$el.checked){$$i<0&&(_vm.value=$$a.concat([$$v]))}else{$$i>-1&&(_vm.value=$$a.slice(0,$$i).concat($$a.slice($$i+1)))}}else{_vm.value=$$c}}}}):((_vm.getInputType())==='radio')?_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.value),expression:"value"}],ref:"input",staticClass:"has-text-regular",class:_vm.getClasses('input'),style:(("width: " + _vm.width + ";")),attrs:{"placeholder":_vm.placeholder,"disabled":_vm.disabled,"type":"radio"},domProps:{"checked":_vm._q(_vm.value,null)},on:{"input":_vm.onInput,"change":function($event){_vm.value=null}}}):_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.value),expression:"value"}],ref:"input",staticClass:"has-text-regular",class:_vm.getClasses('input'),style:(("width: " + _vm.width + ";")),attrs:{"placeholder":_vm.placeholder,"disabled":_vm.disabled,"type":_vm.getInputType()},domProps:{"value":(_vm.value)},on:{"input":[function($event){if($event.target.composing){ return; }_vm.value=$event.target.value},_vm.onInput]}}),((_vm.icon.trim() !== '' && !_vm.isNumber()) || _vm.type === 'password')?[(_vm.type !== 'password')?_c('span',{staticClass:"material-icons is-unselectable"},[_vm._v(_vm._s(_vm.icon))]):_vm._e(),(_vm.type === 'password')?_c('span',{staticClass:"material-icons is-unselectable",on:{"click":_vm.togglePasswordVisibility}},[_vm._v(_vm._s(_vm.passwordVisibility === false ? 'visibility' : 'visibility_off'))]):_vm._e()]:_vm._e(),(_vm.isNumber())?[_c('div',{staticClass:"vuoz-input__number-stepper"},[_c('div',{staticClass:"material-icons is-unselectable up-arrow"},[_vm._v("arrow_drop_down")]),_c('div',{staticClass:"material-icons is-unselectable down-arrow"},[_vm._v("arrow_drop_down")]),_c('span',{staticClass:"material-icons is-unselectable",staticStyle:{"visibility":"hidden"}},[_vm._v("search")]),(_vm.isNumber())?[_c('div',{staticClass:"up-actuator",on:{"mousedown":function($event){return _vm.onMouseDown('up', $event)}}}),_c('div',{staticClass:"down-actuator",on:{"mousedown":function($event){return _vm.onMouseDown('down', $event)}}})]:_vm._e()],2)]:_vm._e()],2),(_vm.label.trim() !== '' && (_vm.labelPosition === 'right' || _vm.labelPosition === 'bottom'))?_c('div',{staticClass:"vuoz-input__label is-unselectable",class:_vm.getClasses('label')},[_vm._v(_vm._s(_vm.label))]):_vm._e()])}
 var inputvue_type_template_id_ee0d4c2e_lang_pug_staticRenderFns = []
 
@@ -51578,7 +52515,7 @@ var input_component = normalizeComponent(
 )
 
 /* harmony default export */ var input = (input_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/menu/index.vue?vue&type=template&id=5c060ec2&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/menu/index.vue?vue&type=template&id=5c060ec2&lang=pug&
 var menuvue_type_template_id_5c060ec2_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"is-flex-column has-padding-sm has-background-dark-grey"},[_c('div',{on:{"mousedown":_vm.onMouseDown}},[_vm._v("Bla")])])}
 var menuvue_type_template_id_5c060ec2_lang_pug_staticRenderFns = []
 
@@ -51721,7 +52658,7 @@ var menu_component = normalizeComponent(
 )
 
 /* harmony default export */ var components_menu = (menu_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/image/index.vue?vue&type=template&id=78f4070c&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/image/index.vue?vue&type=template&id=78f4070c&lang=pug&
 var imagevue_type_template_id_78f4070c_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"container",style:(_vm.containerStyle)},[_c('img',{style:(_vm.imageStyle),attrs:{"src":_vm.path}})])}
 var imagevue_type_template_id_78f4070c_lang_pug_staticRenderFns = []
 
@@ -51947,7 +52884,7 @@ var image_component = normalizeComponent(
 )
 
 /* harmony default export */ var components_image = (image_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/loading/bar/index.vue?vue&type=template&id=2d914f95&scoped=true&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/loading/bar/index.vue?vue&type=template&id=2d914f95&scoped=true&lang=pug&
 var barvue_type_template_id_2d914f95_scoped_true_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vuoz-loading__bar is-fullwidth has-background-medium-grey",class:("is-" + _vm.size)},[_c('div',{ref:"progress",staticClass:"vuoz-loading__bar-progress",class:("is-" + _vm.size)})])}
 var barvue_type_template_id_2d914f95_scoped_true_lang_pug_staticRenderFns = []
 
@@ -52033,7 +52970,7 @@ var bar_component = normalizeComponent(
 )
 
 /* harmony default export */ var bar = (bar_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/tabbar/tabs/index.vue?vue&type=template&id=0cb26430&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/tabbar/tabs/index.vue?vue&type=template&id=0cb26430&lang=pug&
 var tabsvue_type_template_id_0cb26430_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vuoz-tabs has-background-darker-grey"},[_c('vuoz-tab-bar',{attrs:{"size":_vm.size,"showAdd":_vm.showAdd,"draggable":_vm.draggable,"tabs":_vm.tabs,"selected":_vm.selected},on:{"select":_vm.onSelect,"close":_vm.onClose,"addtab":_vm.onAddTab,"dragged":_vm.onTabDragged}}),_c('keep-alive',[_c('vuoz-tab-content',{attrs:{"selected":_vm.selected,"component":_vm.getComponent(),"content":_vm.getContent()}})],1)],1)}
 var tabsvue_type_template_id_0cb26430_lang_pug_staticRenderFns = []
 
@@ -52043,7 +52980,7 @@ var tabsvue_type_template_id_0cb26430_lang_pug_staticRenderFns = []
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.find.js
 var es_array_find = __webpack_require__("7db0");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/tabbar/bar/index.vue?vue&type=template&id=74d384fe&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/tabbar/bar/index.vue?vue&type=template&id=74d384fe&lang=pug&
 var barvue_type_template_id_74d384fe_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vuoz-tab-bar",class:_vm.getClasses()},[_c('div',{staticClass:"vuoz-tabs-container"},[_c('draggable',{staticClass:"draggable",attrs:{"value":_vm.tabs,"delayOnTouchOnly":"true","draggable":".vuoz-tab","filter":".not-draggable","disabled":!this.draggable},on:{"start":_vm.onStartDrag,"end":_vm.onEndDrag}},[_vm._l((_vm.tabs),function(tab,index){return [_c('vuoz-tab',{key:tab.id,attrs:{"title":tab.title,"id":tab.id,"selected":_vm.selected === tab.id,"closable":tab.closable,"divider":(_vm.selected !== tab.id && _vm.tabs[index + 1] !== undefined && _vm.tabs[index + 1].id !== _vm.selected) || (_vm.selected !== tab.id && index === _vm.tabs.length - 1)},on:{"select":_vm.onSelect,"close":_vm.onClose}})]})],2),(_vm.showAdd === true)?_c('div',{staticClass:"plus-button not-draggable"},[_c('vuoz-button',{attrs:{"type":"push","size":_vm.getButtonSize(),"border":false,"shape":"circle","color":"transparent"},on:{"click":_vm.onAddTab},scopedSlots:_vm._u([{key:"shaped",fn:function(){return [_c('span',{staticClass:"material-icons"},[_vm._v("add")])]},proxy:true}],null,false,2481801972)})],1):_vm._e()],1)])}
 var barvue_type_template_id_74d384fe_lang_pug_staticRenderFns = []
 
@@ -52054,7 +52991,7 @@ var barvue_type_template_id_74d384fe_lang_pug_staticRenderFns = []
 var vuedraggable_umd = __webpack_require__("b76a");
 var vuedraggable_umd_default = /*#__PURE__*/__webpack_require__.n(vuedraggable_umd);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/tabbar/tab/index.vue?vue&type=template&id=4b13ce63&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/tabbar/tab/index.vue?vue&type=template&id=4b13ce63&lang=pug&
 var tabvue_type_template_id_4b13ce63_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vuoz-tab",class:_vm.getClasses(),on:{"mousedown":_vm.onSelect}},[_c('div',{staticClass:"title"},[_vm._v(_vm._s(_vm.title))]),(_vm.selected === true && _vm.closable === true)?_c('div',{staticClass:"close",on:{"click":function($event){$event.stopPropagation();return _vm.onClose($event)}}},[_c('vuoz-button',{attrs:{"type":"push","size":"tiny","shape":"square","color":"transparent"},scopedSlots:_vm._u([{key:"shaped",fn:function(){return [_c('span',{staticClass:"material-icons"},[_vm._v("close")])]},proxy:true}],null,false,1373312195)})],1):_vm._e(),(!_vm.selected && _vm.divider)?_c('div',{staticClass:"divider"}):_vm._e()])}
 var tabvue_type_template_id_4b13ce63_lang_pug_staticRenderFns = []
 
@@ -52353,7 +53290,7 @@ var tabbar_bar_component = normalizeComponent(
 )
 
 /* harmony default export */ var tabbar_bar = (tabbar_bar_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/tabbar/content/index.vue?vue&type=template&id=55c6385b&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/tabbar/content/index.vue?vue&type=template&id=55c6385b&lang=pug&
 var contentvue_type_template_id_55c6385b_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vuoz-tab-content has-border-left-medium-grey"},[(_vm.component)?_c(_vm.component.object,_vm._b({tag:"component"},'component',_vm.component.props,false)):_c('div',[_vm._v(_vm._s(_vm.content))])],1)}
 var contentvue_type_template_id_55c6385b_lang_pug_staticRenderFns = []
 
@@ -52624,7 +53561,7 @@ var tabs_component = normalizeComponent(
 )
 
 /* harmony default export */ var tabs = (tabs_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/console/full/index.vue?vue&type=template&id=0a787184&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/console/full/index.vue?vue&type=template&id=0a787184&lang=pug&
 var fullvue_type_template_id_0a787184_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vuoz-console__container",class:("has-toolbar-" + _vm.toolbarPosition)},[(_vm.toolbar === true && (_vm.toolbarPosition === 'left' || _vm.toolbarPosition === 'top'))?_c('div',[_c('vuoz-toolbar',{attrs:{"type":"fixed","position":_vm.toolbarPosition,"border":_vm.toolbarBorder,"size":_vm.size === 'small' ? 'tiny' : 'small',"items":_vm.toolbarItems},on:{"click":_vm.onToolbar}})],1):_vm._e(),_c('div',{ref:"console",staticClass:"vuoz-console__content flex-grow"},[(_vm.type === 'table')?[_c('table',{staticClass:"vuoz-table"},[_c('colgroup',[(_vm.date === true)?_c('col',{attrs:{"span":"1"}}):_vm._e(),_c('col',{attrs:{"span":"1"}}),(_vm.showCaller === true)?_c('col',{attrs:{"span":"1"}}):_vm._e()]),_c('tbody',[_vm._l((_vm.lines),function(line,index){return [_c('vuoz-console-item',{attrs:{"line":line,"size":_vm.size,"caller":_vm.showCaller,"date":_vm.date,"format":_vm.format,"bordered":_vm.bordered}})]})],2)])]:_vm._e(),(_vm.type === 'stack')?_vm._l((_vm.lines),function(line,index){return _c('div',{staticClass:"flex-grow",class:_vm.getStackLineClasses()},[_vm._v(_vm._s(line.content))])}):_vm._e()],2),(_vm.toolbar === true && (_vm.toolbarPosition === 'right' || _vm.toolbarPosition === 'bottom'))?_c('div',[_c('vuoz-toolbar',{attrs:{"type":"fixed","position":_vm.toolbarPosition,"border":_vm.toolbarBorder,"size":_vm.size === 'small' ? 'tiny' : 'small',"items":_vm.toolbarItems},on:{"click":_vm.onToolbar}})],1):_vm._e()])}
 var fullvue_type_template_id_0a787184_lang_pug_staticRenderFns = []
 
@@ -52634,7 +53571,7 @@ var fullvue_type_template_id_0a787184_lang_pug_staticRenderFns = []
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.splice.js
 var es_array_splice = __webpack_require__("a434");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/console/item/index.vue?vue&type=template&id=5e4554e2&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/console/item/index.vue?vue&type=template&id=5e4554e2&lang=pug&
 var itemvue_type_template_id_5e4554e2_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('tr',{class:_vm.getClasses('main')},[(_vm.date === true)?_c('td',[_c('div',{staticClass:"accessory-cell",class:_vm.getClasses('time:content')},[_vm._v(_vm._s(_vm.getFormattedDate()))])]):_vm._e(),_c('td',{staticClass:"flex-grow"},[_c('div',{staticClass:"has-text-regular",class:_vm.getClasses('line:content')},[_vm._v(_vm._s(_vm.getContent()))])]),(_vm.caller === true)?_c('td',[(_vm.line.caller)?_c('div',{staticClass:"accessory-cell",class:_vm.getClasses('caller')},[_vm._v(_vm._s(_vm.line.caller))]):_vm._e()]):_vm._e()])}
 var itemvue_type_template_id_5e4554e2_lang_pug_staticRenderFns = []
 
@@ -52985,7 +53922,7 @@ var item_component = normalizeComponent(
 )
 
 /* harmony default export */ var console_item = (item_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/toolbar/index.vue?vue&type=template&id=40095470&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/toolbar/index.vue?vue&type=template&id=40095470&lang=pug&
 var toolbarvue_type_template_id_40095470_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"main",staticClass:"vuoz-toolbar",class:_vm.getClasses('main')},[(_vm.type === 'contextual')?_c('div',{ref:"content",staticClass:"vuoz-toolbar__content-contextual"},_vm._l((_vm.buttons),function(button){return (button.role !== 'separator' && button.role !== 'spacer')?_c('div',{staticClass:"is-flex align-center has-padding-s"},[_c('vuoz-button',{ref:button.name,refInFor:true,attrs:{"size":_vm.size,"shape":button.shape || 'square',"color":button.color,"icon":button.icon,"rounded":button.rounded,"border":button.border,"type":button.type,"toggle":button.toggle,"toggled":button.toggled,"disabled":_vm.disabledFlag === true ? true : button.disabled || false,"loading":button.loading,"menuComponent":button.menu},on:{"click":function($event){return _vm.onClick($event, button.name)},"menu":function($event){return _vm.onMenuSelect($event, button.name)}}})],1):_vm._e()}),0):_c('div',{ref:"content",staticClass:"vuoz-toolbar__content-fixed"},[_vm._l((_vm.items),function(item,index){return (Array.isArray(_vm.items))?[(Array.isArray(item))?_c('div',{staticClass:"line",class:_vm.getClasses('line', index, _vm.items.length)},_vm._l((item),function(button){return _c('div',{staticClass:"align-center has-padding-s",class:{ spacer: button.role === 'spacer', separator: item.role === 'separator' }},[(button.role === 'separator')?_c('div',{class:("has-border-left-" + _vm.border),staticStyle:{"width":"2px","height":"100%"}}):_vm._e(),(button.role !== 'separator' && button.role !== 'spacer')?_c('vuoz-button',{ref:button.name,refInFor:true,attrs:{"size":_vm.size,"shape":button.shape || 'square',"color":button.color,"icon":button.icon,"rounded":button.rounded,"border":button.border,"type":button.type,"toggle":button.toggle,"toggled":button.toggled,"disabled":_vm.disabledFlag === true ? true : button.disabled || false,"loading":button.loading,"menuComponent":button.menu},on:{"click":function($event){return _vm.onClick($event, button.name)},"menu":function($event){return _vm.onMenuSelect($event, button.name)}}}):_vm._e()],1)}),0):_c('div',{staticClass:"align-center has-padding-s",class:{ spacer: item.role === 'spacer', separator: item.role === 'separator' }},[(item.role === 'separator')?_c('div',{class:("has-border-left-" + _vm.border),staticStyle:{"width":"2px","height":"100%"}}):_vm._e(),(item.role !== 'separator' && item.role !== 'spacer')?_c('vuoz-button',{ref:item.name,refInFor:true,attrs:{"size":_vm.size,"shape":item.shape || 'square',"color":item.color,"icon":item.icon,"rounded":item.rounded,"border":item.border,"type":item.type,"toggle":item.toggle,"toggled":item.toggled,"disabled":_vm.disabledFlag === true ? true : item.disabled || false,"loading":item.loading,"menuComponent":item.menu},on:{"click":function($event){return _vm.onClick($event, item.name)},"menu":function($event){return _vm.onMenuSelect($event, item.name)}}}):_vm._e()],1)]:_vm._e()}),_vm._l((_vm.items.buttons),function(item,index){return (!Array.isArray(_vm.items))?[(Array.isArray(item))?_c('div',{staticClass:"line",class:_vm.getClasses('line', index, _vm.items.buttons.length)},_vm._l((item),function(button){return _c('div',{staticClass:"align-center has-padding-s",class:{ spacer: button.role === 'spacer', separator: item.role === 'separator' }},[(button.role === 'separator')?_c('div',{class:("has-border-left-" + _vm.border),staticStyle:{"width":"2px","height":"100%"}}):_vm._e(),(button.role !== 'separator' && button.role !== 'spacer')?_c('vuoz-button',{ref:button.name,refInFor:true,attrs:{"size":_vm.size,"shape":button.shape || 'square',"color":button.color,"icon":button.icon,"rounded":button.rounded,"border":button.border,"type":button.type,"toggle":button.toggle,"toggled":button.toggled,"disabled":_vm.disabledFlag === true ? true : button.disabled || false,"loading":button.loading,"menuComponent":button.menu},on:{"click":function($event){return _vm.onClick($event, button.name)},"menu":function($event){return _vm.onMenuSelect($event, button.name)}}}):_vm._e()],1)}),0):_c('div',{staticClass:"align-center has-padding-s",class:{ spacer: item.role === 'spacer', separator: item.role === 'separator' }},[(item.role === 'separator')?_c('div',{class:("has-border-left-" + _vm.border),staticStyle:{"width":"2px","height":"100%"}}):_vm._e(),(item.role !== 'separator' && item.role !== 'spacer')?_c('vuoz-button',{ref:item.name,refInFor:true,attrs:{"size":_vm.size,"shape":item.shape || 'square',"color":item.color,"icon":item.icon,"rounded":item.rounded,"border":item.border,"type":item.type,"toggle":item.toggle,"toggled":item.toggled,"disabled":_vm.disabledFlag === true ? true : item.disabled || false,"loading":item.loading,"menuComponent":item.menu},on:{"click":function($event){return _vm.onClick($event, item.name)},"menu":function($event){return _vm.onMenuSelect($event, item.name)}}}):_vm._e()],1)]:_vm._e()})],2)])}
 var toolbarvue_type_template_id_40095470_lang_pug_staticRenderFns = []
 
@@ -54050,7 +54987,7 @@ var full_component = normalizeComponent(
 )
 
 /* harmony default export */ var full = (full_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/splitview/index.vue?vue&type=template&id=0639e608&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/splitview/index.vue?vue&type=template&id=0639e608&lang=pug&
 var splitviewvue_type_template_id_0639e608_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"container",staticClass:"vuoz-split-view__container",class:{ 'is-vertical': _vm.direction === 'vertical', 'is-horizontal': _vm.direction === 'horizontal', dragging: _vm.dragging === true },on:{"mousemove":_vm.onMouseMove,"mouseup":_vm.onMouseUp}},[_c('div',{ref:"first",staticClass:"vuoz-split-view__view is-flex flex-grow",staticStyle:{"position":"relative"}},[_c('div',{staticClass:"flex-grow"},[_vm._t("first",[_vm._v("First")])],2)]),_c('div',{ref:"second",staticClass:"vuoz-split-view__view is-flex flex-grow",staticStyle:{"position":"relative"}},[_c('div',{staticClass:"flex-grow"},[_vm._t("second",[_vm._v("Second")])],2)]),_c('div',{ref:"separator",staticClass:"vuoz-split-view__separator",class:{ 'is-vertical': _vm.direction === 'vertical', 'is-horizontal': _vm.direction === 'horizontal', hovered: _vm.hovered === true || _vm.dragging === true },on:{"mousedown":_vm.onSeparatorMouseDown,"mouseover":function($event){return _vm.onToggleOver(true)},"mouseout":function($event){return _vm.onToggleOver(false)},"mouseup":_vm.onMouseUp}},[_c('div',{ref:"displayed",staticClass:"vuoz-split-view__separator-displayed",on:{"mousedown":_vm.onSeparatorMouseDown,"mouseup":_vm.onMouseUp}})])])}
 var splitviewvue_type_template_id_0639e608_lang_pug_staticRenderFns = []
 
@@ -54387,7 +55324,7 @@ var splitview_component = normalizeComponent(
 )
 
 /* harmony default export */ var splitview = (splitview_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/titlebar/index.vue?vue&type=template&id=d1423968&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/titlebar/index.vue?vue&type=template&id=d1423968&lang=pug&
 var titlebarvue_type_template_id_d1423968_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vuoz-title-bar has-text-semi-bold",class:_vm.getClasses()},[_vm._v(_vm._s(_vm.title))])}
 var titlebarvue_type_template_id_d1423968_lang_pug_staticRenderFns = []
 
@@ -54475,7 +55412,7 @@ var titlebar_component = normalizeComponent(
 )
 
 /* harmony default export */ var titlebar = (titlebar_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/table/index.vue?vue&type=template&id=1cbda44b&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/table/index.vue?vue&type=template&id=1cbda44b&lang=pug&
 var tablevue_type_template_id_1cbda44b_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('table',{staticClass:"vuoz-table",class:("has-background-" + _vm.color),staticStyle:{"overflow-y":"scroll"},attrs:{"tabindex":"0","cellspacing":"0"},on:{"keydown":_vm.onKeyDown,"blur":_vm.unselect}},[_c('tbody',[_vm._t("headers",null,{"border":_vm.border,"selectable":_vm.selectable}),_vm._l((_vm.items),function(item,index){return _vm._t("rows",null,{"row":item,"id":index,"size":_vm.size,"border":_vm.border,"delimiter":_vm.delimiter,"selected":_vm.selection[index],"highlight":_vm.highlight,"selectable":_vm.selectable})})],2)])}
 var tablevue_type_template_id_1cbda44b_lang_pug_staticRenderFns = []
 
@@ -54755,7 +55692,7 @@ var table_component = normalizeComponent(
 )
 
 /* harmony default export */ var table = (table_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/table/header/index.vue?vue&type=template&id=02e34a55&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/table/header/index.vue?vue&type=template&id=02e34a55&lang=pug&
 var headervue_type_template_id_02e34a55_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('tr',{class:_vm.getClasses('row')},_vm._l((_vm.row),function(item,index){return _c('th',{class:_vm.getClasses('cell', index),style:(("width: " + (100 / _vm.row.length) + "%;")),on:{"mousedown":function($event){return _vm.onClick(index)}}},[_vm._v(_vm._s(item))])}),0)}
 var headervue_type_template_id_02e34a55_lang_pug_staticRenderFns = []
 
@@ -54882,7 +55819,7 @@ var header_component = normalizeComponent(
 )
 
 /* harmony default export */ var header = (header_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/table/row/index.vue?vue&type=template&id=77306aec&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/table/row/index.vue?vue&type=template&id=77306aec&lang=pug&
 var rowvue_type_template_id_77306aec_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('tr',{staticClass:"is-flex-column",class:"has-background-" + (this.background) + " " + _vm.getClasses('row'),staticStyle:{"height":"auto"}},[_vm._l((_vm.row),function(item,index){return (Array.isArray(_vm.row))?_c('td',{staticClass:"is-flex flex-grow",class:_vm.getClasses('cell', _vm.isObject(item), index, _vm.row.length),style:(("width: " + (100 / _vm.row.length) + "%;")),attrs:{"id":index},on:{"mousedown":function($event){return _vm.onClick(index, item, $event)}}},[(!_vm.isObject(item))?[_c('div',{staticClass:"flex-grow is-flex align-center is-fullheight"},[_vm._v(_vm._s(item))])]:_vm._e(),(_vm.isObject(item))?[_c(item.component,_vm._b({tag:"component"},'component',item.props,false))]:_vm._e()],2):_vm._e()}),(!Array.isArray(_vm.row))?_c('td',{staticClass:"is-fullwidth is-flex-column",class:_vm.getClasses('cell', _vm.isObject(_vm.row)),on:{"mousedown":function($event){return _vm.onClick(0, _vm.row, $event)}}},[(!_vm.isObject(_vm.row))?[_vm._v(_vm._s(_vm.row))]:_vm._e(),(_vm.isObject(_vm.row))?[_c(_vm.row.component,_vm._b({tag:"component"},'component',_vm.row.props,false))]:_vm._e()],2):_vm._e()],2)}
 var rowvue_type_template_id_77306aec_lang_pug_staticRenderFns = []
 
@@ -55130,7 +56067,7 @@ var row_component = normalizeComponent(
 )
 
 /* harmony default export */ var row = (row_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/preferences/item/index.vue?vue&type=template&id=6ff3101c&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/preferences/item/index.vue?vue&type=template&id=6ff3101c&lang=pug&
 var itemvue_type_template_id_6ff3101c_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"is-flex align-center is-small is-unselectable"},[_c('div',{staticClass:"material-icons has-padding-left-sm"},[_vm._v(_vm._s(_vm.icon))]),_c('div',{staticClass:"has-padding-left-ms has-padding-right-sm"},[_vm._v(_vm._s(_vm.title))])])}
 var itemvue_type_template_id_6ff3101c_lang_pug_staticRenderFns = []
 
@@ -55198,7 +56135,7 @@ var preferences_item_component = normalizeComponent(
 )
 
 /* harmony default export */ var preferences_item = (preferences_item_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/preferences/panel/index.vue?vue&type=template&id=cf2dc630&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/preferences/panel/index.vue?vue&type=template&id=cf2dc630&lang=pug&
 var panelvue_type_template_id_cf2dc630_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"flex-grow is-flex"},[_vm._t("default")],2)}
 var panelvue_type_template_id_cf2dc630_lang_pug_staticRenderFns = []
 
@@ -55256,7 +56193,7 @@ var panel_component = normalizeComponent(
 )
 
 /* harmony default export */ var panel = (panel_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/monitor/index.vue?vue&type=template&id=050b8a62&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/monitor/index.vue?vue&type=template&id=050b8a62&lang=pug&
 var monitorvue_type_template_id_050b8a62_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"container",staticClass:"is-fullsize"},[_c('canvas',{attrs:{"id":"monitor"}})])}
 var monitorvue_type_template_id_050b8a62_lang_pug_staticRenderFns = []
 
@@ -55423,17 +56360,20 @@ var monitor_component = normalizeComponent(
 )
 
 /* harmony default export */ var components_monitor = (monitor_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/whiteboard/index.vue?vue&type=template&id=3d417a0e&lang=pug&
-var whiteboardvue_type_template_id_3d417a0e_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"container",staticClass:"flex-grow is-flex-column",staticStyle:{"width":"100%","height":"100%"}},[_c('vuoz-toolbar',{attrs:{"items":_vm.toolbarItems,"type":"fixed","position":"top","size":"small","color":"dark-grey","border":"medium-grey","shadow":false},on:{"click":_vm.onToolbar,"menu":_vm.onMenuSelect}}),_vm._m(0)],1)}
-var whiteboardvue_type_template_id_3d417a0e_lang_pug_staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"is-flex flex-grow"},[_c('canvas',{attrs:{"id":"whiteboard"}})])}]
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/whiteboard/index.vue?vue&type=template&id=2add72dc&lang=pug&
+var whiteboardvue_type_template_id_2add72dc_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"container",staticClass:"flex-grow is-flex-column",staticStyle:{"width":"100%","height":"100%"}},[_c('vuoz-toolbar',{attrs:{"items":_vm.toolbarItems,"type":"fixed","position":"top","size":"small","color":"dark-grey","border":"medium-grey","shadow":false},on:{"click":_vm.onToolbar,"menu":_vm.onMenuSelect}}),_vm._m(0)],1)}
+var whiteboardvue_type_template_id_2add72dc_lang_pug_staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"is-flex flex-grow"},[_c('canvas',{attrs:{"id":"whiteboard"}})])}]
 
 
-// CONCATENATED MODULE: ./src/components/whiteboard/index.vue?vue&type=template&id=3d417a0e&lang=pug&
+// CONCATENATED MODULE: ./src/components/whiteboard/index.vue?vue&type=template&id=2add72dc&lang=pug&
 
 // EXTERNAL MODULE: ./node_modules/@arch-inc/fabricjs-psbrush/dist/index.js
 var dist = __webpack_require__("2374");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/whiteboard/toolbar/brush.menu/index.vue?vue&type=template&id=d33cef9a&lang=pug&
+// EXTERNAL MODULE: ./node_modules/resize-observer-polyfill/dist/ResizeObserver.es.js
+var ResizeObserver_es = __webpack_require__("6dd8");
+
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/whiteboard/toolbar/brush.menu/index.vue?vue&type=template&id=d33cef9a&lang=pug&
 var brush_menuvue_type_template_id_d33cef9a_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"is-flex-column has-padding-sm has-padding-left-ms has-background-medium-grey",staticStyle:{"width":"296px"}},[_c('h3',{staticClass:"has-border-bottom-dark-grey has-padding-bottom-sm"},[_vm._v("Brush")]),_c('v-swatches',{attrs:{"inline":"","show-fallback":"","fallback-input-type":"color","background-color":"rgba(0, 0, 0, 0)","show-border":"","swatch-size":"30","spacing-size":7,"shapes":"circles","fallback-input-class":"vuoz-color-menu-fallback"},model:{value:(_vm.brushColor),callback:function ($$v) {_vm.brushColor=$$v},expression:"brushColor"}}),_c('div',{staticClass:"has-border-top-dark-grey has-margin-top-sm has-padding-top-sm is-flex flex-grow align-center",staticStyle:{"justify-content":"space-between"}},[_c('div',[_vm._v("Size (px) ")]),_c('vuoz-input',{attrs:{"type":"uinteger","color":"dark-grey","initial":_vm.brushSize,"rounded":""},on:{"change":_vm.onSizeChange}})],1)],1)}
 var brush_menuvue_type_template_id_d33cef9a_lang_pug_staticRenderFns = []
 
@@ -55612,7 +56552,7 @@ var brush_menu_component = normalizeComponent(
 )
 
 /* harmony default export */ var brush_menu = (brush_menu_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46711a3f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/whiteboard/toolbar/background.menu/index.vue?vue&type=template&id=3a4ab841&lang=pug&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/whiteboard/toolbar/background.menu/index.vue?vue&type=template&id=3a4ab841&lang=pug&
 var background_menuvue_type_template_id_3a4ab841_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"is-flex-column has-padding-sm has-padding-left-ms has-background-medium-grey",staticStyle:{"width":"296px"}},[_c('v-swatches',{attrs:{"inline":"","show-fallback":"","fallback-input-type":"color","background-color":"rgba(0, 0, 0, 0)","show-border":"","swatch-size":"30","spacing-size":7,"shapes":"circles","fallback-input-class":"vuoz-color-menu-fallback"},model:{value:(_vm.backgroundColor),callback:function ($$v) {_vm.backgroundColor=$$v},expression:"backgroundColor"}})],1)}
 var background_menuvue_type_template_id_3a4ab841_lang_pug_staticRenderFns = []
 
@@ -55940,6 +56880,7 @@ var whiteBoardToolbarItems = [deleteButton, separator, brushButton, backgroundBu
 
 
 
+
  // Toobar
 
 
@@ -55969,7 +56910,7 @@ var whiteboardvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vu
 
     _this.toolbarItems = whiteBoardToolbarItems; // State
 
-    _this.pressure = 0; // Objects 
+    _this.pressure = 0; // Objects
 
     _this.objects = [];
     return _this;
@@ -55978,7 +56919,8 @@ var whiteboardvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vu
   _createClass(VuozComponent, [{
     key: "mounted",
     value: function mounted() {
-      window.addEventListener("resize", this.onResize); // For Storybook
+      this.resizeObserver = new ResizeObserver_es["a" /* default */](this.onResize);
+      this.resizeObserver.observe(this.$refs.container.parentElement); // For Storybook
 
       var inFrame = this.$refs.container.ownerDocument !== document; // Get full container's size
 
@@ -56023,7 +56965,7 @@ var whiteboardvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vu
   }, {
     key: "beforeDestroy",
     value: function beforeDestroy() {
-      window.removeEventListener("resize", this.onResize);
+      this.resizeObserver.disconnect();
       this.canvas.off("mouse:down", this.onMouseDown);
       this.canvas.off("mouse:down:before", this.onMouseDownBefore);
       this.canvas.off("mouse:move", this.onMouseMove);
@@ -56110,13 +57052,20 @@ var whiteboardvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vu
   }, {
     key: "onResize",
     value: function onResize() {
-      // Get full container's size
-      var container = this.$refs.container;
-      this.width = container.clientWidth;
-      this.height = container.clientHeight;
-      this.canvas.setWidth(this.width);
-      this.canvas.setHeight(this.height);
-      this.canvas.calcOffset();
+      var _this2 = this;
+
+      this.$nextTick(function () {
+        // Get full container's size
+        var container = _this2.$refs.container;
+        _this2.width = container.clientWidth;
+        _this2.height = container.clientHeight;
+
+        _this2.canvas.setWidth(_this2.width);
+
+        _this2.canvas.setHeight(_this2.height);
+
+        _this2.canvas.calcOffset();
+      });
     }
   }, {
     key: "onToolbar",
@@ -56228,8 +57177,8 @@ whiteboardvue_type_script_lang_ts_VuozComponent = __decorate([vue_class_componen
 
 var whiteboard_component = normalizeComponent(
   components_whiteboardvue_type_script_lang_ts_,
-  whiteboardvue_type_template_id_3d417a0e_lang_pug_render,
-  whiteboardvue_type_template_id_3d417a0e_lang_pug_staticRenderFns,
+  whiteboardvue_type_template_id_2add72dc_lang_pug_render,
+  whiteboardvue_type_template_id_2add72dc_lang_pug_staticRenderFns,
   false,
   null,
   null,
