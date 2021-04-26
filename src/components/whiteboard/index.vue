@@ -58,47 +58,49 @@ export default class VuozComponent extends Vue {
   private objects: any[] = [];
 
   private mounted() {
-    // For Storybook
-    // TODO: For Electron: ping/pong with resize event
-    const inFrame =
-      (this.$refs.container as HTMLElement).ownerDocument !== document;
-    // Get full container's size
-    const container: HTMLElement = this.$refs.container as HTMLElement;
-    // For Storybook iframe
-    this.width = container.clientWidth;
-    this.height = container.clientHeight;
-    if (inFrame && container.parentNode && container.parentNode.parentNode) {
-      this.width = (container.parentNode.parentNode as Element).clientWidth;
-      this.height = (container.parentNode.parentNode as Element).clientHeight;
-    }
-    // Creates new full size canvas
-    this.canvas = new fabric.Canvas("whiteboard", {
-      width: this.width, // * window.devicePixelRatio,
-      height: this.height, // * window.devicePixelRatio,
-      backgroundColor: this.backgroundColor,
-      // To avoid highlighted bounding box
-      // selection: false,
-      preserveObjectStacking: true,
-      targetFindTolerance: 5,
-      // @see https://stackoverflow.com/a/55614126/1060921
-      fireRightClick: true, // <-- enable firing of right click events
-      fireMiddleClick: true, // <-- enable firing of middle click events
-      stopContextMenu: true,
-      isDrawingMode: true,
-      // @ts-expect-error
-      enablePointerEvents: true,
-    });
-    // Brush handles pen, but not trackpad
-    this.brush = new PSBrush(this.canvas);
-    this.brush.width = 10;
-    this.brush.color = this.brushColor;
-    this.brush.simplifyHighestQuality = true;
-    this.canvas.freeDrawingBrush = this.brush;
+    this.$nextTick(() => {
+      // For Storybook
+      // TODO: For Electron: ping/pong with resize event
+      const inFrame =
+        (this.$refs.container as HTMLElement).ownerDocument !== document;
+      // Get full container's size
+      const container: HTMLElement = this.$refs.container as HTMLElement;
+      // For Storybook iframe
+      this.width = container.clientWidth;
+      this.height = container.clientHeight;
+      if (inFrame && container.parentNode && container.parentNode.parentNode) {
+        this.width = (container.parentNode.parentNode as Element).clientWidth;
+        this.height = (container.parentNode.parentNode as Element).clientHeight;
+      }
+      // Creates new full size canvas
+      this.canvas = new fabric.Canvas("whiteboard", {
+        width: this.width, // * window.devicePixelRatio,
+        height: this.height, // * window.devicePixelRatio,
+        backgroundColor: this.backgroundColor,
+        // To avoid highlighted bounding box
+        // selection: false,
+        preserveObjectStacking: true,
+        targetFindTolerance: 5,
+        // @see https://stackoverflow.com/a/55614126/1060921
+        fireRightClick: true, // <-- enable firing of right click events
+        fireMiddleClick: true, // <-- enable firing of middle click events
+        stopContextMenu: true,
+        isDrawingMode: true,
+        // @ts-expect-error
+        enablePointerEvents: true,
+      });
+      // Brush handles pen, but not trackpad
+      this.brush = new PSBrush(this.canvas);
+      this.brush.width = 10;
+      this.brush.color = this.brushColor;
+      this.brush.simplifyHighestQuality = true;
+      this.canvas.freeDrawingBrush = this.brush;
 
-    this.canvas.on("mouse:down", this.onMouseDown);
-    this.canvas.on("mouse:down:before", this.onMouseDownBefore);
-    this.canvas.on("mouse:move", this.onMouseMove);
-    this.canvas.on("mouse:up", this.onMouseUp);
+      this.canvas.on("mouse:down", this.onMouseDown);
+      this.canvas.on("mouse:down:before", this.onMouseDownBefore);
+      this.canvas.on("mouse:move", this.onMouseMove);
+      this.canvas.on("mouse:up", this.onMouseUp);
+    });
   }
 
   private beforeDestroy() {

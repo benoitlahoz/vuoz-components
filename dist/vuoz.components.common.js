@@ -55423,12 +55423,12 @@ var monitor_component = normalizeComponent(
 )
 
 /* harmony default export */ var components_monitor = (monitor_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/whiteboard/index.vue?vue&type=template&id=09176768&lang=pug&
-var whiteboardvue_type_template_id_09176768_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"container",staticClass:"flex-grow is-flex-column",staticStyle:{"width":"100%","height":"100%"}},[_c('vuoz-toolbar',{attrs:{"items":_vm.toolbarItems,"type":"fixed","position":"top","size":"small","color":"dark-grey","border":"medium-grey","shadow":false},on:{"click":_vm.onToolbar,"menu":_vm.onMenuSelect}}),_vm._m(0)],1)}
-var whiteboardvue_type_template_id_09176768_lang_pug_staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"is-flex flex-grow"},[_c('canvas',{attrs:{"id":"whiteboard"}})])}]
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"756a4cf0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/whiteboard/index.vue?vue&type=template&id=7a9d1880&lang=pug&
+var whiteboardvue_type_template_id_7a9d1880_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"container",staticClass:"flex-grow is-flex-column",staticStyle:{"width":"100%","height":"100%"}},[_c('vuoz-toolbar',{attrs:{"items":_vm.toolbarItems,"type":"fixed","position":"top","size":"small","color":"dark-grey","border":"medium-grey","shadow":false},on:{"click":_vm.onToolbar,"menu":_vm.onMenuSelect}}),_vm._m(0)],1)}
+var whiteboardvue_type_template_id_7a9d1880_lang_pug_staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"is-flex flex-grow"},[_c('canvas',{attrs:{"id":"whiteboard"}})])}]
 
 
-// CONCATENATED MODULE: ./src/components/whiteboard/index.vue?vue&type=template&id=09176768&lang=pug&
+// CONCATENATED MODULE: ./src/components/whiteboard/index.vue?vue&type=template&id=7a9d1880&lang=pug&
 
 // EXTERNAL MODULE: ./node_modules/@arch-inc/fabricjs-psbrush/dist/index.js
 var dist = __webpack_require__("2374");
@@ -55978,47 +55978,55 @@ var whiteboardvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vu
   _createClass(VuozComponent, [{
     key: "mounted",
     value: function mounted() {
-      // For Storybook
-      // TODO: For Electron: ping/pong with resize event
-      var inFrame = this.$refs.container.ownerDocument !== document; // Get full container's size
+      var _this2 = this;
 
-      var container = this.$refs.container; // For Storybook iframe
+      this.$nextTick(function () {
+        // For Storybook
+        // TODO: For Electron: ping/pong with resize event
+        var inFrame = _this2.$refs.container.ownerDocument !== document; // Get full container's size
 
-      this.width = container.clientWidth;
-      this.height = container.clientHeight;
+        var container = _this2.$refs.container; // For Storybook iframe
 
-      if (inFrame && container.parentNode && container.parentNode.parentNode) {
-        this.width = container.parentNode.parentNode.clientWidth;
-        this.height = container.parentNode.parentNode.clientHeight;
-      } // Creates new full size canvas
+        _this2.width = container.clientWidth;
+        _this2.height = container.clientHeight;
+
+        if (inFrame && container.parentNode && container.parentNode.parentNode) {
+          _this2.width = container.parentNode.parentNode.clientWidth;
+          _this2.height = container.parentNode.parentNode.clientHeight;
+        } // Creates new full size canvas
 
 
-      this.canvas = new fabric["fabric"].Canvas("whiteboard", {
-        width: this.width,
-        height: this.height,
-        backgroundColor: this.backgroundColor,
-        // To avoid highlighted bounding box
-        // selection: false,
-        preserveObjectStacking: true,
-        targetFindTolerance: 5,
-        // @see https://stackoverflow.com/a/55614126/1060921
-        fireRightClick: true,
-        fireMiddleClick: true,
-        stopContextMenu: true,
-        isDrawingMode: true,
-        // @ts-expect-error
-        enablePointerEvents: true
-      }); // Brush handles pen, but not trackpad
+        _this2.canvas = new fabric["fabric"].Canvas("whiteboard", {
+          width: _this2.width,
+          height: _this2.height,
+          backgroundColor: _this2.backgroundColor,
+          // To avoid highlighted bounding box
+          // selection: false,
+          preserveObjectStacking: true,
+          targetFindTolerance: 5,
+          // @see https://stackoverflow.com/a/55614126/1060921
+          fireRightClick: true,
+          fireMiddleClick: true,
+          stopContextMenu: true,
+          isDrawingMode: true,
+          // @ts-expect-error
+          enablePointerEvents: true
+        }); // Brush handles pen, but not trackpad
 
-      this.brush = new dist["PSBrush"](this.canvas);
-      this.brush.width = 10;
-      this.brush.color = this.brushColor;
-      this.brush.simplifyHighestQuality = true;
-      this.canvas.freeDrawingBrush = this.brush;
-      this.canvas.on("mouse:down", this.onMouseDown);
-      this.canvas.on("mouse:down:before", this.onMouseDownBefore);
-      this.canvas.on("mouse:move", this.onMouseMove);
-      this.canvas.on("mouse:up", this.onMouseUp);
+        _this2.brush = new dist["PSBrush"](_this2.canvas);
+        _this2.brush.width = 10;
+        _this2.brush.color = _this2.brushColor;
+        _this2.brush.simplifyHighestQuality = true;
+        _this2.canvas.freeDrawingBrush = _this2.brush;
+
+        _this2.canvas.on("mouse:down", _this2.onMouseDown);
+
+        _this2.canvas.on("mouse:down:before", _this2.onMouseDownBefore);
+
+        _this2.canvas.on("mouse:move", _this2.onMouseMove);
+
+        _this2.canvas.on("mouse:up", _this2.onMouseUp);
+      });
     }
   }, {
     key: "beforeDestroy",
@@ -56109,19 +56117,19 @@ var whiteboardvue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vu
   }, {
     key: "onResize",
     value: function onResize() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.$nextTick(function () {
         // Get full container's size
-        var container = _this2.$refs.container;
-        _this2.width = container.clientWidth;
-        _this2.height = container.clientHeight;
+        var container = _this3.$refs.container;
+        _this3.width = container.clientWidth;
+        _this3.height = container.clientHeight;
 
-        _this2.canvas.setWidth(_this2.width);
+        _this3.canvas.setWidth(_this3.width);
 
-        _this2.canvas.setHeight(_this2.height);
+        _this3.canvas.setHeight(_this3.height);
 
-        _this2.canvas.calcOffset();
+        _this3.canvas.calcOffset();
       });
     }
   }, {
@@ -56234,8 +56242,8 @@ whiteboardvue_type_script_lang_ts_VuozComponent = __decorate([vue_class_componen
 
 var whiteboard_component = normalizeComponent(
   components_whiteboardvue_type_script_lang_ts_,
-  whiteboardvue_type_template_id_09176768_lang_pug_render,
-  whiteboardvue_type_template_id_09176768_lang_pug_staticRenderFns,
+  whiteboardvue_type_template_id_7a9d1880_lang_pug_render,
+  whiteboardvue_type_template_id_7a9d1880_lang_pug_staticRenderFns,
   false,
   null,
   null,
