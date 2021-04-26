@@ -23,7 +23,9 @@
         :toggled="button.toggled",
         :disabled="disabledFlag === true ? true : button.disabled || false",
         :loading="button.loading",
-        @click="onClick($event, button.name)"
+        @click="onClick($event, button.name)",
+        :menuComponent="button.menu",
+        @menu="onMenuSelect($event, button.name)"
       )
   // Fixed type, TODO @see: https://stackoverflow.com/a/56249209/1060921
   .vuoz-toolbar__content-fixed(v-else, ref="content")
@@ -37,8 +39,9 @@
         // Here, item is an array for button description
         .align-center.has-padding-s(
           v-for="button in item",
-          :class="{ spacer: button.role === 'spacer' }"
+          :class="{ spacer: button.role === 'spacer', separator: item.role === 'separator' }"
         )
+          div(v-if="button.role === 'separator'", :class="`has-border-left-${border}`", style="width: 2px; height: 100%;")
           vuoz-button(
             v-if="button.role !== 'separator' && button.role !== 'spacer'",
             :ref="button.name",
@@ -53,14 +56,16 @@
             :toggled="button.toggled",
             :disabled="disabledFlag === true ? true : button.disabled || false",
             :loading="button.loading",
-            @click="onClick($event, button.name)"
+            @click="onClick($event, button.name)",
+            :menuComponent="button.menu",
+            @menu="onMenuSelect($event, button.name)"
           )
       // Unidimensional: one line or row
       .align-center.has-padding-s(
         v-else,
-        ,
-        :class="{ spacer: item.role === 'spacer' }"
+        :class="{ spacer: item.role === 'spacer', separator: item.role === 'separator' }"
       )
+        div(v-if="item.role === 'separator'", :class="`has-border-left-${border}`", style="width: 2px; height: 100%;")
         // Here, item is a button description
         vuoz-button(
           v-if="item.role !== 'separator' && item.role !== 'spacer'",
@@ -76,7 +81,9 @@
           :toggled="item.toggled",
           :disabled="disabledFlag === true ? true : item.disabled || false",
           :loading="item.loading",
-          @click="onClick($event, item.name)"
+          @click="onClick($event, item.name)",
+          :menuComponent="item.menu",
+          @menu="onMenuSelect($event, item.name)"
         )
     // Objects
     template(
@@ -91,8 +98,9 @@
         // Here, item is an array for button description
         .align-center.has-padding-s(
           v-for="button in item",
-          :class="{ spacer: button.role === 'spacer' }"
+          :class="{ spacer: button.role === 'spacer', separator: item.role === 'separator' }"
         )
+          div(v-if="button.role === 'separator'", :class="`has-border-left-${border}`", style="width: 2px; height: 100%;")
           vuoz-button(
             v-if="button.role !== 'separator' && button.role !== 'spacer'",
             :ref="button.name",
@@ -107,13 +115,16 @@
             :toggled="button.toggled",
             :disabled="disabledFlag === true ? true : button.disabled || false",
             :loading="button.loading",
-            @click="onClick($event, button.name)"
+            @click="onClick($event, button.name)",
+            :menuComponent="button.menu",
+            @menu="onMenuSelect($event, button.name)"
           )
       // Unidimensional: one line or row
       .align-center.has-padding-s(
         v-else,
-        :class="{ spacer: item.role === 'spacer' }"
+        :class="{ spacer: item.role === 'spacer', separator: item.role === 'separator' }"
       )
+        div(v-if="item.role === 'separator'", :class="`has-border-left-${border}`", style="width: 2px; height: 100%;")
         // Here, item is a button description
         vuoz-button(
           v-if="item.role !== 'separator' && item.role !== 'spacer'",
@@ -129,7 +140,9 @@
           :toggled="item.toggled",
           :disabled="disabledFlag === true ? true : item.disabled || false",
           :loading="item.loading",
-          @click="onClick($event, item.name)"
+          @click="onClick($event, item.name)",
+          :menuComponent="item.menu",
+          @menu="onMenuSelect($event, item.name)"
         )
 </template>
 <script lang='ts'>
@@ -575,6 +588,10 @@ export default class VuozComponent extends Vue {
     }
   }
 
+  private onMenuSelect(event: any) {
+    this.$emit('menu', event)
+  }
+
   public disable(name?: string) {
     if (name) {
       const button = this.buttons.find((b) => b.name === name);
@@ -589,6 +606,24 @@ export default class VuozComponent extends Vue {
       const el = this.$refs.main as HTMLElement;
       el.style.setProperty("--vuoz-toolbar__opacity", "0.75");
       this.$emit("disable");
+    }
+  }
+
+  public select(name?: string) {
+    if (name) {
+      const button = (this.$refs[name] as any);
+      if (button) {
+        button[0].click(true);
+      }
+    }
+  }
+
+  public unselect(name?: string) {
+    if (name) {
+      const button = (this.$refs[name] as any);
+      if (button) {
+        button[0].unselect();
+      }
     }
   }
 

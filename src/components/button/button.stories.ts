@@ -20,7 +20,7 @@ export default {
       description: 'Type of the button.',
       control: {
         type: 'select',
-        options: ['push', 'toggle']
+        options: ['push', 'toggle', 'dropdown']
       }
     },
     size: {

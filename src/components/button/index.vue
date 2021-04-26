@@ -1,11 +1,13 @@
 <template lang='pug'>
 button.vuoz-button(
+  ref="main",
   :class="getClasses()",
   :key="size",
   @mouseenter="onMouseEnter",
   @mouseleave="onMouseLeave",
   @mousedown="onMouseDown",
-  @mouseup="onMouseUp"
+  @mouseup="onMouseUp",
+  style="position: relative"
 )
   .content(v-if="shape === 'free'", :class="{ 'is-hidden': load === true }")
     // @slot Icon left: TODO
@@ -25,10 +27,25 @@ button.vuoz-button(
         vuoz-loading-icon(name="grid", :size="size")
       template(v-if="shape === 'circle'")
         vuoz-loading-icon(name="spinner", :size="size")
+  .has-shadow(
+    v-if="type === 'dropdown'",
+    ref="menu",
+    v-click-outside="onClickOutside"
+  )
+    // style="position: absolute; left: 0px; top: 30px; display: inline-block; width: 250px; z-index: 9999;"
+    // Can provide a slot content or a component via props
+    slot(name="menu") 
+      component.is-rounded-bottom-left.is-rounded-bottom-right.is-rounded-top-right(
+        :is="menuComponent",
+        @select="onMenu"
+      )
 </template>
 <script lang='ts'>
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
+import tippy, { Content, MultipleTargets, Placement } from "tippy.js";
 import VuozLoadingIcon from "../loading/icon/index.vue";
+import { clickOutside } from "@/directives/click.outside";
+import { VueConstructor } from "vue";
 /**
  * Vuoz standard button
  * @displayName VuozButton
@@ -38,6 +55,9 @@ import VuozLoadingIcon from "../loading/icon/index.vue";
   components: {
     VuozLoadingIcon,
   },
+  directives: {
+    clickOutside,
+  },
 })
 export default class VuozComponent extends Vue {
   /**
@@ -45,7 +65,10 @@ export default class VuozComponent extends Vue {
    */
   @Prop({ type: Boolean, default: false }) readonly disabled!: boolean;
   @Prop({ type: Boolean, default: false }) readonly loading!: boolean;
-  @Prop({ type: String, default: "push" }) readonly type!: "push" | "toggle";
+  @Prop({ type: String, default: "push" }) readonly type!:
+    | "push"
+    | "toggle"
+    | "dropdown";
   @Prop({ type: String, default: "normal" }) readonly size!:
     | "tiny"
     | "small"
@@ -65,6 +88,9 @@ export default class VuozComponent extends Vue {
   @Prop({ type: Boolean, default: false }) readonly toggled!: string;
   @Prop({ type: Boolean, default: false }) readonly shadow!: boolean;
   @Prop({ type: String, default: "close" }) readonly icon!: string;
+  @Prop({ type: String, default: "bottom-left" })
+  readonly menuPlacement!: Placement;
+  @Prop({ type: Function }) readonly menuComponent!: VueConstructor | null;
   /**
    * Internal component's data
    */
@@ -73,14 +99,62 @@ export default class VuozComponent extends Vue {
   private disable = false;
   private load = false;
   /**
+   * Dropdown
+   */
+  private menu: any = null;
+  /**
    * Initialization and tear-down
    */
   private mounted() {
     if (this.toggled) {
       this.selected = true;
     }
-    if (this.shape === "free") {
-      //
+    if (this.type === "dropdown") {
+      const main = this.$refs.main as MultipleTargets;
+      const menu = this.$refs.menu as Content;
+      this.menu = tippy(main, {
+        content: menu,
+        trigger: "manual",
+        duration: [0, 0],
+        hideOnClick: false,
+        arrow: false,
+        interactive: true,
+        allowHTML: true,
+        // placement: this.menuPlacement,
+        placement: "bottom-start",
+        offset: [0, 5],
+      });
+      /*
+      this.menu = tippy(main, {
+        content: menu,
+        render(instance) {
+          // The recommended structure is to use the popper as an outer wrapper
+          // element, with an inner `box` element
+          const popper = document.createElement("div");
+          const box = document.createElement("div");
+
+          popper.appendChild(box);
+
+          box.className = "my-custom-class";
+          box.innerHTML = (instance.props.content as string);
+
+          function onUpdate(prevProps: any, nextProps: any) {
+            // DOM diffing
+            if (prevProps.content !== nextProps.content) {
+              box.innerHTML = nextProps.content;
+            }
+          }
+
+          // Return an object with two properties:
+          // - `popper` (the root popper element)
+          // - `onUpdate` callback whenever .setProps() or .setContent() is called
+          return {
+            popper,
+            onUpdate, // optional
+          };
+        },
+      });
+      */
     }
   }
   private updated() {
@@ -122,7 +196,7 @@ export default class VuozComponent extends Vue {
     // Small caps
     this.smallcaps ? (classes += ` is-small-caps`) : "";
     // Background color
-    if (this.type === "toggle") {
+    if (this.type !== "push") {
       if (this.selected) {
         classes += ` has-background-${this.toggle}`;
       } else {
@@ -170,39 +244,70 @@ export default class VuozComponent extends Vue {
   }
 
   public click(toggle: boolean) {
-    this.selected = toggle
+    this.selected = toggle;
+  }
+
+  public unselect() {
+    if (this.selected) {
+      this.selected = false;
+      this.$emit("click", this.selected);
+    }
   }
 
   /**
    * Mouse events
    */
-  onMouseEnter() {
+  private onMouseEnter() {
     if (!this.load) {
       this.hovered = true;
     }
   }
-  onMouseLeave() {
+  private onMouseLeave() {
     if (!this.load) {
       this.hovered = false;
     }
   }
-  onMouseDown(event: any) {
+  private onMouseDown(event: any) {
     event.stopPropagation();
     if (!this.disable && !this.load) {
-      if (this.type === "toggle") {
+      if (this.type !== "push") {
         // Toggles or untoggles the button
         this.selected = !this.selected;
+        if (this.type === "dropdown") {
+          if (this.selected) {
+            this.menu.show();
+          } else {
+            this.menu.hide();
+          }
+        }
       } else {
         this.selected = true;
       }
       this.$emit("click", this.selected);
     }
   }
-  onMouseUp(event: any) {
+  private onMouseUp(event: any) {
     event.stopPropagation();
-    if (this.type !== "toggle" && !this.disable && !this.load) {
+    if (this.type === "push" && !this.disable && !this.load) {
       this.selected = false;
       this.$emit("click", this.selected);
+    }
+  }
+
+  private onMenu(event: any) {
+    this.$emit("menu", event);
+  }
+
+  private onClickOutside(event: any) {
+    let wasButton = false;
+    event.path.forEach((el: any) => {
+      if (el === this.$refs.main) {
+        wasButton = true;
+      }
+    });
+    if (wasButton === false) {
+      this.selected = false;
+      this.menu.hide();
     }
   }
 }
