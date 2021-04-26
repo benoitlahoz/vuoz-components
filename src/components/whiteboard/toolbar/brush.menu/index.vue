@@ -1,24 +1,11 @@
 <template lang='pug'>
-.is-flex-column.has-padding-sm.has-padding-left-ms.has-background-medium-grey(style="width: 296px;")
+.vuoz-color-menu
   h3.has-border-bottom-dark-grey.has-padding-bottom-sm Brush
   v-swatches(v-model="brushColor", inline, show-fallback, fallback-input-type="color", background-color="rgba(0, 0, 0, 0)", show-border, swatch-size="30", :spacing-size="7", shapes="circles", fallback-input-class="vuoz-color-menu-fallback")
   .has-border-top-dark-grey.has-margin-top-sm.has-padding-top-sm.is-flex.flex-grow.align-center(style="justify-content: space-between")
     div Size (px) 
     vuoz-input(type='uinteger', color="dark-grey", :initial="brushSize", rounded, @change="onSizeChange")
 </template>
-<style lang="sass">
-@import "@vuoz/theme-core-default/dist/sass/theme.sass"
-.vue-swatches__fallback__wrapper
-  width: 280px
-
-.vuoz-color-menu-fallback
-  @extend .has-background-medium-grey
-  @extend .has-border-darker-grey
-  -webkit-appearance: none
-  width: 100%
-  height: 18px
-  margin-top: 7px
-</style>
 <script lang='ts'>
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 import VSwatches from 'vue-swatches'
@@ -66,7 +53,7 @@ export default class VuozComponent extends Vue {
   @Prop({ type: String, default: "close" }) readonly icon!: string;
 
   private brushColor = '#000'
-  private brushSize = "10"
+  private brushSize = "2"
 
   @Watch('brushColor', { immediate: true })
   private onBrushColorChange() {

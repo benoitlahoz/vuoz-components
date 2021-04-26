@@ -91,7 +91,7 @@ export default class VuozComponent extends Vue {
       });
       // Brush handles pen, but not trackpad
       this.brush = new PSBrush(this.canvas);
-      this.brush.width = 10;
+      this.brush.width = 2;
       this.brush.color = this.brushColor;
       this.brush.simplifyHighestQuality = true;
       this.canvas.freeDrawingBrush = this.brush;
