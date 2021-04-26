@@ -18,7 +18,6 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { fabric } from "fabric";
 import { PSBrush, PSBrushIface, PSPoint } from "@arch-inc/fabricjs-psbrush";
-import ResizeObserver from "resize-observer-polyfill";
 // Toobar
 import VuozToolbar from "@/components/toolbar/index.vue";
 import { whiteBoardToolbarItems } from "./toolbar";
@@ -44,7 +43,6 @@ export default class VuozComponent extends Vue {
   private canvas!: fabric.Canvas;
   private width!: number;
   private height!: number;
-  private resizeObserver!: ResizeObserver;
   private backgroundColor = "#fff";
   private brush!: PSBrushIface;
   private brushColor = "#000";
@@ -60,11 +58,8 @@ export default class VuozComponent extends Vue {
   private objects: any[] = [];
 
   private mounted() {
-    this.resizeObserver = new ResizeObserver(this.onResize);
-    this.resizeObserver.observe(
-      (this.$refs.container as HTMLElement).parentElement!
-    );
     // For Storybook
+    // TODO: For Electron: ping/pong with resize event
     const inFrame =
       (this.$refs.container as HTMLElement).ownerDocument !== document;
     // Get full container's size
@@ -107,7 +102,6 @@ export default class VuozComponent extends Vue {
   }
 
   private beforeDestroy() {
-    this.resizeObserver.disconnect();
     this.canvas.off("mouse:down", this.onMouseDown);
     this.canvas.off("mouse:down:before", this.onMouseDownBefore);
     this.canvas.off("mouse:move", this.onMouseMove);
