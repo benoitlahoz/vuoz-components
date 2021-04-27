@@ -4,3 +4,4 @@ declare module '*.vue' {
 }
 
 declare module 'vue-swatches'
+declare module 'vue-element-resize-detector'

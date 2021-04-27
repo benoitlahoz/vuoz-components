@@ -1,5 +1,5 @@
 <template lang="pug">
-.is-flex-column(ref="container", style="width: 100%; height: 100%")
+.is-flex-column(v-resize, @resize="onResize", style="width: 100%; height: 100%")
   vuoz-toolbar(
     :items="toolbarItems",
     type="fixed",
@@ -11,16 +11,25 @@
     @click="onToolbar",
     @menu="onMenuSelect"
   )
-  .is-flex.flex-grow
-    canvas#whiteboard
+  // TODO: For infinite canvas see https://stackoverflow.com/a/22777752/1060921
+  // and this: https://stackoverflow.com/a/22792461/1060921
+  .is-flex.flex-grow(style="position: relative")
+    div(
+      ref="container",
+      style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; overflow: auto",
+      @scroll="canvas.calcOffset.bind(canvas)"
+    )
+      canvas#whiteboard
 </template>
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { fabric } from "fabric";
-import { PSBrush, PSBrushIface, PSPoint } from "@arch-inc/fabricjs-psbrush";
-// Toobar
+import { PSBrush, PSBrushIface } from "@arch-inc/fabricjs-psbrush";
+// Toolbar
 import VuozToolbar from "@/components/toolbar/index.vue";
 import { whiteBoardToolbarItems } from "./toolbar";
+// Directives
+import { resize } from "vue-element-resize-detector";
 
 /**
  * Vuoz white board
@@ -30,6 +39,9 @@ import { whiteBoardToolbarItems } from "./toolbar";
   name: "VuozWhiteBoard",
   components: {
     VuozToolbar,
+  },
+  directives: {
+    resize,
   },
 })
 export default class VuozComponent extends Vue {
@@ -59,19 +71,18 @@ export default class VuozComponent extends Vue {
 
   private mounted() {
     this.$nextTick(() => {
-      // For Storybook
-      // TODO: For Electron: ping/pong with resize event
-      const inFrame =
-        (this.$refs.container as HTMLElement).ownerDocument !== document;
       // Get full container's size
       const container: HTMLElement = this.$refs.container as HTMLElement;
-      // For Storybook iframe
       this.width = container.clientWidth;
       this.height = container.clientHeight;
+
+      // For Storybook iframe
+      const inFrame = container.ownerDocument !== document;
       if (inFrame && container.parentNode && container.parentNode.parentNode) {
         this.width = (container.parentNode.parentNode as Element).clientWidth;
         this.height = (container.parentNode.parentNode as Element).clientHeight;
       }
+
       // Creates new full size canvas
       this.canvas = new fabric.Canvas("whiteboard", {
         width: this.width, // * window.devicePixelRatio,
@@ -100,7 +111,11 @@ export default class VuozComponent extends Vue {
       this.canvas.on("mouse:down:before", this.onMouseDownBefore);
       this.canvas.on("mouse:move", this.onMouseMove);
       this.canvas.on("mouse:up", this.onMouseUp);
+      // Handles infinite canvas
+      this.canvas.on("object:moving", this.onObjectMoving)
+
     });
+
   }
 
   private beforeDestroy() {
@@ -108,6 +123,7 @@ export default class VuozComponent extends Vue {
     this.canvas.off("mouse:down:before", this.onMouseDownBefore);
     this.canvas.off("mouse:move", this.onMouseMove);
     this.canvas.off("mouse:up", this.onMouseUp);
+    this.canvas.off("object:moving", this.onObjectMoving)
   }
 
   @Watch("backgroundColor", { immediate: false })
@@ -181,14 +197,36 @@ export default class VuozComponent extends Vue {
     }
   }
 
+  private onObjectMoving(event: any) {
+    const container: HTMLElement = this.$refs.container as HTMLElement;
+    // Expands to the right
+    if ((event.target.left + event.target.width) > this.width) {
+      this.width += 50
+      this.canvas.setWidth(this.width)
+      this.canvas.calcOffset()
+      container.scrollLeft = this.width - event.target.left
+    }
+    // Expands to the bottom
+    if ((event.target.top + event.target.height) > this.height) {
+      this.height += 50
+      this.canvas.setHeight(this.height)
+      this.canvas.calcOffset()
+      container.scrollTop = this.height - event.target.top
+    }
+  }
+
   private onResize() {
     this.$nextTick(() => {
       // Get full container's size
       const container: HTMLElement = this.$refs.container as HTMLElement;
-      this.width = container.clientWidth;
-      this.height = container.clientHeight;
-      this.canvas.setWidth(this.width);
-      this.canvas.setHeight(this.height);
+      if (this.canvas.width! < container.clientWidth) {
+        this.canvas.setWidth(container.clientWidth);
+      }
+      if (this.canvas.height! < container.clientHeight) {
+        this.canvas.setHeight(container.clientHeight);
+      }
+      this.width = this.canvas.width!;
+      this.height = this.canvas.height!;
       this.canvas.calcOffset();
     });
   }
