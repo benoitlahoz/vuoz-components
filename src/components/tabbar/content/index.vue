@@ -1,10 +1,9 @@
 <template lang="pug">
  .vuoz-tab-content.has-border-left-medium-grey
   component(v-if="component", :is="component.object", v-bind="component.props")
-  div(v-else) {{ content }}
+  div(v-if="!component") {{ content }}
 </template>
 <script lang="ts">
-import { VueConstructor } from "vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 /**
  * Vuoz tab system's main content of tab.
