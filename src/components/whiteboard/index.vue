@@ -1,5 +1,5 @@
 <template lang="pug">
-.flex-grow.is-flex-column(ref="container", style="width: 100%; height: 100%")
+.is-flex-column(ref="container", style="width: 100%; height: 100%")
   vuoz-toolbar(
     :items="toolbarItems",
     type="fixed",
