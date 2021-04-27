@@ -9,13 +9,13 @@
     ref="first",
     style="position: relative"
   )
-    .flex-grow
+    div(style="width: 100%; height: 100%;")
       slot(name="first") First
   .vuoz-split-view__view.is-flex.flex-grow(
     ref="second",
     style="position: relative"
   )
-    .flex-grow
+    div(style="width: 100%; height: 100%;")
       slot(name="second") Second
   .vuoz-split-view__separator(
     ref="separator",
