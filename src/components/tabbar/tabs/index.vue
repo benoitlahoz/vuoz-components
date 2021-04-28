@@ -11,11 +11,11 @@
     @addtab="onAddTab",
     @dragged="onTabDragged"
   )
-    vuoz-tab-content(
-      :selected="selected",
-      :component="getComponent()",
-      :content="getContent()"
-    )
+  vuoz-tab-content(
+    :selected="selected",
+    :component="getComponent()",
+    :content="getContent()"
+  )
 </template>
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
@@ -25,11 +25,11 @@ import VuozTabContent from "./../content/index.vue";
  * Types
  */
 interface TabDescription {
-  id: number | string;
-  title: string;
-  content: string | undefined;
-  component: string | undefined;
-}
+    id: number | string;
+    title: string;
+    content: string | undefined;
+    component: string | undefined;
+  }
 /**
  * Vuoz tabs VuozTabs
  * @displayName VuozButton
@@ -48,26 +48,17 @@ export default class VuozComponent extends Vue {
   @Prop({ type: String, default: "normal" }) readonly size!: string;
   @Prop({ type: Boolean, default: true }) readonly showAdd!: boolean;
   @Prop({ type: Boolean, default: true }) readonly draggable!: boolean;
-  @Prop({
-    type: Array,
-    default: () => {
-      return [];
-    },
-  })
-  readonly tabs!: TabDescription[];
+  @Prop({ type: Array, default: () => { return [] } }) readonly tabs!: TabDescription[];
   @Prop({ type: String, default: "No tab" }) readonly placeholder!: string;
   /**
    * Internal component's data
    */
   private selected: string | number = -1;
 
-  @Watch("tabs", { immediate: true })
+  @Watch('tabs', { immediate: true })
   onTabsChanged() {
-    if (
-      this.tabs.length > 0 &&
-      (this.selected < 0 || this.tabs.length <= this.selected)
-    ) {
-      this.selected = this.tabs[0].id;
+    if (this.tabs.length > 0 && (this.selected < 0 || this.tabs.length <= this.selected)) {
+      this.selected = this.tabs[0].id
     }
   }
 
@@ -127,11 +118,14 @@ export default class VuozComponent extends Vue {
     this.$emit("addtab");
     this.$nextTick(() => {
       // Select last tab at next tick
-      this.selected = this.tabs[this.tabs.length - 1].id;
-    });
+      this.selected = this.tabs[this.tabs.length - 1].id
+    })
   }
-  onTabDragged(e: { oldIndex: number; newIndex: number }) {
-    this.$emit("dragged", e);
+  onTabDragged(e: {
+    oldIndex: number;
+    newIndex: number;
+  }) {
+    this.$emit("dragged", e)
   }
 }
 </script>
