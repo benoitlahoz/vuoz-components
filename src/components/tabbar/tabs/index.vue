@@ -12,6 +12,7 @@
     @dragged="onTabDragged"
   )
   vuoz-tab-content(
+    :key="selected",
     :selected="selected",
     :component="getComponent()",
     :content="getContent()"

@@ -106,7 +106,7 @@ export default class VuozComponent extends Vue {
     this.$emit("addtab");
   }
   onStartDrag(e: { originalEvent: DragEvent }) {
-    console.log(e)
+    // 
   }
   onEndDrag(e: { oldIndex: number; newIndex: number }) {
     const oldIndex = e.oldIndex;
