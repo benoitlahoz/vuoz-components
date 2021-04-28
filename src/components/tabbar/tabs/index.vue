@@ -49,6 +49,7 @@ export default class VuozComponent extends Vue {
   @Prop({ type: Boolean, default: true }) readonly showAdd!: boolean;
   @Prop({ type: Boolean, default: true }) readonly draggable!: boolean;
   @Prop({ type: Array, default: () => { return [] } }) readonly tabs!: TabDescription[];
+  @Prop({ type: Number }) readonly select!: number;
   @Prop({ type: String, default: "No tab" }) readonly placeholder!: string;
   /**
    * Internal component's data
@@ -59,6 +60,13 @@ export default class VuozComponent extends Vue {
   onTabsChanged() {
     if (this.tabs.length > 0 && (this.selected < 0 || this.tabs.length <= this.selected)) {
       this.selected = this.tabs[0].id
+    }
+  }
+
+  @Watch('select', { immediate: true })
+  onSelectChanged() {
+    if (this.tabs.length > 0 && (this.select < this.tabs.length)) {
+      this.selected = this.select
     }
   }
 
