@@ -14,6 +14,7 @@
   keep-alive
     vuoz-tab-content(
       :selected="selected",
+      :key="getKey()",
       :component="getComponent()",
       :content="getContent()"
     )
@@ -104,6 +105,14 @@ export default class VuozComponent extends Vue {
       return tab !== undefined ? tab.content : null;
     }
     return this.placeholder;
+  }
+  getKey() {
+    if (this.tabs.length > 0) {
+      const tab = this.tabs.find((t) => t.id === this.selected);
+      // Tab may be undefined before Vue re-render the component after tab close
+      return tab ? tab.id : -1
+    }
+    return -1;
   }
   /**
    * Events
