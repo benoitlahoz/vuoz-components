@@ -28,7 +28,11 @@ interface TabDescription {
     id: number | string;
     title: string;
     content: string | undefined;
-    component: string | undefined;
+    component: {
+      component: any;
+      props: any;
+      key: any;
+    };
   }
 /**
  * Vuoz tabs VuozTabs
@@ -85,7 +89,10 @@ export default class VuozComponent extends Vue {
     if (this.tabs.length > 0) {
       const tab = this.tabs.find((t) => t.id === this.selected);
       // Tab may be undefined before Vue re-render the component after tab close
-      return tab !== undefined ? tab.component : null;
+      if (tab && tab.component) {
+        tab.component.key = tab.id
+        return tab.component
+      }
     }
     return null;
   }
