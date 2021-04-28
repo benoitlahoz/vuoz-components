@@ -1,8 +1,8 @@
 <template lang="pug">
  .vuoz-tab-content.has-border-left-medium-grey
-  keep-alive
-    component(v-if="component", :is="component.object", v-bind="component.props")
-    div(v-if="!component") {{ content }}
+  keep-alive(v-if="component")
+    component(:is="component.object", v-bind="component.props")
+  div(v-if="!component") {{ content }}
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
