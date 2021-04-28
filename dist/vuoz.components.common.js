@@ -54337,12 +54337,12 @@ var tabbar_bar_component = normalizeComponent(
 )
 
 /* harmony default export */ var tabbar_bar = (tabbar_bar_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"08892d8a-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/tabbar/content/index.vue?vue&type=template&id=5527b26c&lang=pug&
-var contentvue_type_template_id_5527b26c_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vuoz-tab-content has-border-left-medium-grey"},[_c('keep-alive',[(_vm.component)?_c(_vm.component.object,_vm._b({key:_vm.component.key,tag:"component"},'component',_vm.component.props,false)):_vm._e()],1),(!_vm.component)?_c('div',[_vm._v(_vm._s(_vm.content))]):_vm._e()],1)}
-var contentvue_type_template_id_5527b26c_lang_pug_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"08892d8a-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/tabbar/content/index.vue?vue&type=template&id=9f703a94&lang=pug&
+var contentvue_type_template_id_9f703a94_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vuoz-tab-content has-border-left-medium-grey"},[(_vm.component)?_c(_vm.component.object,_vm._b({key:_vm.component.key,tag:"component"},'component',_vm.component.props,false)):_vm._e(),(!_vm.component)?_c('div',[_vm._v(_vm._s(_vm.content))]):_vm._e()],1)}
+var contentvue_type_template_id_9f703a94_lang_pug_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/tabbar/content/index.vue?vue&type=template&id=5527b26c&lang=pug&
+// CONCATENATED MODULE: ./src/components/tabbar/content/index.vue?vue&type=template&id=9f703a94&lang=pug&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--14-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/ts-loader??ref--14-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/tabbar/content/index.vue?vue&type=script&lang=ts&
 
@@ -54394,8 +54394,8 @@ contentvue_type_script_lang_ts_VuozComponent = __decorate([vue_class_component_e
 
 var content_component = normalizeComponent(
   tabbar_contentvue_type_script_lang_ts_,
-  contentvue_type_template_id_5527b26c_lang_pug_render,
-  contentvue_type_template_id_5527b26c_lang_pug_staticRenderFns,
+  contentvue_type_template_id_9f703a94_lang_pug_render,
+  contentvue_type_template_id_9f703a94_lang_pug_staticRenderFns,
   false,
   null,
   null,

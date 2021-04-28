@@ -1,7 +1,7 @@
 <template lang="pug">
  .vuoz-tab-content.has-border-left-medium-grey
-  keep-alive
-    component(v-if="component", :is="component.object", v-bind="component.props", :key="component.key")
+  // keep-alive
+  component(v-if="component", :is="component.object", v-bind="component.props", :key="component.key")
   div(v-if="!component") {{ content }}
 </template>
 <script lang="ts">
