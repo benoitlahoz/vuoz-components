@@ -61,7 +61,9 @@ export default class VuozComponent extends Vue {
     if (this.unselectable === false && this.items.length > 0) {
       this.firstSelected = 0
       this.selectionRange = 1
-      this.handleSelection()
+      this.$nextTick(() => {
+        this.handleSelection()
+      })
     }
   }
 

@@ -135,7 +135,7 @@ export default {
     delimiter: 'medium-grey',
     highlight: 'dark-grey',
     selectable: 'none',
-    unselectable: true,
+    unselectable: false,
     // For headers
     headersItems
   }
