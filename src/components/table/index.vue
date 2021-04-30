@@ -34,6 +34,7 @@ import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 })
 export default class VuozComponent extends Vue {
   @Prop({ type: [Array, Object], required: true }) readonly items!: any[];
+  @Prop({ type: Number, default: 0 }) readonly initial!: number;
   @Prop({ type: String, default: "small" }) readonly size!:
     | "tiny"
     | "small"
@@ -57,9 +58,9 @@ export default class VuozComponent extends Vue {
   public mounted() {
     // VuozTableHeader and VuozTableRow component calls this.$parent.$emit
     this.$on("cell", this.onCellSelected);
-    // Select the first item if 'unselectable' is set to false
+    // Select the initial item if 'unselectable' is set to false
     if (this.unselectable === false && this.items.length > 0) {
-      this.firstSelected = 0
+      this.firstSelected = this.initial
       this.selectionRange = 1
       this.$nextTick(() => {
         this.handleSelection()
@@ -74,6 +75,14 @@ export default class VuozComponent extends Vue {
   @Watch("items", { immediate: true })
   private onItemsChanged() {
     this.selection = new Array(this.items.length).fill(false);
+    // Select the initial item if 'unselectable' is set to false
+    if (this.unselectable === false && this.items.length > 0) {
+      this.firstSelected = this.initial
+      this.selectionRange = 1
+      this.$nextTick(() => {
+        this.handleSelection()
+      })
+    }
   }
 
   private onKeyDown(event: KeyboardEvent) {
