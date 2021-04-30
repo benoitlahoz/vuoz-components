@@ -59,11 +59,14 @@ export default class VuozComponent extends Vue {
     // VuozTableHeader and VuozTableRow component calls this.$parent.$emit
     this.$on("cell", this.onCellSelected);
     // Select the initial item if 'unselectable' is set to false
-    if (this.unselectable === false && this.items.length > 0) {
+    if (this.unselectable === false && this.items.length > (this.initial + 1)) {
       this.firstSelected = this.initial
       this.selectionRange = 1
       this.$nextTick(() => {
         this.handleSelection()
+        this.$nextTick(() => {
+          this.$forceUpdate()
+        })
       })
     }
   }
