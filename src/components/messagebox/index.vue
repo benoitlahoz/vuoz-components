@@ -1,5 +1,7 @@
 <template lang='pug'>
-div Messages
+table(style="width: 100%;")
+  tr(style="width: 100%; background: red;")
+    td My message
 </template>
 <script lang='ts'>
 import { Component, Prop, Vue } from 'vue-property-decorator'

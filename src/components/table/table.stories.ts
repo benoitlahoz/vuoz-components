@@ -113,6 +113,12 @@ export default {
         options: ['none', 'one', 'multiple']
       }
     },
+    unselectable: {
+      description: 'Is it possible to unselect.',
+      control: {
+        type: 'boolean'
+      }
+    },
     items: {
       description: 'The main rows of the table.',
     }
@@ -129,6 +135,7 @@ export default {
     delimiter: 'medium-grey',
     highlight: 'dark-grey',
     selectable: 'none',
+    unselectable: true,
     // For headers
     headersItems
   }
@@ -136,7 +143,7 @@ export default {
 /**
  * Template
  */
-const template = `<div style="margin: 0; height: 100vh;"><vuoz-table :items="items" :selectable="selectable" :size="size" :color="color" :border="border" :delimiter="delimiter" :highlight="highlight" @header="onHeader" @row="onRow" @cell="onCell" @multi="onMultiSelection" @unselect="onUnselect">` +
+const template = `<div style="margin: 0; height: 100vh;"><vuoz-table :items="items" :selectable="selectable" :unselectable="unselectable" :size="size" :color="color" :border="border" :delimiter="delimiter" :highlight="highlight" @header="onHeader" @row="onRow" @cell="onCell" @multi="onMultiSelection" @unselect="onUnselect">` +
   `<template v-if="showHeaders === true" slot="headers" slot-scope="props"><vuoz-table-header :row="headersItems" :selectable="props.selectable" :size="headersSize" :color="headersColor" :border="props.border"></vuoz-table-header></template>` +
   `<template slot="rows" slot-scope="props">` +
   `<vuoz-table-row :row="props.row" :id="props.id" :selectable="props.selectable" :size="props.size" :border="props.border" :cell-border="delimiter" :selected="props.selected" :highlight="highlight"></vuoz-table-row>` +

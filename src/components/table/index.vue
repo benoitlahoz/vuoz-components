@@ -4,7 +4,7 @@ table.vuoz-table(
   tabindex="0",
   cellspacing="0",
   :class="`has-background-${color}`",
-  style="overflow-y: scroll;",
+  style="overflow-y: scroll",
   @keydown="onKeyDown",
   @blur="unselect"
 )
@@ -47,6 +47,7 @@ export default class VuozComponent extends Vue {
     | "none"
     | "one"
     | "multiple";
+  @Prop({ type: Boolean, default: true }) readonly unselectable!: boolean;
 
   private selection: boolean[] = [];
   private firstSelected = -1;
@@ -56,6 +57,12 @@ export default class VuozComponent extends Vue {
   public mounted() {
     // VuozTableHeader and VuozTableRow component calls this.$parent.$emit
     this.$on("cell", this.onCellSelected);
+    // Select the first item if 'unselectable' is set to false
+    if (this.unselectable === false && this.items.length > 0) {
+      this.firstSelected = 0
+      this.selectionRange = 1
+      this.handleSelection()
+    }
   }
 
   public beforeDestroy() {
@@ -77,7 +84,7 @@ export default class VuozComponent extends Vue {
 
       switch (event.key) {
         case "ArrowUp": {
-          if (this.selectable === 'multiple' && hasShift) {
+          if (this.selectable === "multiple" && hasShift) {
             if (this.firstSelected >= 1) {
               this.firstSelected -= 1;
               this.selectionRange += 1;
@@ -100,7 +107,7 @@ export default class VuozComponent extends Vue {
           break;
         }
         case "ArrowDown": {
-          if (this.selectable === 'multiple' && hasShift) {
+          if (this.selectable === "multiple" && hasShift) {
             if (
               this.firstSelected + this.selectionRange <
               this.selection.length
@@ -135,7 +142,11 @@ export default class VuozComponent extends Vue {
 
   private onCellSelected(payload: any) {
     if (this.selectable !== "none") {
-      if (this.selectable === 'multiple' && payload.modifier === "shift" && this.firstSelected >= 0) {
+      if (
+        this.selectable === "multiple" &&
+        payload.modifier === "shift" &&
+        this.firstSelected >= 0
+      ) {
         // Handles shift modifier
         const first = this.firstSelected;
         const second = payload.row;
@@ -158,7 +169,11 @@ export default class VuozComponent extends Vue {
         }
 
         this.handleSelection();
-      } else if (this.selectable === 'multiple' && payload.modifier === "ctrl" && this.firstSelected >= 0) {
+      } else if (
+        this.selectable === "multiple" &&
+        payload.modifier === "ctrl" &&
+        this.firstSelected >= 0
+      ) {
         // Specific handler for ctrl (ctrlKey on Windows / Linux, metaKey on macOS) modifier
         this.selection.splice(payload.row, 1, !this.selection[payload.row]);
         // TODO: emit multi or row or clear
@@ -178,11 +193,13 @@ export default class VuozComponent extends Vue {
   }
 
   private unselect() {
-    this.firstSelected = -1;
-    this.selectionRange = 1;
-    this.selection = new Array(this.items.length).fill(false);
-    // Emits 'clear' message
-    this.$emit("unselect");
+    if (this.unselectable) {
+      this.firstSelected = -1;
+      this.selectionRange = 1;
+      this.selection = new Array(this.items.length).fill(false);
+      // Emits 'clear' message
+      this.$emit("unselect");
+    }
   }
 
   private handleSelection() {

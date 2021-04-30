@@ -56880,12 +56880,12 @@ var titlebar_component = normalizeComponent(
 )
 
 /* harmony default export */ var titlebar = (titlebar_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"2db9add5-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/table/index.vue?vue&type=template&id=1cbda44b&lang=pug&
-var tablevue_type_template_id_1cbda44b_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('table',{staticClass:"vuoz-table",class:("has-background-" + _vm.color),staticStyle:{"overflow-y":"scroll"},attrs:{"tabindex":"0","cellspacing":"0"},on:{"keydown":_vm.onKeyDown,"blur":_vm.unselect}},[_c('tbody',[_vm._t("headers",null,{"border":_vm.border,"selectable":_vm.selectable}),_vm._l((_vm.items),function(item,index){return _vm._t("rows",null,{"row":item,"id":index,"size":_vm.size,"border":_vm.border,"delimiter":_vm.delimiter,"selected":_vm.selection[index],"highlight":_vm.highlight,"selectable":_vm.selectable})})],2)])}
-var tablevue_type_template_id_1cbda44b_lang_pug_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"2db9add5-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/table/index.vue?vue&type=template&id=2f06fa74&lang=pug&
+var tablevue_type_template_id_2f06fa74_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('table',{staticClass:"vuoz-table",class:("has-background-" + _vm.color),staticStyle:{"overflow-y":"scroll"},attrs:{"tabindex":"0","cellspacing":"0"},on:{"keydown":_vm.onKeyDown,"blur":_vm.unselect}},[_c('tbody',[_vm._t("headers",null,{"border":_vm.border,"selectable":_vm.selectable}),_vm._l((_vm.items),function(item,index){return _vm._t("rows",null,{"row":item,"id":index,"size":_vm.size,"border":_vm.border,"delimiter":_vm.delimiter,"selected":_vm.selection[index],"highlight":_vm.highlight,"selectable":_vm.selectable})})],2)])}
+var tablevue_type_template_id_2f06fa74_lang_pug_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/table/index.vue?vue&type=template&id=1cbda44b&lang=pug&
+// CONCATENATED MODULE: ./src/components/table/index.vue?vue&type=template&id=2f06fa74&lang=pug&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.fill.js
 var es_array_fill = __webpack_require__("cb29");
@@ -56928,7 +56928,13 @@ var tablevue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) {
     key: "mounted",
     value: function mounted() {
       // VuozTableHeader and VuozTableRow component calls this.$parent.$emit
-      this.$on("cell", this.onCellSelected);
+      this.$on("cell", this.onCellSelected); // Select the first item if 'unselectable' is set to false
+
+      if (this.unselectable === false && this.items.length > 0) {
+        this.firstSelected = 0;
+        this.selectionRange = 1;
+        this.handleSelection();
+      }
     }
   }, {
     key: "beforeDestroy",
@@ -56949,7 +56955,7 @@ var tablevue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) {
         switch (event.key) {
           case "ArrowUp":
             {
-              if (this.selectable === 'multiple' && hasShift) {
+              if (this.selectable === "multiple" && hasShift) {
                 if (this.firstSelected >= 1) {
                   this.firstSelected -= 1;
                   this.selectionRange += 1;
@@ -56975,7 +56981,7 @@ var tablevue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) {
 
           case "ArrowDown":
             {
-              if (this.selectable === 'multiple' && hasShift) {
+              if (this.selectable === "multiple" && hasShift) {
                 if (this.firstSelected + this.selectionRange < this.selection.length) {
                   this.selectionRange += 1;
                   this.handleSelection(); // Informs listeners
@@ -57005,7 +57011,7 @@ var tablevue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) {
     key: "onCellSelected",
     value: function onCellSelected(payload) {
       if (this.selectable !== "none") {
-        if (this.selectable === 'multiple' && payload.modifier === "shift" && this.firstSelected >= 0) {
+        if (this.selectable === "multiple" && payload.modifier === "shift" && this.firstSelected >= 0) {
           // Handles shift modifier
           var first = this.firstSelected;
           var second = payload.row;
@@ -57027,7 +57033,7 @@ var tablevue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) {
           }
 
           this.handleSelection();
-        } else if (this.selectable === 'multiple' && payload.modifier === "ctrl" && this.firstSelected >= 0) {
+        } else if (this.selectable === "multiple" && payload.modifier === "ctrl" && this.firstSelected >= 0) {
           // Specific handler for ctrl (ctrlKey on Windows / Linux, metaKey on macOS) modifier
           this.selection.splice(payload.row, 1, !this.selection[payload.row]); // TODO: emit multi or row or clear
         } else {
@@ -57046,11 +57052,13 @@ var tablevue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) {
   }, {
     key: "unselect",
     value: function unselect() {
-      this.firstSelected = -1;
-      this.selectionRange = 1;
-      this.selection = new Array(this.items.length).fill(false); // Emits 'clear' message
+      if (this.unselectable) {
+        this.firstSelected = -1;
+        this.selectionRange = 1;
+        this.selection = new Array(this.items.length).fill(false); // Emits 'clear' message
 
-      this.$emit("unselect");
+        this.$emit("unselect");
+      }
     }
   }, {
     key: "handleSelection",
@@ -57130,6 +57138,11 @@ __decorate([Prop({
   default: "none"
 })], tablevue_type_script_lang_ts_VuozComponent.prototype, "selectable", void 0);
 
+__decorate([Prop({
+  type: Boolean,
+  default: true
+})], tablevue_type_script_lang_ts_VuozComponent.prototype, "unselectable", void 0);
+
 __decorate([Watch("items", {
   immediate: true
 })], tablevue_type_script_lang_ts_VuozComponent.prototype, "onItemsChanged", null);
@@ -57150,8 +57163,8 @@ tablevue_type_script_lang_ts_VuozComponent = __decorate([vue_class_component_esm
 
 var table_component = normalizeComponent(
   components_tablevue_type_script_lang_ts_,
-  tablevue_type_template_id_1cbda44b_lang_pug_render,
-  tablevue_type_template_id_1cbda44b_lang_pug_staticRenderFns,
+  tablevue_type_template_id_2f06fa74_lang_pug_render,
+  tablevue_type_template_id_2f06fa74_lang_pug_staticRenderFns,
   false,
   null,
   null,
