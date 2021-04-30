@@ -84,6 +84,9 @@ export default class VuozComponent extends Vue {
       this.selectionRange = 1
       this.$nextTick(() => {
         this.handleSelection()
+        this.$nextTick(() => {
+          this.$forceUpdate()
+        })
       })
     }
   }
