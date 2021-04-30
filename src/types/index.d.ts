@@ -8,6 +8,7 @@ export const VuozMenu: VueConstructor
 export const VuozTabs: VueConstructor
 export const VuozLoader: VueConstructor
 export const VuozImage: VueConstructor
+export const VuozCropper: VueConstructor
 export const VuozConsole: VueConstructor
 export const VuozConsoleItem: VueConstructor
 export const VuozToolbar: VueConstructor
@@ -22,3 +23,5 @@ export const VuozMonitorView: VueConstructor
 export const VuozWhiteBoard: VueConstructor
 
 export const VuozFormatterMixin: VueConstructor
+
+export { CropperOptions } from '@/components/cropper/types'

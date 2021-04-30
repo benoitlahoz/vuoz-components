@@ -73,7 +73,7 @@ export default class VuozComponent extends Vue {
     | "left"
     | "bottom"
     | "right";
-  @Prop({ type: Boolean, default: true }) readonly toolbarBorder!: string;
+  @Prop({ type: String, default: 'medium-grey' }) readonly toolbarBorder!: string;
   @Prop({ type: String, default: "small" }) readonly size!:
     "small"
     | "normal"

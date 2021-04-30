@@ -5,3 +5,5 @@ declare module '*.vue' {
 
 declare module 'vue-swatches'
 declare module 'vue-element-resize-detector'
+declare module 'vue-advanced-cropper'
+declare module 'vue-avatar-component'

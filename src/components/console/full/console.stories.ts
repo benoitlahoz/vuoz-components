@@ -32,8 +32,11 @@ export default {
       }
     },
     toolbarBorder: {
-      description: 'Toggles toolbar\'s border.',
-      control: { type: 'boolean' }
+      description: 'Toolbar\'s border\'s color.',
+      control: {
+        type: 'select',
+        options: ['none', 'primary', 'secondary', 'success', 'warning', 'danger', 'darker-grey', 'dark-grey', 'medium-grey', 'transparent']
+      }
     },
     size: {
       description: 'Size of the console\'s items.',
@@ -74,7 +77,7 @@ export default {
     type: 'table',
     toolbar: true,
     toolbarPosition: 'top',
-    toolbarBorder: true,
+    toolbarBorder: 'medium-grey',
     size: 'small',
     bordered: true,
     caller: true,

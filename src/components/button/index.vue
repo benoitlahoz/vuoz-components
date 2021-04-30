@@ -18,7 +18,7 @@ button.vuoz-button(
     slot(name="right") 
   // @slot Content for square and circle shapes
   slot(name="shaped", v-if="shape !== 'free' && !load") 
-    span.material-icons {{ icon }}
+    span.material-icons(v-html="icon")
   .loading-icon(v-if="load")
     slot(name="loader") 
       template(v-if="shape === 'free'")
