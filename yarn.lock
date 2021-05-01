@@ -2788,12 +2788,12 @@
   integrity sha512-Iu8Tbg3f+emIIMmI2ycSI8QcEuAUgPTgHwesDU1eKMLE4YC/c/sFbGc70QgMq31ijRftV0R7vCm9co6rldCeOA==
 
 "@vuoz/theme-api@oz-/vuoz-theme-api":
-  version "0.1.147"
-  resolved "https://codeload.github.com/oz-/vuoz-theme-api/tar.gz/94e8141ceae38e1497318261a35c6408e92b3445"
+  version "0.1.150"
+  resolved "https://codeload.github.com/oz-/vuoz-theme-api/tar.gz/210e5aa2673fd7eca1aee042f6e36b121def5b20"
 
 "@vuoz/theme-core-default@oz-/vuoz-theme-core-default":
-  version "0.2.168"
-  resolved "https://codeload.github.com/oz-/vuoz-theme-core-default/tar.gz/e1e171b125728505b2f1d60e45355e55ca1d7da4"
+  version "0.2.172"
+  resolved "https://codeload.github.com/oz-/vuoz-theme-core-default/tar.gz/90155b69cd67b9dc1989c32aa38a9db639d88d21"
   dependencies:
     "@vuoz/theme-api" oz-/vuoz-theme-api
 

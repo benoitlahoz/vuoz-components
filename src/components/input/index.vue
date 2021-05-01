@@ -40,7 +40,6 @@
   ) {{ label }}
 </template>
 <script lang="ts">
-import { parse } from "node:path";
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 /**
  * Vuoz input.
@@ -101,7 +100,13 @@ export default class VuozComponent extends Vue {
   // Password behavior
   private passwordVisibility = false;
   // eslint-disable-next-line
-  private passwordPattern = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+  private reqs = {
+    email: /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
+    // 8 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter
+    password0: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$/,
+    // From 8 characters with one special character, one numeric digit, one uppercase and one lowercase letter
+    password1: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^/\\_&*-:=+(){}]).{8,}$/
+  };
   // Input value
   private value = "";
   private valid = false;
@@ -118,30 +123,30 @@ export default class VuozComponent extends Vue {
   onInitialChange() {
     this.$nextTick(() => {
       // Sets default value
-      this.setFormat()
+      this.setFormat();
     });
   }
 
   private getInputType() {
     switch (this.type) {
-      case "text":
-      case "integer":
-      case "float": {
-        return "text";
-      }
-      case "email":
       case "password": {
         return this.type;
+      }
+      default: {
+        return 'text'
       }
     }
   }
 
   private setFormat() {
     this.value = this.initial;
-    if (this.isNumber() && (isNaN(this.value as any) || this.value.trim() === '')) {
+    if (
+      this.isNumber() &&
+      (isNaN(this.value as any) || this.value.trim() === "")
+    ) {
       // Type is integer, uinteger or float, with no initial value or an initial value that is not a number
-        this.value = "0";
-    } else if (this.value.trim() === '') {
+      this.value = "0";
+    } else if (this.value.trim() === "") {
       this.value = "";
     }
   }
@@ -243,25 +248,27 @@ export default class VuozComponent extends Vue {
     return classes;
   }
 
-  private onInput(event: any) {
+  private onInput(event: InputEvent) {
     // ^[^@]+@[a-zA-Z0-9._-]+\\.+[a-z._-]+$
     let current = this.value;
     let updated = this.value;
 
     switch (this.type) {
       case "email": {
-        console.warn("TODO: validate email");
         // Replace white spaces
         current = current.replace(/\s+/g, "");
+        this.valid = this.reqs.email.test(current)
+        updated = current;
         break;
       }
       case "password": {
-        console.warn("TODO: validate password");
         // For password regex:
         // see: https://stackoverflow.com/a/21456918/1060921
         // see: https://stackoverflow.com/a/33589907/1060921
         current = current.replace(/\s+/g, "");
-        this.valid = this.passwordPattern.test(current);
+        this.valid = this.reqs.password1.test(current);
+        console.log(this.valid)
+        updated = current
         break;
       }
       case "integer": {
@@ -296,7 +303,7 @@ export default class VuozComponent extends Vue {
         console.warn("TODO: float behavior");
         console.log(current);
         // Juste un point => NaN
-        // Point et un choffre après le zéro initial => le chiffre
+        // Point et un chiffre après le zéro initial => le chiffre
         // Point tout seul après chiffre au-dessus de zéro : pas pris en compte
         // Signe moins après select all => NaN
         updated = `${parseFloat(current)}`;
@@ -310,6 +317,9 @@ export default class VuozComponent extends Vue {
       value: this.value,
       valid: this.valid,
     });
+
+    // TODO: Check this https://github.com/vuejs/vue/issues/2804
+    // (this.$refs.input as any).dispatchEvent(new Event('input'))
   }
 
   private onMouseDown(direction: "up" | "down", event: MouseEvent) {

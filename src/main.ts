@@ -1,6 +1,7 @@
 export { default as VuozButton } from './components/button/index.vue'
 export { default as VuozCheckbox } from './components/checkbox/index.vue'
 export { default as VuozInput } from './components/input/index.vue'
+export { default as VuozSignIn } from './components/sign/in/index.vue'
 export { default as VuozMenu } from './components/menu/index.vue'
 export { default as VuozImage } from './components/image/index.vue'
 export { default as VuozCropper } from './components/cropper/index.vue'
