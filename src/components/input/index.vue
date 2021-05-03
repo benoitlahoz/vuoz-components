@@ -267,7 +267,6 @@ export default class VuozComponent extends Vue {
         // see: https://stackoverflow.com/a/33589907/1060921
         current = current.replace(/\s+/g, "");
         this.valid = this.reqs.password1.test(current);
-        console.log(this.valid)
         updated = current
         break;
       }
