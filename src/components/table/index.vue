@@ -4,7 +4,6 @@ table.vuoz-table(
   tabindex="0",
   cellspacing="0",
   :class="`has-background-${color}`",
-  style="overflow-y: scroll",
   @keydown="onKeyDown",
   @blur="unselect"
 )
