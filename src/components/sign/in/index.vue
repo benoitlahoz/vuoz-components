@@ -28,14 +28,13 @@ import VuozButton from '@/components/button/index.vue'
 })
 export default class VuozComponent extends Vue {
 
-  @Prop({ type: String, default: 'normal' }) readonly size!: 'timy' | 'small' | 'normal' | 'large'
-
   // Inputs state
   private valid = false
   private email: { type: string; value: string; valid: boolean } = { type: 'email', value: '', valid: false }
   private password: { type: string; value: string; valid: boolean } = { type: 'password', value: '', valid: false }
   // Loading state
   private loading = false
+  private message = ''
 
   @Watch('email')
   @Watch('password')
@@ -63,8 +62,8 @@ export default class VuozComponent extends Vue {
     }
   }
 
-  public reset(message: string) {
-    console.log('reset with message', message)
+  public reset() {
+    this.loading = false
   }
 
 }

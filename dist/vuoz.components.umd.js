@@ -53604,12 +53604,12 @@ var input_component = normalizeComponent(
 )
 
 /* harmony default export */ var input = (input_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"60ee0def-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/sign/in/index.vue?vue&type=template&id=c8774888&lang=pug&
-var invue_type_template_id_c8774888_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"is-inline-flex-column",staticStyle:{"align-items":"flex-end"}},[_c('div',{staticClass:"is-flex-column is-fullwidth has-padding-bottom-md has-border-bottom-medium-grey"},[_c('div',{staticClass:"has-text-large has-text-bold"},[_vm._t("title",[_vm._v("Sign In")])],2),_c('div',{staticClass:"has-text-small has-margin-top-sm"},[_vm._t("subtitle",[_vm._v("Please enter your credentials.")])],2)]),_c('vuoz-input',{staticClass:"has-padding-sm",attrs:{"type":"email","label":"Email","labelPosition":"left","icon":"alternate_email","rounded":"","disabled":_vm.loading},on:{"change":_vm.onEmailChange}}),_c('vuoz-input',{staticClass:"has-padding-sm",attrs:{"type":"password","label":"Password","labelPosition":"left","rounded":"","disabled":_vm.loading},on:{"change":_vm.onPasswordChange}}),_c('div',{staticClass:"is-flex is-fullwidth has-text-large has-padding-top-sm has-border-top-medium-grey",staticStyle:{"justify-content":"flex-end"}},[_c('vuoz-button',{staticClass:"has-margin-left-s has-margin-top-s has-margin-bottom-s",attrs:{"color":"secondary","size":"small","weight":"bold","uppercase":"","rounded":"","border":"","disabled":!_vm.valid,"loading":_vm.loading},on:{"click":_vm.onSubmit},scopedSlots:_vm._u([{key:"main",fn:function(){return [_vm._v("Submit")]},proxy:true}])})],1)],1)}
-var invue_type_template_id_c8774888_lang_pug_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"60ee0def-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/sign/in/index.vue?vue&type=template&id=8806c1ae&lang=pug&
+var invue_type_template_id_8806c1ae_lang_pug_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"is-inline-flex-column",staticStyle:{"align-items":"flex-end"}},[_c('div',{staticClass:"is-flex-column is-fullwidth has-padding-bottom-md has-border-bottom-medium-grey"},[_c('div',{staticClass:"has-text-large has-text-bold"},[_vm._t("title",[_vm._v("Sign In")])],2),_c('div',{staticClass:"has-text-small has-margin-top-sm"},[_vm._t("subtitle",[_vm._v("Please enter your credentials.")])],2)]),_c('vuoz-input',{staticClass:"has-padding-sm",attrs:{"type":"email","label":"Email","labelPosition":"left","icon":"alternate_email","rounded":"","disabled":_vm.loading},on:{"change":_vm.onEmailChange}}),_c('vuoz-input',{staticClass:"has-padding-sm",attrs:{"type":"password","label":"Password","labelPosition":"left","rounded":"","disabled":_vm.loading},on:{"change":_vm.onPasswordChange}}),_c('div',{staticClass:"is-flex is-fullwidth has-text-large has-padding-top-sm has-border-top-medium-grey",staticStyle:{"justify-content":"flex-end"}},[_c('vuoz-button',{staticClass:"has-margin-left-s has-margin-top-s has-margin-bottom-s",attrs:{"color":"secondary","size":"small","weight":"bold","uppercase":"","rounded":"","border":"","disabled":!_vm.valid,"loading":_vm.loading},on:{"click":_vm.onSubmit},scopedSlots:_vm._u([{key:"main",fn:function(){return [_vm._v("Submit")]},proxy:true}])})],1)],1)}
+var invue_type_template_id_8806c1ae_lang_pug_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/sign/in/index.vue?vue&type=template&id=c8774888&lang=pug&
+// CONCATENATED MODULE: ./src/components/sign/in/index.vue?vue&type=template&id=8806c1ae&lang=pug&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--14-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/ts-loader??ref--14-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/sign/in/index.vue?vue&type=script&lang=ts&
 
@@ -53650,6 +53650,7 @@ var invue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) {
     }; // Loading state
 
     _this.loading = false;
+    _this.message = '';
     return _this;
   }
 
@@ -53683,18 +53684,13 @@ var invue_type_script_lang_ts_VuozComponent = /*#__PURE__*/function (_Vue) {
     }
   }, {
     key: "reset",
-    value: function reset(message) {
-      console.log('reset with message', message);
+    value: function reset() {
+      this.loading = false;
     }
   }]);
 
   return VuozComponent;
 }(external_commonjs_vue_commonjs2_vue_root_Vue_default.a);
-
-__decorate([Prop({
-  type: String,
-  default: 'normal'
-})], invue_type_script_lang_ts_VuozComponent.prototype, "size", void 0);
 
 __decorate([Watch('email'), Watch('password')], invue_type_script_lang_ts_VuozComponent.prototype, "onValidate", null);
 
@@ -53718,8 +53714,8 @@ invue_type_script_lang_ts_VuozComponent = __decorate([vue_class_component_esm({
 
 var in_component = normalizeComponent(
   sign_invue_type_script_lang_ts_,
-  invue_type_template_id_c8774888_lang_pug_render,
-  invue_type_template_id_c8774888_lang_pug_staticRenderFns,
+  invue_type_template_id_8806c1ae_lang_pug_render,
+  invue_type_template_id_8806c1ae_lang_pug_staticRenderFns,
   false,
   null,
   null,
