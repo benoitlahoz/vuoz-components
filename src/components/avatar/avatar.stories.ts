@@ -1,5 +1,5 @@
-import VuozAvatar from './index.vue'
-import VuozButton from '@/components/button/index.vue'
+import VuozAvatar from "./index.vue";
+import VuozButton from "@/components/button/index.vue";
 /**
  * Options example.
  */
@@ -7,7 +7,7 @@ const options = {
   stencil: {
     aspectRatio: 1,
     resizable: true,
-    movable: true
+    movable: true,
   },
   cropper: {
     autoZoom: true,
@@ -15,49 +15,58 @@ const options = {
     minWidth: 200,
     minHeight: 200,
     defaultPosition: { left: 80, top: 120 },
-  }
+  },
 };
 /**
  * Story
  */
 export default {
   component: VuozAvatar,
-  title: 'Components/Avatar',
+  title: "Components/Avatar",
   parameters: {
-    layout: 'fullscreen'
+    layout: "fullscreen",
   },
   // Arguments (props) description
   argTypes: {
-    src: {
-      description: 'Path to the image.',
+    toolbar: {
+      description: "Show the toolbar or not.",
       control: {
-        type: 'select',
-        options: ['', 'images/IMG_0665.jpg', 'images/IMG_3993.jpg']
-      }
+        type: "boolean",
+      },
+    },
+    src: {
+      description: "Path to the image.",
+      control: {
+        type: "select",
+        options: ["", "images/IMG_0665.jpg", "images/IMG_3993.jpg"],
+      },
     },
     fullname: {
-      description : 'The full name of the user (if no image is present.'
+      description: "The full name of the user (if no image is present.",
     },
     size: {
-      description: 'The size in pixels.',
+      description: "The size in pixels.",
       control: {
-        type: 'number'
-      }
+        type: "number",
+      },
     },
   },
   // Arguments (props) defaults
   args: {
-    src: 'images/IMG_0665.jpg',
-    fullname: 'Benoît LAHOZ',
-    size: 200
-  }
-}
+    toolbar: true,
+    src: "images/IMG_0665.jpg",
+    fullname: "Benoît LAHOZ",
+    size: 200,
+  },
+};
 /**
  * Template
  */
-const template = `<div style="height: 600px; display:flex; align-items: center;" class="has-padding-sm is-flex">` +
+const template =
+  `<div style="height: 600px; display:flex; align-items: center;" class="has-padding-sm is-flex">` +
   `<vuoz-avatar ref="avatar" ` +
   // Props
+  `   :toolbar="toolbar" ` +
   `   :src="src" ` +
   `   :fullname="fullname" ` +
   `   :size="size" ` +
@@ -70,7 +79,7 @@ const template = `<div style="height: 600px; display:flex; align-items: center;"
   `<div style="display: block;">` +
   `<img ref="image" :src="img" />` +
   `</div>` +
-  `</div>`
+  `</div>`;
 // To be displayed by Storybook
 export const Avatar = (args: any, { argTypes }: any) => ({
   components: { VuozAvatar, VuozButton },
@@ -78,18 +87,18 @@ export const Avatar = (args: any, { argTypes }: any) => ({
   props: Object.keys(argTypes),
   data: () => {
     return {
-      img: ''
-    }
+      img: "",
+    };
   },
   methods: {
     // Actual actions
     async getResult(down: boolean) {
       if (down) {
         const result = await (this as any).$refs.avatar.getResult();
-        const img: string = result.cropped.toDataURL('image/png');
-        (this as any).img = img
+        const img: string = result.cropped.toDataURL("image/png");
+        (this as any).img = img;
       }
     },
   },
-  argTypes
-})
+  argTypes,
+});
