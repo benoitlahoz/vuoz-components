@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 .vuoz-avatar(ref="dropzone", @drop="onDrop", @dragover="onDragOver")
   .vuoz-avatar__container
     vuoz-cropper(
@@ -7,7 +7,7 @@
       :src="img",
       stencil="circle",
       :showHandlers="false",
-      :showToolbar="toolbar",
+      :showToolbar="editable",
       :options="options",
       cropperClass="vuoz-avatar-cropper",
       @change="onChange",
@@ -95,7 +95,7 @@
   z-index: 1
   background: transparent
 </style>
-<script lang='ts'>
+<script lang="ts">
 // TODO: See here for custom handlers: https://codesandbox.io/s/vue-advanced-cropper-desktop-without-theme-4pp9f?file=/src/App.vue
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import VuozCropper from "@/components/cropper/index.vue";
@@ -203,22 +203,24 @@ export default class VuozComponent extends Vue {
 
   @Watch("size", { immediate: true })
   private onSizeChange() {
-    this.$nextTick(() => {
-      const root = this.$refs.dropzone as HTMLElement;
-      const cropper = this.$refs.cropper as any;
-      const toolbar = this.$refs.toolbar as Vue;
-      root.style.setProperty("--vuoz-avatar__size", `${this.size}px`);
-      if (this.options.cropper) {
-        this.options.cropper.stencilSize = {
-          width: this.size,
-          height: this.size,
-        };
-      }
-      toolbar.$forceUpdate();
-      if (cropper) {
-        cropper.refresh();
-      }
-    });
+    if (this.editable) {
+      this.$nextTick(() => {
+        const root = this.$refs.dropzone as HTMLElement;
+        const cropper = this.$refs.cropper as any;
+        const toolbar = this.$refs.toolbar as Vue;
+        root.style.setProperty("--vuoz-avatar__size", `${this.size}px`);
+        if (this.options.cropper) {
+          this.options.cropper.stencilSize = {
+            width: this.size,
+            height: this.size,
+          };
+        }
+        toolbar.$forceUpdate();
+        if (cropper) {
+          cropper.refresh();
+        }
+      });
+    }
   }
 
   private randomColor() {

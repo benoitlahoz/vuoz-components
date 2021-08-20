@@ -2,7 +2,7 @@
 .vuoz-user-cell
   // height: 3rem;
   .flex-grow.is-flex.align-center 
-    vuoz-avatar(:src="avatar", :fullname="firstname + ' ' + lastname", :size="25")
+    vuoz-avatar(:editable="false", :src="avatar", :fullname="firstname + ' ' + lastname", :size="25")
     .vuoz-user-cell-name {{ firstname }} 
       span.is-uppercase.has-text-bold {{ lastname }}
 </template>

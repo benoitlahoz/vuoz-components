@@ -30,6 +30,7 @@ const items = [
       firstname: "Benoît",
       lastname: "lahoz",
       avatar: "images/IMG_0665.jpg",
+      editable: "false",
     },
   },
   {
