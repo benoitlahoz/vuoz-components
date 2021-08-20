@@ -68,6 +68,7 @@ export default class VuozComponent extends Vue {
   private pressure = 0;
   // Objects
   private objects: any[] = [];
+  private nextId = 0
 
   private mounted() {
     this.$nextTick(() => {
@@ -113,6 +114,8 @@ export default class VuozComponent extends Vue {
       this.canvas.on("mouse:up", this.onMouseUp);
       // Handles infinite canvas
       this.canvas.on("object:moving", this.onObjectMoving)
+      // Get last added object
+      this.canvas.on("object:added", this.onObjectAdded)
 
     });
 
@@ -124,6 +127,7 @@ export default class VuozComponent extends Vue {
     this.canvas.off("mouse:move", this.onMouseMove);
     this.canvas.off("mouse:up", this.onMouseUp);
     this.canvas.off("object:moving", this.onObjectMoving)
+    this.canvas.off("object:added", this.onObjectAdded)
   }
 
   @Watch("backgroundColor", { immediate: false })
@@ -181,6 +185,8 @@ export default class VuozComponent extends Vue {
   }
 
   private onMouseUp(event: any) {
+    console.log('MOUSE UP')
+    /*
     this.mode = this.previousMode;
     this.isDrawing = false;
     this.brush.color =
@@ -189,6 +195,7 @@ export default class VuozComponent extends Vue {
     this.canvas.isDrawingMode = false;
     this.objects = this.canvas.getObjects();
     this.canvas.isDrawingMode = this.mode !== "select" ? true : false;
+    */
   }
 
   private onMouseMove(event: any) {
@@ -213,6 +220,41 @@ export default class VuozComponent extends Vue {
       this.canvas.calcOffset()
       container.scrollTop = this.height - event.target.top
     }
+
+    const object = this.objects.find(o => o.id === event.target.id)
+    if (object) {
+      const index = this.objects.indexOf(object)
+      this.objects.splice(index, 1, object)
+    }
+    // TODO: Emit actions in time order
+    // Emits the whole canvas' objects
+    this.$emit('change', {
+      type: 'move',
+      objects: this.objects
+    })
+    // Emits the last edited object
+    this.$emit('last', {
+      type: 'move',
+      object: event.target
+    })
+  }
+
+  private onObjectAdded(event: any) {
+    event.target.id = this.nextId
+    // TODO: use startTime and endTime for operational computation AND replay
+    this.objects.push(event.target)
+    this.nextId++
+    // TODO: Emit actions in time order
+    // Emits the whole canvas' objects
+    this.$emit('change', {
+      type: 'add',
+      objects: this.objects
+    })
+    // Emits the last edited object
+    this.$emit('last', {
+      type: 'add',
+      object: event.target
+    })
   }
 
   private onResize() {
