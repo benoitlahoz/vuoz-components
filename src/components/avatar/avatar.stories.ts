@@ -28,8 +28,8 @@ export default {
   },
   // Arguments (props) description
   argTypes: {
-    toolbar: {
-      description: "Show the toolbar or not.",
+    editable: {
+      description: "Make editable or not.",
       control: {
         type: "boolean",
       },
@@ -53,7 +53,7 @@ export default {
   },
   // Arguments (props) defaults
   args: {
-    toolbar: true,
+    editable: true,
     src: "images/IMG_0665.jpg",
     fullname: "Benoît LAHOZ",
     size: 200,
@@ -66,7 +66,7 @@ const template =
   `<div style="height: 600px; display:flex; align-items: center;" class="has-padding-sm is-flex">` +
   `<vuoz-avatar ref="avatar" ` +
   // Props
-  `   :toolbar="toolbar" ` +
+  `   :editable="editable" ` +
   `   :src="src" ` +
   `   :fullname="fullname" ` +
   `   :size="size" ` +

@@ -21,6 +21,7 @@
         :color="randomColor()"
       )
     input(
+      v-if="editable === true",
       ref="input",
       type="file",
       accept="image/*",
@@ -28,7 +29,7 @@
       style="display: none",
       @click="loadImage"
     )
-  .vuoz-avatar__toolbar-container(v-if="toolbar === true")
+  .vuoz-avatar__toolbar-container(v-if="editable === true")
     .vuoz-avatar__toolbar
       vuoz-toolbar(
         ref="toolbar",
@@ -116,7 +117,7 @@ import html2canvas from "html2canvas";
   },
 })
 export default class VuozComponent extends Vue {
-  @Prop({ type: Boolean, default: true }) readonly toolbar!: boolean;
+  @Prop({ type: Boolean, default: true }) readonly editable!: boolean;
   @Prop({ type: String }) readonly fullname!: string;
   @Prop({ type: String }) readonly src!: string;
   @Prop({ type: Number, default: 200 }) readonly size!: number;
